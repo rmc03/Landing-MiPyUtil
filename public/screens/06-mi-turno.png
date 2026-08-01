@@ -1,0 +1,10 @@
+<svg width="1080" height="2340" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="2340" fill="#ECF7F0"/>
+  <rect x="40" y="1070" width="1000" height="200" rx="16" fill="#E2EBE5"/>
+  <text x="540" y="1150" font-family="Inter, system-ui, sans-serif" font-size="48" font-weight="600" fill="#6B7280" text-anchor="middle">
+    Screenshot pendiente
+  </text>
+  <text x="540" y="1210" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="#9CA3AF" text-anchor="middle">
+    Coloca la captura en public/screens/
+  </text>
+</svg>

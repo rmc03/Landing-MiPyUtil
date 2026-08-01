@@ -1,0 +1,250 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="/" class="logo">MiPyUtil</a>
+        
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="nav-menu">
+          <a href="#hero">Resumen</a>
+          <a href="#inventario">Inventario</a>
+          <a href="#ventas">Ventas</a>
+          <a href="#cuadre">Cuadre</a>
+          <a href="#temas">Temas</a>
+          <a href="#descarga" class="nav-cta">Descargar APK</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <h3 class="footer-logo">MiPyUtil</h3>
+          <p class="footer-tagline">Tu mipyme, organizada.</p>
+          <p class="footer-desc">Inventario, ventas y turnos. Todo sin internet.</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="#">WhatsApp</a>
+          <a href="#">Telegram</a>
+          <a href="#">Canal de Telegram</a>
+        </div>
+
+        <p class="footer-note">
+          Aplicación en desarrollo activo. Funcionalidades mostradas según el estado actual del producto.
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      /* === NAV === */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(248, 250, 247, 0.9);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav-container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .nav-toggle {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+      }
+
+      .hamburger {
+        width: 24px;
+        height: 24px;
+        color: var(--ink);
+      }
+
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        gap: 16px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        padding: 24px;
+      }
+
+      .nav-menu.open {
+        display: flex;
+      }
+
+      .nav-menu a {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--ink);
+        text-decoration: none;
+        transition: color 200ms ease;
+      }
+
+      .nav-menu a:hover {
+        color: var(--primary);
+      }
+
+      .nav-cta {
+        display: inline-block;
+        background: var(--primary);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: var(--radius-pill);
+        font-weight: 600;
+      }
+
+      .nav-cta:hover {
+        background: var(--primary-deep);
+      }
+
+      @media (min-width: 768px) {
+        .nav-toggle {
+          display: none;
+        }
+
+        .nav-menu {
+          display: flex;
+          position: static;
+          flex-direction: row;
+          align-items: center;
+          gap: 32px;
+          background: transparent;
+          border: none;
+          padding: 0;
+        }
+      }
+
+      /* === FOOTER === */
+      .footer {
+        background: var(--forest-bg);
+        color: var(--forest-ink);
+        padding: 64px 0 32px;
+      }
+
+      .footer-container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 24px;
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--forest-ink);
+        margin-bottom: 8px;
+      }
+
+      .footer-tagline {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .footer-desc {
+        font-size: 0.9375rem;
+        color: var(--forest-ink);
+        opacity: 0.8;
+        margin-bottom: 32px;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: var(--primary-light);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 200ms ease;
+      }
+
+      .footer-links a:hover {
+        color: white;
+      }
+
+      .footer-note {
+        font-size: 0.875rem;
+        color: var(--forest-ink);
+        opacity: 0.6;
+        max-width: 60ch;
+        margin: 0 auto;
+      }
+    </style>
+
+    <script>
+      // Nav toggle para mobile
+      const navToggle = document.querySelector('.nav-toggle') as HTMLButtonElement;
+      const navMenu = document.querySelector('.nav-menu') as HTMLDivElement;
+
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+          const isOpen = navMenu.classList.contains('open');
+          navMenu.classList.toggle('open');
+          navToggle.setAttribute('aria-expanded', (!isOpen).toString());
+        });
+      }
+    </script>
+  </body>
+</html>
