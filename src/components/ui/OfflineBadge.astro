@@ -1,0 +1,50 @@
+<span class="offline-badge">
+  <svg class="offline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 13a10 10 0 0 1 14 0"></path>
+    <path d="M8.5 16.5a5 5 0 0 1 7 0"></path>
+    <path d="M2 8.82a15 15 0 0 1 20 0"></path>
+    <line x1="2" y1="2" x2="22" y2="22"></line>
+  </svg>
+  Funciona sin internet
+</span>
+
+<style>
+  .offline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-subtle);
+    padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
+    border-radius: var(--radius-pill);
+    color: var(--primary);
+    font-weight: 600;
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
+    border: 1px solid var(--primary);
+    white-space: nowrap;
+  }
+
+  .offline-icon {
+    width: clamp(14px, 3vw, 16px);
+    height: clamp(14px, 3vw, 16px);
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .offline-icon {
+      animation: pulse-subtle 3s ease-in-out infinite;
+    }
+
+    .offline-icon.ambient-paused {
+      animation-play-state: paused;
+    }
+  }
+</style>

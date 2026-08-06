@@ -1,0 +1,74 @@
+---
+interface CheckItem {
+  text: string;
+  highlight?: string;
+}
+
+interface Props {
+  items: CheckItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="checklist">
+  {items.map(item => (
+    <li>
+      <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span>
+        {item.highlight && <strong>{item.highlight}</strong>}
+        {item.text}
+      </span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .checklist {
+    list-style: none;
+    margin-bottom: var(--space-xl);
+  }
+
+  .checklist li {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+    margin-bottom: var(--space-md);
+  }
+
+  .check {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--primary);
+    margin-top: 2px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .check polyline {
+      stroke-dasharray: 24;
+      stroke-dashoffset: 24;
+      animation: check-draw 300ms var(--ease-out-expo) forwards;
+    }
+
+    .checklist li:nth-child(1) .check polyline {
+      animation-delay: 320ms;
+    }
+
+    .checklist li:nth-child(2) .check polyline {
+      animation-delay: 380ms;
+    }
+
+    .checklist li:nth-child(3) .check polyline {
+      animation-delay: 440ms;
+    }
+  }
+
+  @keyframes check-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

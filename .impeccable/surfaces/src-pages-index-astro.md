@@ -7,7 +7,7 @@ related_targets: []
 
 # Surface brief — index.astro (MiPyUtil landing, página única)
 
-**Scope:** la landing de MiPyUtil completa, una sola página de marketing web. El mundo visual ya está anclado (DESIGN.md, "El Día de Trabajo en una Sola Pantalla", tema Prosperidad); este brief solo fija la estrategia de esta superficie.
+**Scope:** la landing de MiPyUtil completa, una sola página de marketing web. El mundo visual ya está anclado (DESIGN.md, "El Día de Trabajo en una Sola Pantalla", tema Confianza índigo con modo oscuro por toggle); este brief solo fija la estrategia de esta superficie.
 
 **Visitor mode:** Persuade.
 
@@ -32,7 +32,7 @@ related_targets: []
 
 - Estructura "panel de control": la landing replica las pantallas de la app (Resumen → Inventario → Ventas → Cuadre → Temas) y cada sección se ancla en un screenshot.
 - **Moment:** el hero como espejo del Resumen del admin — el primer viewport muestra la app real funcionando (mockup con `01-resumen.png`), no una ilustración.
-- Bandas oscuras "modo noche" (bosque) para el problema y la descarga, exhibiendo el dark mode del producto.
+- Bandas oscuras "modo noche" (paleta oscura del producto, #16161F/#1F1F2E, siempre) para el problema y la descarga, exhibiendo el dark mode de la app.
 
 ## Constraints
 

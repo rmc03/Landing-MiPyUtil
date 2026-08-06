@@ -1,22 +1,31 @@
 ---
 name: MiPyUtil — Landing
-description: La landing es la app. Panel de control emerald para la mipyme cubana.
+description: La landing es la app. Panel de control índigo para la mipyme cubana.
 colors:
-  primary: "#059669"
-  primary-deep: "#047857"
-  primary-light: "#34D399"
-  forest-bg: "#0F1A14"
-  forest-surface: "#1A2E22"
-  forest-line: "#2A4A38"
-  forest-ink: "#EEF4F0"
-  neutral-bg: "#F8FAF7"
+  primary: "#5B5BF4"
+  primary-deep: "#4A4AD4"
+  primary-light: "#8080F7"
+  primary-subtle: "#E8E8FD"
+  neutral-bg: "#F5F5FA"
   neutral-surface: "#FFFFFF"
-  neutral-surface-sec: "#ECF7F0"
-  ink: "#1A2E1A"
+  neutral-surface-sec: "#F0F0F8"
+  neutral-surface-ter: "#E8E8F5"
+  ink: "#1A1A2E"
+  ink-secondary: "#4A4A5E"
   muted: "#6B7280"
-  line: "#E2EBE5"
-  success: "#059669"
-  warning: "#D97706"
+  line: "#E5E5EF"
+  line-strong: "#D0D0E0"
+  dark-bg: "#16161F"
+  dark-surface: "#1F1F2E"
+  dark-elevated: "#2A2A3E"
+  dark-ink: "#F0F0F8"
+  dark-ink-secondary: "#C0C0D0"
+  dark-line: "#3A3A50"
+  success: "#10B981"
+  warning: "#F59E0B"
+  error: "#EF4444"
+  info: "#3B82F6"
+  overlay-strong: "rgba(0, 0, 0, 0.5)"
 typography:
   display:
     fontFamily: "Inter, system-ui, sans-serif"
@@ -35,6 +44,11 @@ typography:
     fontSize: "1.125rem"
     fontWeight: 600
     lineHeight: 1.3
+  lead:
+    fontFamily: "Inter, system-ui, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 500
+    lineHeight: 1.5
   body:
     fontFamily: "Inter, system-ui, sans-serif"
     fontSize: "1rem"
@@ -46,10 +60,29 @@ typography:
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: "0.08em"
+  scale:
+    micro: "0.6875rem"
+    tiny: "0.7rem"
+    caption: "0.75rem"
+    label: "0.8125rem"
+    small: "0.875rem"
+    body-sm: "0.9375rem"
+    body: "1rem"
+    lead-sm: "1.0625rem"
+    title: "1.125rem"
+    title-lg: "1.25rem"
+    xl: "1.5rem"
+    stat: "2rem"
+    hero-min: "2.5rem"
+    display-min: "2.75rem"
+    hero-max: "3.5rem"
+    display-max: "4rem"
 rounded:
+  xs: "2px"
   sm: "8px"
   md: "12px"
   lg: "16px"
+  xl: "20px"
   pill: "9999px"
   phone: "32px"
 spacing:
@@ -58,6 +91,8 @@ spacing:
   md: "16px"
   lg: "24px"
   xl: "32px"
+  "2xl": "48px"
+  "3xl": "64px"
   section-sm: "80px"
   section-lg: "120px"
 components:
@@ -85,7 +120,7 @@ components:
 
 # Design System: MiPyUtil — Landing
 
-<!-- SEED: dirección establecida con el usuario (05-direccion-visual.md, confirmada en entrevista); los tokens provienen del brief comprometido. Re-ejecutar `$impeccable document` tras el build para carbonizar valores exactos. -->
+<!-- SEED: dirección establecida con el usuario (05-direccion-visual.md, confirmada en entrevista, ajustada a tema Confianza índigo + modo oscuro por decisión del dueño del producto); los tokens provienen de la implementación. Re-ejecutar `$impeccable document` tras el build para carbonizar valores exactos. -->
 
 ## Overview
 
@@ -93,38 +128,50 @@ components:
 
 La landing replica el panel de control de la app: cada sección es una pantalla de MiPyUtil y se ancla en un screenshot real dentro de un mockup de teléfono. No es una landing genérica de SaaS (hero + grid de features + pricing); es la propia app contando su día de trabajo. El visitante recorre Resumen → Inventario → Ventas → Cuadre → Temas como navegaría el dueño en su teléfono, y al final cierra con la descarga de la APK.
 
-El carácter visual es **calmo y operativo**: superficies planas teñidas de verde, un único acento esmeralda que solo aparece donde hay acción o dato vivo (CTAs, checks, alertas de stock, métricas), y tipografía Inter en pesos bien escalonados. Las bandas oscuras "modo noche" (bosque, no negro) exhiben el dark mode del producto y separan los momentos de problema/descarga del resto. La prueba es la pantalla real, nunca el placeholder: mientras no exista la captura, el mockup muestra el nombre esperado.
+El carácter visual es **calmo y operativo**: superficies planas, un único acento índigo que solo aparece donde hay acción o dato vivo (CTAs, checks, alertas de stock, métricas), y tipografía Inter en pesos bien escalonados. La página respeta el tema claro u oscuro que elija el visitante con el toggle del nav (modo oscuro con la paleta del producto, nunca negro puro). Las bandas "modo noche" de problema y descarga renderizan la paleta oscura siempre, independiente del toggle: exhiben el dark mode del producto y separan los momentos de problema/descarga del resto. La prueba es la pantalla real, nunca el placeholder: mientras no exista la captura, el mockup muestra el nombre esperado.
 
 La emoción es confianza: esto se ve como una herramienta que no se cae cuando se va el internet. Nada de gradientes sobre contenido, nada de glow disperso, nada de "revolucionario".
 
 **Key Characteristics:**
-- Flat surfaces, green-tinted neutrals, single emerald voice.
+- Flat surfaces, indigo voice on tinted neutrals.
 - Phone mockups as the material center of every feature section.
 - Inter everywhere — the same family the app ships.
-- Dark bands in forest `#0F1A14`, never pure black.
+- Dark mode via toggle; "modo noche" bands always dark (`#16161F` / `#1F1F2E`), never pure black.
 - Calm, operative, no hype.
 
 ## Colors
 
-Paleta operativa con un solo acento: esmeralda sobre neutros teñidos de verde. La oscuridad es bosque, nunca negro puro.
+Paleta operativa con un solo acento: índigo sobre neutros fríos. La oscuridad es un azul noche, nunca negro puro.
 
 ### Primary
-- **Prosperidad Emerald** (#059669): CTAs, enlaces, checks, métricas vivas y acentos activos. En oscuro, la versión clara (#34D399) brilla sobre el bosque. Solo se usa donde hay acción o dato vivo.
-- **Emerald Deep** (#047857): hover del primario.
+- **Confianza Indigo** (#5B5BF4): CTAs, enlaces, checks, métricas vivas y acentos activos. Solo se usa donde hay acción o dato vivo.
+- **Indigo Deep** (#4A4AD4): hover del primario.
+- **Indigo Light** (#8080F7): acentos de texto y enlaces sobre superficies oscuras (contraste AA en modo noche).
+- **Indigo Wash** (#E8E8FD): fondos de chips y badges.
 
 ### Neutral
-- **Paper** (#F8FAF7): fondo base de la página, teñido de verde.
+- **Paper** (#F5F5FA): fondo base de la página, teñido de índigo.
 - **White** (#FFFFFF): cards y superficies de sección.
-- **Mint Wash** (#ECF7F0): fondos alternos, chips, hover de filas.
-- **Ink** (#1A2E1A): texto principal.
+- **Wash** (#F0F0F8): fondos alternos (secciones de features), chips, hover de filas.
+- **Ink** (#1A1A2E): texto principal.
+- **Ink Secondary** (#4A4A5E): textos de apoyo.
 - **Muted** (#6B7280): solo metadatos y textos secundarios.
-- **Line** (#E2EBE5): bordes y separadores.
-- **Amber Stock** (#D97706): alertas de stock bajo (único acento de advertencia).
+- **Line** (#E5E5EF): bordes y separadores.
+- **Amber Stock** (#F59E0B): alertas de stock bajo (único acento de advertencia).
+
+### Dark palette (modo oscuro y bandas "modo noche")
+- **Night** (#16161F): fondo base oscuro y bandas.
+- **Night Surface** (#1F1F2E): cards sobre noche.
+- **Night Elevated** (#2A2A3E): superficies que sobresalen.
+- **Night Ink** (#F0F0F8): texto sobre oscuro.
+- **Night Line** (#3A3A50): bordes sobre oscuro.
 
 ### Named Rules
-**The One Voice Rule.** La esmeralda es el único acento y su rareza es el punto: aparece en CTAs, checks, alertas y métricas; el resto del sistema vive en neutros. Dos acentos compitiendo rompen el contrato.
+**The One Voice Rule.** El índigo es el único acento y su rareza es el punto: aparece en CTAs, checks, alertas y métricas; el resto del sistema vive en neutros. Dos acentos compitiendo rompen el contrato.
 
-**The Forest Rule.** Toda superficie oscura es bosque (#0F1A14) o su derivado (#1A2E22, #2A4A38), nunca negro puro. El texto en oscuro es verde pálido (#EEF4F0).
+**The Night Rule.** Toda superficie oscura es azul noche (#16161F) o su derivado (#1F1F2E, #2A2A3E), nunca negro puro. El texto en oscuro es #F0F0F8; los acentos pasan a la versión clara (#8080F7) para mantener AA.
+
+**The Band Rule.** Las bandas "modo noche" (problema, descarga) usan la paleta oscura siempre, en ambos temas del toggle: son el dark mode del producto exhibido como material de la landing.
 
 ## Typography
 
@@ -136,6 +183,7 @@ Paleta operativa con un solo acento: esmeralda sobre neutros teñidos de verde. 
 - **Display** (800, clamp 2.75–4rem, 1.05, −0.02em): solo el H1 del hero.
 - **Headline** (700, clamp 1.75–2.25rem, 1.15, −0.02em): títulos de sección.
 - **Title** (600, 1.125rem, 1.3): títulos de tarjeta.
+- **Lead** (500, 1.125rem, 1.5): intros de sección y cierres enfatizados.
 - **Body** (400, 1rem, 1.6): texto de lectura; medida 65–75ch.
 - **Label** (600, 0.8125rem, 1.2, +0.08em, mayúsculas): eyebrows y metadatos; solo en el punto donde el sistema lo elige, no en toda sección.
 
@@ -144,24 +192,24 @@ Paleta operativa con un solo acento: esmeralda sobre neutros teñidos de verde. 
 
 ## Layout
 
-Sistema mobile-first de una columna con contenedor centrado (~1120px). Ritmo de espaciado base 4px; las secciones respiran 80–120px de vertical, con más espacio arriba del encabezado que abajo.
+Sistema mobile-first de una columna con contenedor centrado (~1120px). Ritmo de espaciado base 4px; las secciones respiran 80–120px de vertical, con más espacio arriba del encabezado que abajo. Gaps de composición generosos (64px) entre texto y mockup en pantallas ≥ 768px.
 
 - **< 640px:** 1 columna; mockups de teléfono a ancho completo (máx. 320px, centrados).
 - **≥ 768px:** hero en 2 columnas (texto | mockup); features en grid de 2.
 - **≥ 1024px:** grid de 3 para "Para quién"; hero display a 64px; mockups flanqueando el texto.
 - **Breakpoints:** 640 / 768 / 1024.
 
-El patrón de sección es: encabezado (label + H2 + lead), luego la evidencia — screenshot en mockup o grid de tarjetas planas. Las bandas oscuras "modo noche" alternan el ritmo entre el mundo claro operativo y el problema/descarga.
+El patrón de sección es: encabezado (H2 + lead), luego la evidencia — screenshot en mockup o grid de tarjetas planas. El ritmo se construye alternando superficies: las secciones de features alternan paper y wash, y las bandas "modo noche" (problema/descarga) separan los momentos de problema y cierre del resto. Las secciones de historia (ComoFunciona) centran su encabezado y sus cierres; las operativas alinean a la izquierda.
 
 ## Elevation & Depth
 
-Sistema plano por defecto, fiel al anti-patrón de la app ("sin gradientes de fondo"). La profundidad la da el contraste tonal y las líneas, no las sombras.
+Sistema plano por defecto, fiel al anti-patrón de la app ("sin gradientes de fondo"). La profundidad la dan el contraste tonal y las líneas, no las sombras.
 
 ### Shadow Vocabulary
-- **subtle** (`0 2px 4px rgba(6,78,59,0.06)`): única sombra del sistema. Exclusiva para mockups de teléfono y bandas que lo requieran; nunca en cards de contenido.
+- **subtle** (`0 1px 2px rgba(26,26,46,0.04), 0 2px 4px rgba(26,26,46,0.02)`): única sombra del sistema. Exclusiva para mockups de teléfono; nunca en cards de contenido.
 
 ### Named Rules
-**The Flat-by-Default Rule.** Las cards son planas, separadas por línea y superficie. La sombra subtle es un material reservado al teléfono; si una tarjeta necesita levantar, se usa superficie clara (o bordes), no sombra.
+**The Flat-by-Default Rule.** Las cards son planas, separadas por línea y superficie. La sombra subtle es un material reservado al teléfono; si una tarjeta necesita levantar, se usa superficie clara (o bordes), no sombra. Los hovers de cards cambian solo el color de borde.
 
 ## Shapes
 
@@ -170,7 +218,7 @@ Lenguaje de formas con radios generosos y una sola silueta protagonista: el tel�
 - **Cards:** 16px.
 - **Botones:** 12px.
 - **Pills:** 9999px (solo controles pequeños: nav CTA, chips, badges).
-- **Mockup de teléfono:** 32px, marco oscuro (#1A2E1A) sobre superficies claras o blanco sobre bandas oscuras, con muesca superior.
+- **Mockup de teléfono:** 32px, marco oscuro (#1A1A2E) sobre superficies claras o superficie noche (#2F2F45) sobre bandas oscuras, con muesca superior.
 
 ### Named Rules
 **The Phone Rule.** Toda captura de la app se muestra dentro de un mockup de teléfono; nunca recortada contra el fondo ni suelta sobre la página.
@@ -179,41 +227,42 @@ Lenguaje de formas con radios generosos y una sola silueta protagonista: el tel�
 
 ### Buttons
 - **Shape:** 12px.
-- **Primary:** esmeralda (#059669), texto blanco, padding 16px 28px, peso 600.
-- **Hover / Focus:** fondo #047857; foco visible con anillo esmeralda 2px.
-- **Secondary:** outline esmeralda sobre fondo transparente.
-- **Ghost:** texto esmeralda, sin borde; para enlaces inline.
+- **Primary:** índigo (#5B5BF4), texto blanco, padding 16px 28px, peso 600.
+- **Hover / Focus:** fondo #4A4AD4; foco visible con anillo índigo 2px.
+- **Secondary:** outline índigo sobre fondo transparente.
+- **Ghost:** texto índigo, sin borde; para enlaces inline.
 
 ### Navigation
-- Fija, fondo `paper` con blur ligero y línea inferior `line`. Logo tipográfico "MiPyUtil" en peso 800, enlaces en Inter 500 con hover esmeralda, CTA pill esmeralda a la derecha.
+- Sticky, fondo `surface` con blur ligero y línea inferior `line`. Logo tipográfico "MiPyUtil" en peso 800, enlaces en Inter 500 con hover índigo, CTA pill índigo a la derecha. Toggle claro/oscuro junto a los enlaces (persistido en `localStorage`, respeta `prefers-color-scheme` como default sin parpadeo).
 - **Mobile:** colapsa a hamburguesa con panel desplegable; enlaces alcanzables por teclado.
 
 ### Phone Mockup (signature)
-- Marco #1A2E1A (o blanco sobre banda oscura), radio 32px, muesca superior, sombra `subtle`.
+- Marco #1A1A2E (o superficie noche #2F2F45 sobre banda oscura), radio 32px, muesca superior, sombra `subtle`.
 - Contenido: la captura de la app. Si el archivo no existe, un placeholder con el nombre esperado del screenshot.
 
 ### Checklist
-- Ítems con check esmeralda (#059669), texto ink; marca de verificación como icono línea, no emoji.
+- Ítems con check índigo (#5B5BF4), texto ink; marca de verificación como icono línea, no emoji.
 
 ### FAQ (accordion)
-- Ítem con borde `line`, encabezado en `<button>` real, ítem activo con acento esmeralda; panel expandible con animación de altura respetando `prefers-reduced-motion`.
+- Ítem con borde `line`, encabezado en `<button>` real, ítem activo con acento índigo; panel expandible con animación de altura respetando `prefers-reduced-motion`. Pregunta y respuesta comparten la misma alineación horizontal.
 
-### Dark Band
-- Sección completa en bosque (#0F1A14): superficie #1A2E22 para tarjetas internas, líneas #2A4A38, texto #EEF4F0, acentos esmeralda claro (#34D399).
+### Dark Band (modo noche)
+- Sección completa en #16161F (siempre, en ambos temas): superficie #1F1F2E para tarjetas internas, líneas #3A3A50, texto #F0F0F8, acentos índigo claro (#8080F7) para enlaces y métricas.
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** anclar cada sección de features a un screenshot real de la app dentro de un mockup de teléfono.
-- **Do** usar bosque (#0F1A14) en todo fondo oscuro y teñir todos los neutros de verde.
-- **Do** reservar la esmeralda para acción y dato vivo: CTAs, checks, alertas, métricas.
+- **Do** usar la paleta noche (#16161F) en toda superficie oscura y neutros fríos en las claras.
+- **Do** reservar el índigo para acción y dato vivo: CTAs, checks, alertas, métricas.
 - **Do** escribir el texto del hero en Display 800 con tracking −0.02em.
-- **Do** respetar `prefers-reduced-motion` reduciendo todo a fades.
+- **Do** respetar `prefers-reduced-motion` reduciendo todo a fades y el toggle de tema.
+- **Do** dejar las bandas "modo noche" oscuras en ambos temas.
 
 ### Don't:
 - **Don't** usar negro puro en superficies oscuras.
 - **Don't** poner gradientes sobre cards de contenido.
 - **Don't** dispersar glow fuera del hero y los estados activos.
-- **Don't** usar gris genérico en fondos; siempre neutros teñidos de verde.
+- **Don't** usar gris genérico en fondos; siempre neutros del sistema.
 - **Don't** introducir una segunda tipografía o un sistema de sombras sobre las cards.
 - **Don't** inventar claims, precios o testimonios en el copy de la página.

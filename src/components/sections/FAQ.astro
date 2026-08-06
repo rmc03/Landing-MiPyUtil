@@ -1,0 +1,212 @@
+---
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+const faqs: FAQItem[] = [
+  {
+    question: '¿Necesita internet?',
+    answer: 'No para operar. Todo vive en el teléfono; la conexión solo se usa cuando la arquitectura de sincronización está activa. <strong>Funciona con apagones</strong> y sin conexión a Etecsa.'
+  },
+  {
+    question: '¿Sirve si no tengo Play Store?',
+    answer: 'Sí: la APK se instala directa. Se comparte por <strong>WhatsApp, Telegram o Zapya</strong> y se instala como cualquier APK, sin cuenta de Google.'
+  },
+  {
+    question: '¿Es solo para bodegones?',
+    answer: 'No: inventario, ventas, turnos y cuadres sirven a cualquier negocio de retail o servicio — <strong>cafeterías, talleres, ferreterías, tiendas de ropa</strong>, lo que vendas con mercancía y empleados.'
+  },
+  {
+    question: '¿Puedo ver las ventas de cada dependiente?',
+    answer: 'Sí: turnos, cuadres e historial por empleado. Cada uno rinde cuentas al cerrar, y <strong>tú decides desde tu casa</strong> si apruebas o rechazas.'
+  },
+  {
+    question: '¿Cómo empiezo?',
+    answer: 'Descargas la APK, la instalas y abres el primer turno. <a href="#">Escríbenos por WhatsApp</a> si quieres ayuda para configurarla — <strong>te respondemos en menos de 1 hora</strong> en horario de oficina.'
+  }
+];
+---
+
+<section id="faq" class="faq">
+  <div class="container">
+    <h2>Preguntas frecuentes</h2>
+
+    <div class="faq-list">
+      {faqs.map((faq, i) => (
+        <div class="faq-item">
+          <button
+            type="button"
+            class="faq-question"
+            id={`faq-question-${i}`}
+            aria-expanded="false"
+            aria-controls={`faq-panel-${i}`}
+          >
+            <span class="faq-question-text">{faq.question}</span>
+          </button>
+          <div
+            class="faq-panel"
+            id={`faq-panel-${i}`}
+            role="region"
+            aria-labelledby={`faq-question-${i}`}
+            inert
+          >
+            <p set:html={faq.answer} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+
+  faqItems.forEach((item) => {
+    const button = item.querySelector('.faq-question');
+    const panel = item.querySelector('.faq-panel');
+
+    if (!button || !panel) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      item.classList.toggle('open', !isOpen);
+      button.setAttribute('aria-expanded', String(!isOpen));
+      panel.toggleAttribute('inert', isOpen);
+    });
+  });
+</script>
+
+<style is:global>
+  .faq {
+    background: var(--surface);
+    padding: var(--space-3xl) 0;
+  }
+
+  .faq .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+  }
+
+  .faq h2 {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    padding: 0;
+    background: var(--surface);
+    transition: background var(--dur-routine) ease;
+  }
+
+  .faq-item:first-child {
+    border-top: 1px solid var(--line);
+  }
+  
+  .faq-item:hover {
+    background: var(--surface-secondary);
+  }
+
+  button.faq-question {
+    width: 100%;
+    min-height: 64px;
+    padding: var(--space-lg) var(--space-md);
+    background: none;
+    border: none;
+    border-radius: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    font-family: var(--font-family);
+    font-size: var(--fs-title);
+    font-weight: 600;
+    line-height: var(--lh-title);
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    text-align: left;
+    transition: color var(--dur-routine) ease;
+    margin: 0;
+    box-shadow: none;
+    outline: 0;
+  }
+
+  button.faq-question::after {
+    content: '+';
+    font-size: var(--fs-xl);
+    font-weight: 300;
+    color: var(--primary);
+    flex-shrink: 0;
+    margin-left: var(--space-md);
+    transition: transform var(--dur-routine) var(--ease-out-expo);
+  }
+
+  .faq-item.open button.faq-question::after {
+    transform: rotate(45deg);
+  }
+
+  button.faq-question:hover {
+    color: var(--primary);
+  }
+
+  button.faq-question:focus-visible {
+    outline: 2px solid var(--primary) !important;
+    outline-offset: 4px;
+    border-radius: var(--radius-xs);
+  }
+
+  .faq-question-text {
+    flex: 1;
+  }
+
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur-overlay) var(--ease-out-expo);
+  }
+
+  .faq-item.open .faq-panel {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-panel p {
+    overflow: hidden;
+    min-height: 0;
+    padding: var(--space-md) var(--space-md) var(--space-lg) var(--space-md);
+    color: var(--ink-secondary);
+    line-height: 1.7;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity var(--dur-routine) ease, transform var(--dur-routine) var(--ease-out-expo);
+  }
+
+  .faq-item.open .faq-panel p {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .faq-panel strong {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .faq-panel a {
+    color: var(--primary);
+    text-decoration: underline;
+    transition: color 200ms ease;
+  }
+
+  .faq-panel a:hover {
+    color: var(--primary-light);
+  }
+</style>

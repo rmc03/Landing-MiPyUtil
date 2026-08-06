@@ -1,0 +1,233 @@
+---
+interface ProblemaItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const problemas: ProblemaItem[] = [
+  {
+    icon: 'lightning',
+    title: 'Apagones y señal inestable.',
+    description: 'Los sistemas web se caen y la tienda queda vendiendo "a papel".'
+  },
+  {
+    icon: 'table',
+    title: 'La libreta y el Excel.',
+    description: 'Nunca sabes qué se agotó ni cuánto se vendió hoy.'
+  },
+  {
+    icon: 'money',
+    title: 'El faltante en la caja.',
+    description: 'El cuadre se hace a mano y los números no te cuadran.'
+  }
+];
+
+const icons = {
+  lightning: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
+  table: 'M3 3h18v18H3V3zm0 6h18M9 21V9',
+  money: 'M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12c0 1.1.9 2 2 2h14v-4M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z'
+};
+---
+
+<section id="problema" class="problema dark-band" data-atmosphere="apagon">
+  <div class="container">
+    <h2>El día a día de tu negocio no espera por el internet.</h2>
+
+    <div class="problema-grid">
+      {problemas.map(problema => (
+        <div class="problema-card">
+          <div class="problema-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d={icons[problema.icon as keyof typeof icons]} />
+            </svg>
+          </div>
+          <h3>{problema.title}</h3>
+          <p>{problema.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <p class="problema-cierre">
+      <svg class="check-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      MiPyUtil guarda tus datos en el propio teléfono. Si se cae la conexión, sigues vendiendo igual.
+    </p>
+  </div>
+</section>
+
+<script>
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const section = document.querySelector('[data-atmosphere="apagon"]');
+
+  if (section && !prefersReducedMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            section.classList.add('apagon-on');
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(section);
+  }
+</script>
+
+<style>
+  .dark-band {
+    color: var(--ink);
+    position: relative;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dark-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--background);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+  }
+
+  .dark-band.apagon-on::before {
+    animation: apagon-fade var(--dur-focal) var(--ease-out-expo) forwards;
+  }
+
+  .dark-band .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dark-band.apagon-on .problema-card {
+      animation: emerge-dark 500ms var(--ease-out-expo) backwards;
+    }
+
+    .dark-band.apagon-on .problema-card:nth-child(1) {
+      animation-delay: 120ms;
+    }
+
+    .dark-band.apagon-on .problema-card:nth-child(2) {
+      animation-delay: 200ms;
+    }
+
+    .dark-band.apagon-on .problema-card:nth-child(3) {
+      animation-delay: 280ms;
+    }
+
+    .dark-band.apagon-on .check-offline {
+      animation: glow-restore 800ms var(--ease-out-expo);
+    }
+  }
+
+  @keyframes apagon-fade {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes emerge-dark {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes glow-restore {
+    0%, 100% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 1;
+      filter: drop-shadow(0 0 6px var(--primary));
+    }
+  }
+
+  .dark-band h2,
+  .dark-band h3,
+  .dark-band p {
+    color: var(--ink);
+  }
+
+  .problema-grid {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .problema-card {
+    background: var(--surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    transition: border-color 200ms ease;
+  }
+  
+  .problema-card:hover {
+    border-color: var(--primary-light);
+  }
+
+  .problema-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--space-lg);
+    color: var(--primary);
+  }
+
+  .problema-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .problema-card h3 {
+    margin-bottom: var(--space-md);
+    color: var(--ink);
+  }
+  
+  .problema-card p {
+    color: var(--ink-secondary);
+  }
+
+  .problema-cierre {
+    font-size: var(--fs-lead);
+    font-weight: 500;
+    line-height: var(--lh-lead);
+    text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--primary-subtle);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--primary);
+  }
+
+  .check-offline {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--primary);
+  }
+
+  @media (min-width: 768px) {
+    .problema-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

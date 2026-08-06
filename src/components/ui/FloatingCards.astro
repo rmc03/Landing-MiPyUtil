@@ -1,0 +1,363 @@
+---
+/**
+ * FloatingCards: notificaciones de actividad viva alrededor del teléfono del hero.
+ * Cada card es una mini-historia del producto: una venta, un cuadre, una alerta
+ * de stock, la promesa offline y una métrica del día. Decorativo (aria-hidden):
+ * la información ya vive en el copy de la página.
+ *
+ * MOTION: entrance con stagger + float continuo con duraciones distintas por card
+ * (sensación orgánica), count-up en la métrica. Todo respeta prefers-reduced-motion
+ * y se pausa fuera del viewport (IntersectionObserver).
+ */
+
+const cards = [
+  {
+    id: 'ventas',
+    position: 'top',
+    tone: 'primary',
+    icon: 'trend',
+    title: 'Ventas hoy',
+    metric: true
+  },
+  {
+    id: 'cuadre',
+    position: 'tl',
+    tone: 'primary',
+    icon: 'check-circle',
+    title: 'Cuadre aprobado'
+  },
+  {
+    id: 'offline',
+    position: 'tr',
+    tone: 'error',
+    icon: 'wifi-off',
+    title: 'Sin conexión',
+    subtitle: 'todo guardado'
+  },
+  {
+    id: 'stock',
+    position: 'bl',
+    tone: 'warning',
+    icon: 'alert',
+    title: 'Stock bajo:',
+    subtitle: 'Cascos'
+  },
+  {
+    id: 'venta',
+    position: 'br',
+    tone: 'success',
+    icon: 'check',
+    title: 'Venta registrada',
+    subtitle: '$18'
+  }
+];
+---
+
+<div class="floating-cards" aria-hidden="true">
+  {cards.map((card) => (
+    <div class={`card card-${card.position} tone-${card.tone}`}>
+      <div class="card-bob">
+        <span class="icon-chip">
+          {card.icon === 'trend' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+              <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+          )}
+          {card.icon === 'check-circle' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          )}
+          {card.icon === 'wifi-off' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 13a10 10 0 0 1 14 0"></path>
+              <path d="M8.5 16.5a5 5 0 0 1 7 0"></path>
+              <path d="M2 8.82a15 15 0 0 1 20 0"></path>
+              <line x1="2" y1="2" x2="22" y2="22"></line>
+            </svg>
+          )}
+          {card.icon === 'alert' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          )}
+          {card.icon === 'check' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          )}
+        </span>
+        <span class="card-text">
+          <span class="card-title">{card.title}</span>
+          {card.metric && (
+            <span class="card-value metric-count" data-target="47">0</span>
+          )}
+          {!card.metric && card.subtitle && (
+            <span class="card-value">{card.subtitle}</span>
+          )}
+        </span>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  const cardsEl = document.querySelector('.floating-cards');
+  const counter = cardsEl && cardsEl.querySelector('.metric-count');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (counter) {
+    const target = parseInt(counter.dataset.target, 10) || 0;
+
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      counter.textContent = target;
+    } else {
+      let started = false;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            cardsEl.classList.toggle('ambient-paused', !entry.isIntersecting);
+
+            if (entry.isIntersecting && !started) {
+              started = true;
+              const duration = 1200;
+              const start = performance.now();
+
+              const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                counter.textContent = Math.round(target * eased);
+                if (progress < 1) {
+                  requestAnimationFrame(tick);
+                }
+              };
+
+              requestAnimationFrame(tick);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      observer.observe(cardsEl);
+    }
+  }
+</script>
+
+<style>
+  .floating-cards {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .card {
+    position: absolute;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    /* impeccable-disable-line flat-surface -- excepción intencional: las cards flotantes
+       necesitan elevación para leerse como "flotando"; la regla flat-by-default rige el resto */
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-bob {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon-chip {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .icon-chip svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .card-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  .card-title {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--ink-secondary);
+    white-space: nowrap;
+  }
+
+  .card-value {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* === Posiciones (mobile-first: cards pegadas a las esquinas del teléfono) === */
+  .card-top {
+    top: -4%;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin-inline: auto;
+  }
+
+  .card-tl {
+    top: 22%;
+    left: 0;
+  }
+
+  .card-tr {
+    top: 6%;
+    right: 0;
+  }
+
+  .card-bl {
+    bottom: 18%;
+    left: 0;
+  }
+
+  .card-br {
+    bottom: 2%;
+    right: 0;
+  }
+
+  /* === Tonos (chip de icono) === */
+  .tone-primary .icon-chip {
+    background: var(--primary-subtle);
+    color: var(--primary);
+  }
+
+  .tone-success .icon-chip {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--success);
+  }
+
+  .tone-error .icon-chip {
+    background: rgba(239, 68, 68, 0.12);
+    color: var(--error);
+  }
+
+  .tone-warning .icon-chip {
+    background: rgba(245, 158, 11, 0.14);
+    color: var(--warning);
+  }
+
+  @media (max-width: 374px) {
+    .card {
+      padding: 8px 10px;
+    }
+
+    .icon-chip {
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .card-tl {
+      left: -2%;
+    }
+
+    .card-tr {
+      right: -2%;
+    }
+
+    .card-bl {
+      left: -3%;
+    }
+
+    .card-br {
+      right: -3%;
+    }
+
+    .card-top {
+      top: -6%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .card-tl {
+      left: -4%;
+    }
+
+    .card-tr {
+      right: -4%;
+    }
+
+    .card-bl {
+      left: -5%;
+    }
+
+    .card-br {
+      right: -5%;
+    }
+
+    .card-top {
+      top: -8%;
+    }
+  }
+
+  /* === MOTION === */
+  @media (prefers-reduced-motion: no-preference) {
+    .card {
+      animation: card-in 600ms var(--ease-out-expo) both;
+    }
+
+    .card-top { animation-delay: 250ms; }
+    .card-tl { animation-delay: 350ms; }
+    .card-tr { animation-delay: 450ms; }
+    .card-bl { animation-delay: 550ms; }
+    .card-br { animation-delay: 650ms; }
+
+    .card-bob {
+      animation: card-float 5s ease-in-out infinite;
+    }
+
+    .card-top .card-bob { animation-duration: 5.5s; animation-delay: 0.2s; }
+    .card-tl .card-bob { animation-duration: 4.6s; animation-delay: 0.6s; }
+    .card-tr .card-bob { animation-duration: 5.2s; animation-delay: 1s; }
+    .card-bl .card-bob { animation-duration: 4.9s; animation-delay: 0.4s; }
+    .card-br .card-bob { animation-duration: 5.8s; animation-delay: 0.8s; }
+
+    .floating-cards.ambient-paused .card-bob,
+    .floating-cards.ambient-paused .card {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes card-float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+</style>

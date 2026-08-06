@@ -1,0 +1,461 @@
+---
+import PhoneMockup from '../PhoneMockup.astro';
+import FloatingCards from '../ui/FloatingCards.astro';
+import Button from '../ui/Button.astro';
+import CheckList from '../ui/CheckList.astro';
+import OfflineBadge from '../ui/OfflineBadge.astro';
+
+const checkItems = [
+  { highlight: 'Funciona offline', text: ' — apagones y señal mala no paran tu negocio.' },
+  { highlight: 'Control de caja diario', text: ' — cada dependiente rinde cuentas al cerrar su turno.' },
+  { highlight: 'Sin papel ni Excel', text: ' — todo queda registrado.' }
+];
+---
+
+<section id="hero" class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <p class="eyebrow">
+        Para MiPymes y TCPs · 
+        <OfflineBadge />
+      </p>
+      <h1>
+        <span class="title-line">
+          <span class="rotating-word" data-words='["Organiza", "Gestiona", "Optimiza", "Controla", "Digitaliza"]'>Organiza</span>
+        </span>
+        <span class="title-line">tu MiPyme.</span>
+      </h1>
+      <p class="lead">
+        Inventario, ventas y turnos en un solo teléfono. Tu negocio no se detiene
+        aunque se vaya el internet.
+      </p>
+
+      <CheckList items={checkItems} />
+
+      <div class="cta-group">
+        <Button variant="primary" type="link" href="#descarga" icon="download" fullWidth>
+          Descargar APK
+          <span class="apk-size">~12 MB</span>
+        </Button>
+        <div class="secondary-ctas">
+          <Button variant="secondary" type="link" href="https://wa.me/" icon="whatsapp" fullWidth>Contacto WhatsApp</Button>
+          <Button variant="secondary" type="link" href="https://t.me/" icon="telegram" fullWidth>Canal de Telegram</Button>
+        </div>
+      </div>
+
+      <p class="hero-note">
+        <svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Se instala por APK directa. Sin Play Store, sin complicaciones.
+      </p>
+    </div>
+
+    <div class="hero-visual">
+      <FloatingCards />
+      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos y stock bajo en un solo teléfono" compact />
+    </div>
+  </div>
+</section>
+
+<script>
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    const hero = document.querySelector('.hero');
+    const ambientTargets = document.querySelectorAll('.hero .phone-mockup, .hero .offline-icon');
+
+    if (hero && ambientTargets.length) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            ambientTargets.forEach((target) => {
+              target.classList.toggle('ambient-paused', !entry.isIntersecting);
+            });
+          });
+        },
+        { threshold: 0.05 }
+      );
+      observer.observe(hero);
+    }
+  }
+
+  // Rotating word animation
+  if (!prefersReducedMotion) {
+    const rotatingWord = document.querySelector('.rotating-word');
+    if (rotatingWord) {
+      const words = JSON.parse(rotatingWord.getAttribute('data-words') || '[]');
+      let currentIndex = 0;
+      let rotateInterval = null;
+      
+      const rotateWord = () => {
+        rotatingWord.classList.add('word-exit');
+        
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % words.length;
+          rotatingWord.textContent = words[currentIndex];
+          rotatingWord.classList.remove('word-exit');
+          rotatingWord.classList.add('word-enter');
+          
+          setTimeout(() => {
+            rotatingWord.classList.remove('word-enter');
+          }, 500);
+        }, 300);
+      };
+      
+      const startRotation = () => {
+        if (!rotateInterval) {
+          rotateInterval = setInterval(rotateWord, 3000);
+        }
+      };
+      
+      const stopRotation = () => {
+        if (rotateInterval) {
+          clearInterval(rotateInterval);
+          rotateInterval = null;
+        }
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startRotation();
+          } else {
+            stopRotation();
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      observer.observe(rotatingWord);
+    }
+  }
+</script>
+
+<style>
+  /* impeccable-disable gradient-text -- acento de marca aprobado en la palabra rotativa del hero */
+
+  .hero {
+    padding-top: clamp(var(--space-2xl), 8vw, var(--space-section-lg));
+    padding-bottom: var(--space-section-sm);
+    background: linear-gradient(135deg, var(--background) 0%, var(--surface-secondary) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: radial-gradient(circle at top right, var(--primary-subtle) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero .container {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .eyebrow {
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .hero h1 {
+    font-size: var(--fs-display);
+    line-height: var(--lh-display);
+    margin-bottom: var(--space-lg);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  .title-line {
+    display: block;
+    line-height: 1.05;
+  }
+
+  .title-line:first-child {
+    margin-bottom: 0.05em;
+  }
+
+  .lead {
+    font-size: clamp(var(--fs-body), 3vw, var(--fs-lead));
+    line-height: var(--lh-body);
+    color: var(--ink-secondary);
+    margin-bottom: var(--space-xl);
+    max-width: 60ch;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    width: 100%;
+  }
+
+  .secondary-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    width: 100%;
+  }
+
+  .apk-size {
+    display: inline-block;
+    margin-left: var(--space-sm);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    opacity: 0.85;
+  }
+
+  .hero-note {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    line-height: var(--lh-lead);
+  }
+
+  .note-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--primary);
+    margin-top: 2px;
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* En móvil el mockup estira el scroll en una sola columna sin aportar: se oculta */
+  @media (max-width: 639px) {
+    .hero-visual {
+      display: none;
+    }
+  }
+
+  /* Small mobile optimization */
+  @media (max-width: 374px) {
+    .hero {
+      padding-top: var(--space-2xl);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.25rem, 11vw, 2.75rem);
+    }
+
+    .eyebrow {
+      gap: 6px;
+    }
+
+    .title-line:first-child {
+      margin-bottom: 0;
+    }
+  }
+
+  @media (min-width: 375px) and (max-width: 639px) {
+    .hero {
+      padding-top: var(--space-3xl);
+    }
+
+    .title-line:first-child {
+      margin-bottom: 0.02em;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .hero .container {
+      gap: var(--space-3xl);
+    }
+
+    .cta-group {
+      align-items: stretch;
+    }
+
+    .secondary-ctas {
+      flex-direction: row;
+      gap: var(--space-md);
+    }
+
+    .secondary-ctas > :global(*) {
+      flex: 1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-bottom: var(--space-section-lg);
+    }
+
+    .hero .container {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+
+    .hero-visual {
+      max-width: none;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero .container {
+      gap: 80px;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-content > * {
+      animation: hero-rise 500ms var(--ease-out-expo) both;
+    }
+
+    .hero-content > *:nth-child(1) { animation-delay: 0ms; }
+    .hero-content > *:nth-child(2) { animation-delay: 70ms; }
+    .hero-content > *:nth-child(3) { animation-delay: 140ms; }
+    .hero-content > *:nth-child(4) { animation-delay: 210ms; }
+    .hero-content > *:nth-child(5) { animation-delay: 280ms; }
+    .hero-content > *:nth-child(6) { animation-delay: 350ms; }
+
+    :global(.hero .phone-frame) {
+      animation: hero-phone var(--dur-focal) var(--ease-out-expo) both;
+    }
+
+    :global(.hero .phone-mockup) {
+      animation: float-phone 6s ease-in-out 1s infinite;
+    }
+
+    :global(.hero .phone-mockup.ambient-paused) {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-phone {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+      box-shadow: 0 2px 4px rgba(26, 26, 46, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      box-shadow: var(--shadow-subtle);
+    }
+  }
+
+  @keyframes float-phone {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  /* === ROTATING WORD ANIMATION === */
+  .rotating-word {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    min-width: 4.5em;
+    text-align: left;
+    vertical-align: baseline;
+  }
+
+  @supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+    .rotating-word {
+      background: none;
+      color: var(--primary);
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+
+  /* Ajustar ancho mínimo según viewport */
+  @media (max-width: 374px) {
+    .rotating-word {
+      min-width: 4em;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .rotating-word {
+      min-width: 5em;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .rotating-word {
+      min-width: 5.5em;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rotating-word {
+      transition: transform 300ms var(--ease-out-expo), opacity 300ms ease;
+    }
+
+    .rotating-word.word-exit {
+      transform: translateY(-4px);
+      opacity: 0;
+    }
+
+    .rotating-word.word-enter {
+      animation: word-in 500ms var(--ease-out-expo);
+    }
+  }
+
+  @keyframes word-in {
+    from {
+      transform: translateY(6px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+</style>

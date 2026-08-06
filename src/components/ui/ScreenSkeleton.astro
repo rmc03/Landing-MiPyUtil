@@ -1,0 +1,388 @@
+---
+/**
+ * ScreenSkeleton: esqueletos inline de las pantallas de MiPyUtil que se muestran
+ * mientras no exista la captura real. 100% tokens CSS (--background, --surface,
+ * --ink, --primary...) + capas con opacidad para tintes: se adaptan al tema claro
+ * u oscuro sin descargar nada ni duplicar assets.
+ *
+ * Decorativo (aria-hidden): el <img> real (o su alt) es el contenido accesible.
+ */
+interface Props {
+  screen: string;
+}
+
+const { screen } = Astro.props;
+---
+
+<div class="screen-skeleton" aria-hidden="true">
+  {screen === '01-resumen' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Resumen</text>
+
+      <rect x="64" y="460" width="290" height="230" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="500" width="120" height="22" rx="11" fill="var(--surface-tertiary)"/>
+      <rect x="96" y="560" width="160" height="52" rx="10" fill="var(--primary-subtle)"/>
+      <rect x="96" y="640" width="90" height="20" rx="10" fill="var(--surface-tertiary)"/>
+
+      <rect x="394" y="460" width="290" height="230" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="426" y="500" width="120" height="22" rx="11" fill="var(--surface-tertiary)"/>
+      <rect x="426" y="560" width="180" height="52" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="426" y="640" width="90" height="20" rx="10" fill="var(--surface-tertiary)"/>
+
+      <rect x="724" y="460" width="290" height="230" rx="20" fill="var(--surface)" stroke="var(--warning)" stroke-width="3"/>
+      <rect x="756" y="500" width="120" height="22" rx="11" fill="var(--surface-tertiary)"/>
+      <rect x="756" y="560" width="120" height="52" rx="10" fill="var(--warning)" opacity="0.12"/>
+      <rect x="756" y="640" width="150" height="20" rx="10" fill="var(--warning)" opacity="0.12"/>
+
+      <rect x="64" y="760" width="950" height="420" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="96" y="840" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="700" fill="var(--ink)">Productos más vendidos</text>
+      <rect x="96" y="900" width="820" height="24" rx="12" fill="var(--surface-secondary)"/>
+      <rect x="96" y="900" width="700" height="24" rx="12" fill="var(--primary)" opacity="0.45"/>
+      <rect x="96" y="960" width="820" height="24" rx="12" fill="var(--surface-secondary)"/>
+      <rect x="96" y="960" width="520" height="24" rx="12" fill="var(--primary)" opacity="0.3"/>
+      <rect x="96" y="1020" width="820" height="24" rx="12" fill="var(--surface-secondary)"/>
+      <rect x="96" y="1020" width="400" height="24" rx="12" fill="var(--primary)" opacity="0.2"/>
+      <rect x="96" y="1080" width="820" height="24" rx="12" fill="var(--surface-secondary)"/>
+      <rect x="96" y="1080" width="280" height="24" rx="12" fill="var(--primary)" opacity="0.15"/>
+
+      <rect x="64" y="1250" width="950" height="190" rx="20" fill="var(--surface)" stroke="var(--warning)" stroke-width="3"/>
+      <rect x="64" y="1250" width="950" height="190" rx="20" fill="var(--warning)" opacity="0.12"/>
+      <circle cx="128" cy="1345" r="34" fill="var(--warning)" opacity="0.18"/>
+      <path d="M128 1328v24" stroke="var(--warning)" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="128" cy="1368" r="4" fill="var(--warning)"/>
+      <text x="196" y="1326" font-family="Inter, system-ui, sans-serif" font-size="38" font-weight="700" fill="var(--ink)">Stock bajo</text>
+      <text x="196" y="1382" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="500" fill="var(--ink)">Quedan pocas unidades de algunos productos.</text>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Panel Resumen (admin)</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '02-nueva-venta' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Nueva venta</text>
+
+      <rect x="64" y="460" width="950" height="90" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="126" cy="505" r="18" stroke="var(--muted)" stroke-width="5" fill="none"/>
+      <line x1="140" y1="519" x2="156" y2="535" stroke="var(--muted)" stroke-width="6" stroke-linecap="round"/>
+      <text x="196" y="524" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="var(--muted)">Buscar producto...</text>
+
+      <rect x="64" y="620" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="652" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="668" width="380" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="708" width="240" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="676" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="790" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="822" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="838" width="300" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="878" width="200" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="846" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="960" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="992" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1008" width="340" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1048" width="220" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="1016" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="1130" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="1162" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1178" width="260" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1218" width="180" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="1186" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="1340" width="950" height="110" rx="24" fill="var(--primary)"/>
+      <text x="540" y="1412" font-family="Inter, system-ui, sans-serif" font-size="38" font-weight="700" fill="#FFFFFF" text-anchor="middle">Ver carrito · 3 · $45</text>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · POS (dependiente)</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '03-confirmar-pago' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Confirmar pago</text>
+
+      <text x="540" y="540" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="500" fill="var(--muted)" text-anchor="middle">Total a cobrar</text>
+      <text x="540" y="670" font-family="Inter, system-ui, sans-serif" font-size="120" font-weight="800" letter-spacing="-2" fill="var(--ink)" text-anchor="middle">$45</text>
+
+      <rect x="64" y="740" width="300" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="214" y="820" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="600" fill="var(--ink-secondary)" text-anchor="middle">Efectivo</text>
+
+      <rect x="390" y="740" width="300" height="140" rx="20" fill="var(--primary)"/>
+      <text x="540" y="820" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="700" fill="#FFFFFF" text-anchor="middle">Transferencia</text>
+
+      <rect x="716" y="740" width="300" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="866" y="820" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="600" fill="var(--ink-secondary)" text-anchor="middle">Mixto</text>
+
+      <rect x="64" y="930" width="950" height="110" rx="24" fill="var(--primary)"/>
+      <text x="540" y="1002" font-family="Inter, system-ui, sans-serif" font-size="38" font-weight="700" fill="#FFFFFF" text-anchor="middle">Mostrar QR</text>
+
+      <rect x="64" y="1110" width="950" height="470" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1190" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="700" fill="var(--ink)" text-anchor="middle">Escanear para pagar</text>
+      <rect x="340" y="1240" width="400" height="400" rx="24" fill="var(--primary-subtle)"/>
+      <rect x="420" y="1320" width="240" height="240" rx="16" fill="var(--surface)"/>
+      <rect x="470" y="1370" width="60" height="60" rx="10" fill="var(--primary)"/>
+      <rect x="550" y="1370" width="60" height="60" rx="10" fill="var(--primary)"/>
+      <rect x="470" y="1450" width="60" height="60" rx="10" fill="var(--primary)"/>
+      <rect x="550" y="1450" width="60" height="60" rx="10" fill="var(--primary)"/>
+      <text x="540" y="1690" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="500" fill="var(--muted)" text-anchor="middle">Escanea desde tu app bancaria y paga</text>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Modos de pago + QR</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '04-inventario' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Inventario</text>
+
+      <rect x="64" y="460" width="950" height="90" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="126" cy="505" r="18" stroke="var(--muted)" stroke-width="5" fill="none"/>
+      <line x1="140" y1="519" x2="156" y2="535" stroke="var(--muted)" stroke-width="6" stroke-linecap="round"/>
+      <text x="196" y="524" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="400" fill="var(--muted)">Buscar producto...</text>
+
+      <rect x="64" y="590" width="150" height="64" rx="32" fill="var(--primary)"/>
+      <text x="139" y="632" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="#FFFFFF" text-anchor="middle">Todo</text>
+      <rect x="234" y="590" width="190" height="64" rx="32" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="329" y="632" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500" fill="var(--ink-secondary)" text-anchor="middle">Cascos</text>
+      <rect x="444" y="590" width="250" height="64" rx="32" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="569" y="632" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500" fill="var(--ink-secondary)" text-anchor="middle">Repuestos</text>
+
+      <rect x="64" y="700" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="732" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="748" width="380" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="788" width="240" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="756" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="870" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--warning)" stroke-width="3"/>
+      <rect x="96" y="902" width="76" height="76" rx="14" fill="var(--warning)" opacity="0.12"/>
+      <rect x="204" y="918" width="300" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="958" width="200" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <circle cx="922" cy="940" r="26" fill="var(--warning)" opacity="0.18"/>
+      <path d="M922 924v16" stroke="var(--warning)" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="922" cy="952" r="3" fill="var(--warning)"/>
+
+      <rect x="64" y="1040" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="1072" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1088" width="340" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1128" width="220" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="1096" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="64" y="1210" width="950" height="140" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <rect x="96" y="1242" width="76" height="76" rx="14" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1258" width="260" height="24" rx="12" fill="var(--surface-tertiary)"/>
+      <rect x="204" y="1298" width="180" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="880" y="1266" width="90" height="28" rx="14" fill="var(--primary-subtle)"/>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Lista con alertas de stock</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '05-cuadres' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Cuadres</text>
+
+      <rect x="64" y="500" width="950" height="360" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="128" cy="580" r="40" fill="var(--primary-subtle)"/>
+      <text x="128" y="596" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="700" fill="var(--primary)" text-anchor="middle">M</text>
+      <text x="200" y="572" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="700" fill="var(--ink)">María (dependiente)</text>
+      <text x="200" y="618" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)">Turno de hoy · 12:30</text>
+      <rect x="64" y="650" width="950" height="3" fill="var(--surface-secondary)"/>
+      <text x="96" y="730" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="500" fill="var(--ink-secondary)">Total del cuadre</text>
+      <text x="984" y="730" font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="800" fill="var(--ink)" text-anchor="end">$150</text>
+      <rect x="96" y="770" width="390" height="70" rx="16" fill="var(--primary)"/>
+      <text x="291" y="818" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="#FFFFFF" text-anchor="middle">Aprobar</text>
+      <rect x="528" y="770" width="390" height="70" rx="16" fill="var(--surface)" stroke="var(--error)" stroke-width="4"/>
+      <text x="723" y="818" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="var(--error)" text-anchor="middle">Rechazar</text>
+
+      <rect x="64" y="940" width="950" height="220" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="128" cy="1040" r="36" fill="var(--surface-secondary)"/>
+      <rect x="196" y="1016" width="320" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <rect x="196" y="1058" width="200" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="820" y="1030" width="140" height="30" rx="15" fill="var(--surface-tertiary)"/>
+
+      <rect x="64" y="1200" width="950" height="220" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="128" cy="1300" r="36" fill="var(--surface-secondary)"/>
+      <rect x="196" y="1276" width="280" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <rect x="196" y="1318" width="180" height="20" rx="10" fill="var(--surface-tertiary)"/>
+      <rect x="820" y="1290" width="140" height="30" rx="15" fill="var(--surface-tertiary)"/>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Cuadre con aprobar/rechazar</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '06-mi-turno' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Mi turno</text>
+
+      <rect x="380" y="480" width="320" height="76" rx="38" fill="var(--surface)" stroke="var(--success)" stroke-width="3"/>
+      <rect x="380" y="480" width="320" height="76" rx="38" fill="var(--success)" opacity="0.12"/>
+      <circle cx="424" cy="518" r="12" fill="var(--success)"/>
+      <text x="456" y="534" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="700" fill="var(--ink)">Turno abierto</text>
+
+      <circle cx="540" cy="760" r="180" fill="var(--surface)" stroke="var(--line)" stroke-width="4"/>
+      <circle cx="540" cy="760" r="140" fill="var(--surface-secondary)"/>
+      <text x="540" y="736" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="500" fill="var(--muted)" text-anchor="middle">Hora de inicio</text>
+      <text x="540" y="820" font-family="Inter, system-ui, sans-serif" font-size="96" font-weight="800" letter-spacing="-2" fill="var(--ink)" text-anchor="middle">8:00 AM</text>
+
+      <rect x="64" y="1020" width="950" height="160" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="96" y="1100" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="500" fill="var(--ink-secondary)">Ventas del turno</text>
+      <text x="984" y="1100" font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="800" fill="var(--ink)" text-anchor="end">12</text>
+      <rect x="64" y="1140" width="950" height="3" fill="var(--surface-secondary)"/>
+      <text x="96" y="1196" font-family="Inter, system-ui, sans-serif" font-size="30" font-weight="500" fill="var(--ink-secondary)">Total vendido</text>
+      <text x="984" y="1196" font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="800" fill="var(--ink)" text-anchor="end">$240</text>
+
+      <rect x="64" y="1240" width="950" height="110" rx="24" fill="var(--primary)"/>
+      <text x="540" y="1312" font-family="Inter, system-ui, sans-serif" font-size="38" font-weight="700" fill="#FFFFFF" text-anchor="middle">Cerrar turno</text>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Turno del dependiente</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+
+  {screen === '07-temas' && (
+    <svg class="skeleton-svg" viewBox="0 0 1080 2340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1080" height="2340" fill="var(--background)"/>
+
+      <text x="64" y="122" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="600" fill="var(--ink)">9:41</text>
+      <rect x="806" y="92" width="30" height="14" rx="3" fill="var(--ink)"/>
+      <rect x="846" y="88" width="20" height="22" rx="4" fill="none" stroke="var(--ink)" stroke-width="3"/>
+      <rect x="850" y="94" width="8" height="10" rx="1.5" fill="var(--ink)"/>
+
+      <text x="64" y="300" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="500" fill="var(--muted)">MiPyUtil</text>
+      <text x="64" y="396" font-family="Inter, system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-1" fill="var(--ink)">Personaliza tu tema</text>
+
+      <rect x="64" y="500" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="108" cy="560" r="22" fill="#4A4A5E"/>
+      <circle cx="166" cy="560" r="22" fill="#9CA3AF"/>
+      <circle cx="224" cy="560" r="22" fill="#D1D5DB"/>
+      <rect x="96" y="610" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="96" y="666" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="var(--ink-secondary)">Corporativo</text>
+
+      <rect x="560" y="500" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="604" cy="560" r="22" fill="#059669"/>
+      <circle cx="662" cy="560" r="22" fill="#34D399"/>
+      <circle cx="720" cy="560" r="22" fill="#A7F3D0"/>
+      <rect x="592" y="610" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="592" y="666" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="var(--ink-secondary)">Prosperidad</text>
+
+      <rect x="64" y="730" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="108" cy="790" r="22" fill="#F59E0B"/>
+      <circle cx="166" cy="790" r="22" fill="#FBBF24"/>
+      <circle cx="224" cy="790" r="22" fill="#FDE68A"/>
+      <rect x="96" y="840" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="96" y="896" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="var(--ink-secondary)">Energía</text>
+
+      <rect x="560" y="730" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--primary)" stroke-width="4"/>
+      <circle cx="604" cy="790" r="22" fill="#5B5BF4"/>
+      <circle cx="662" cy="790" r="22" fill="#8080F7"/>
+      <circle cx="720" cy="790" r="22" fill="#C7D2FE"/>
+      <rect x="592" y="840" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="592" y="896" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="700" fill="var(--primary)">Confianza</text>
+
+      <rect x="64" y="960" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="108" cy="1020" r="22" fill="#8B5CF6"/>
+      <circle cx="166" cy="1020" r="22" fill="#A78BFA"/>
+      <circle cx="224" cy="1020" r="22" fill="#DDD6FE"/>
+      <rect x="96" y="1070" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="96" y="1126" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="var(--ink-secondary)">Innovación</text>
+
+      <rect x="560" y="960" width="456" height="190" rx="20" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <circle cx="604" cy="1020" r="22" fill="#EF4444"/>
+      <circle cx="662" cy="1020" r="22" fill="#F87171"/>
+      <circle cx="720" cy="1020" r="22" fill="#FECACA"/>
+      <rect x="592" y="1070" width="220" height="26" rx="13" fill="var(--surface-tertiary)"/>
+      <text x="592" y="1126" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="600" fill="var(--ink-secondary)">Impacto</text>
+
+      <rect x="190" y="1760" width="700" height="120" rx="24" fill="var(--surface)" stroke="var(--line)" stroke-width="3"/>
+      <text x="540" y="1830" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="400" fill="var(--muted)" text-anchor="middle">Screenshot pendiente · Selector de 6 temas</text>
+      <rect x="508" y="1925" width="64" height="64" rx="18" fill="var(--primary)"/>
+      <text x="540" y="1972" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" fill="#FFFFFF" text-anchor="middle">M</text>
+      <text x="540" y="2040" font-family="Inter, system-ui, sans-serif" font-size="26" font-weight="400" fill="var(--muted)" text-anchor="middle">MiPyUtil — Inventario, ventas y turnos. Todo sin internet.</text>
+    </svg>
+  )}
+</div>
+
+<style>
+  .screen-skeleton {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .skeleton-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>

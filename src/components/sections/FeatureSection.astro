@@ -1,0 +1,76 @@
+---
+import PhoneMockup from '../PhoneMockup.astro';
+
+interface Props {
+  screenshot: string;
+  alt: string;
+  title: string;
+  reverse?: boolean;
+  band?: boolean;
+  id?: string;
+  class?: string;
+}
+
+const { screenshot, alt, title, reverse = false, band = false, id, class: className } = Astro.props;
+---
+
+<section id={id} class={`feature-section ${className || ''} ${band ? 'band' : ''}`}>
+  <div class="container">
+    <div class={`feature-layout ${reverse ? 'reverse' : ''}`}>
+      <div class="feature-visual">
+        <PhoneMockup screenshot={screenshot} alt={alt} />
+      </div>
+      <div class="feature-content">
+        <h2>{title}</h2>
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature-section.band {
+    background: var(--surface-secondary);
+  }
+
+  .feature-layout {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .feature-content :global(ul) {
+    list-style: none;
+    margin: var(--space-lg) 0;
+  }
+
+  .feature-content :global(li) {
+    padding-left: 1.5em;
+    position: relative;
+    margin-bottom: var(--space-md);
+  }
+
+  .feature-content :global(li::before) {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .feature-content :global(.inline-cta) {
+    font-size: var(--fs-small);
+    margin-top: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .feature-layout {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+    }
+
+    .feature-layout.reverse .feature-visual {
+      order: 2;
+    }
+  }
+</style>

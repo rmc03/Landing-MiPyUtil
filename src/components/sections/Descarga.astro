@@ -1,0 +1,154 @@
+---
+import Button from '../ui/Button.astro';
+
+const stats = [
+  { value: '~12 MB', label: 'Tamaño total' },
+  { value: '~2 min', label: 'Con señal de Etecsa' },
+  { value: 'Android 8+', label: 'Cualquier teléfono reciente' }
+];
+---
+
+<section id="descarga" class="descarga dark-band">
+  <div class="container">
+    <h2>Instálala en segundos, sin Play Store.</h2>
+    <p class="lead">
+      La APK se comparte directo por WhatsApp, Telegram o Zapya. Se instala en cualquier 
+      Android y queda lista para el primer turno.
+    </p>
+
+    <div class="download-stats">
+      {stats.map(stat => (
+        <div class="stat">
+          <div class="stat-value">{stat.value}</div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="cta-group">
+      <Button variant="primary" icon="download" class="btn-full-width">Descargar APK <span class="size-badge">~12 MB</span></Button>
+      <p class="cta-divider">O escríbenos por:</p>
+      <div class="secondary-ctas">
+        <Button variant="secondary" icon="whatsapp">Contacto WhatsApp</Button>
+        <Button variant="secondary" icon="telegram">Canal de Telegram</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dark-band {
+    color: var(--ink);
+    text-align: center;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dark-band h2,
+  .dark-band p {
+    color: var(--ink);
+  }
+
+  .dark-band a {
+    color: var(--primary-light);
+    font-weight: 600;
+  }
+
+  .dark-band a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+  }
+
+  .lead {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    margin: 0 auto var(--space-xl);
+    max-width: 70ch;
+    color: var(--ink-secondary);
+  }
+
+  .download-stats {
+    display: grid;
+    gap: var(--space-lg);
+    max-width: 800px;
+    margin: var(--space-2xl) auto;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .stat {
+    background: var(--surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    transition: border-color 200ms ease;
+  }
+  
+  .stat:hover {
+    border-color: var(--primary-light);
+  }
+
+  .stat-value {
+    font-size: var(--fs-stat);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--primary-light);
+    margin-bottom: var(--space-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+  }
+
+  .cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    align-items: stretch;
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .cta-group :global(.btn-full-width) {
+    width: 100%;
+  }
+  
+  .cta-divider {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+    margin: var(--space-sm) 0;
+    text-align: center;
+  }
+
+  .secondary-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+  
+  .secondary-ctas :global(.btn) {
+    flex: 1;
+  }
+  
+  .size-badge {
+    opacity: 0.8;
+    font-size: var(--fs-small);
+    font-weight: 500;
+  }
+
+  @media (min-width: 640px) {
+    .secondary-ctas {
+      flex-direction: row;
+      gap: var(--space-md);
+    }
+  }
+
+  .descarga-note {
+    font-size: var(--fs-small);
+  }
+</style>

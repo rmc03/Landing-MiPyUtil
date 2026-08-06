@@ -1,0 +1,305 @@
+---
+import PhoneMockup from '../PhoneMockup.astro';
+
+interface Step {
+  screenshot: string;
+  alt: string;
+  number: number;
+  time: string;
+  title: string;
+  description: string;
+}
+
+const steps: Step[] = [
+  {
+    screenshot: '06-mi-turno.png',
+    alt: 'Pantalla Mi turno mostrando el turno abierto del dependiente',
+    number: 1,
+    time: '8:00 AM',
+    title: 'El dependiente abre su turno.',
+    description: 'Llega, abre el teléfono, inicia el turno y está listo para vender.'
+  },
+  {
+    screenshot: '02-nueva-venta.png',
+    alt: 'Pantalla de nueva venta con productos en el carrito',
+    number: 2,
+    time: 'Durante el día',
+    title: 'Vende y cobra.',
+    description: 'Efectivo, transferencia o mixto, con el cambio calculado y el stock descontado solo.'
+  },
+  {
+    screenshot: '05-cuadres.png',
+    alt: 'Pantalla de cuadres pendientes de aprobación',
+    number: 3,
+    time: 'Al cerrar',
+    title: 'Cierra y rinde cuentas.',
+    description: 'Envía su cuadre. Tú lo apruebas o lo rechazas desde tu casa.'
+  }
+];
+---
+
+<section class="como-funciona" id="como-funciona">
+  <div class="container">
+    <h2>Así se trabaja un día con MiPyUtil.</h2>
+    <p class="section-lead">Desde que abre la tienda hasta que se aprueba el cuadre.</p>
+
+    <div class="timeline-progress" role="progressbar" aria-label="Progreso del flujo de trabajo" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+      <div class="timeline-bar"></div>
+      <span class="timeline-dot" style="--dot-pos: 16.7%" aria-hidden="true"></span>
+      <span class="timeline-dot" style="--dot-pos: 50%" aria-hidden="true"></span>
+      <span class="timeline-dot" style="--dot-pos: 83.3%" aria-hidden="true"></span>
+    </div>
+
+    <div class="steps">
+      {steps.map(step => (
+        <div class="step">
+          <div class="step-visual">
+            <PhoneMockup screenshot={step.screenshot} alt={step.alt} />
+          </div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-number" aria-hidden="true">{step.number}</span>
+              <span class="step-time">{step.time}</span>
+            </div>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="section-close">
+      <svg class="revert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="1 4 1 10 7 10"></polyline>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+      </svg>
+      Si rechazas un cuadre, el stock se revierte automáticamente. Nadie se queda con el beneficio de la duda.
+    </p>
+  </div>
+</section>
+
+<script>
+  const observeTimeline = () => {
+    const section = document.getElementById('como-funciona');
+    const progressBar = document.querySelector('.timeline-bar');
+    const progressContainer = document.querySelector('.timeline-progress');
+    const dots = Array.from(document.querySelectorAll('.timeline-dot'));
+    const thresholds = [16.7, 50, 83.3];
+
+    if (!section || !progressBar || !progressContainer) return;
+
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const total = rect.height + viewportHeight;
+      const passed = viewportHeight - rect.top;
+      const progress = Math.min(100, Math.max(0, (passed / total) * 100));
+
+      progressBar.style.transform = `scaleX(${progress / 100})`;
+      progressContainer.setAttribute('aria-valuenow', Math.round(progress).toString());
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', progress >= thresholds[i]);
+      });
+    };
+
+    const requestUpdate = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+  };
+
+  const observeSteps = () => {
+    const stepObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('step-active');
+            stepObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    document.querySelectorAll('.step').forEach((step) => stepObserver.observe(step));
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      observeTimeline();
+      observeSteps();
+    });
+  } else {
+    observeTimeline();
+    observeSteps();
+  }
+</script>
+
+<style>
+  .como-funciona h2 {
+    text-align: center;
+  }
+
+  .section-lead {
+    font-size: var(--fs-lead);
+    line-height: var(--lh-lead);
+    color: var(--ink-secondary);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+  }
+
+  .timeline-progress {
+    position: sticky;
+    top: clamp(76px, 8vw, 84px); /* debajo del nav sticky (44px + padding clamp(12px,3vw,16px)*2) */
+    z-index: 5;
+    max-width: 600px;
+    height: 8px;
+    background: var(--surface-tertiary);
+    border-radius: var(--radius-pill);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+    margin: 0 auto var(--space-section-sm) auto;
+  }
+
+  .timeline-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: inherit;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    top: 50%;
+    left: var(--dot-pos);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--line-strong);
+    transform: translate(-50%, -50%);
+    transition: background-color var(--dur-routine) ease, border-color var(--dur-routine) ease;
+  }
+
+  .timeline-dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-section-sm);
+  }
+
+  .step {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .step-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step-time {
+    font-size: var(--fs-caption);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .step h3 {
+    margin-bottom: var(--space-sm);
+    color: var(--ink);
+  }
+  
+  .step p {
+    color: var(--ink-secondary);
+  }
+
+  .section-close {
+    margin-top: var(--space-xl);
+    font-size: var(--fs-lead);
+    font-weight: 500;
+    line-height: var(--lh-lead);
+    text-align: center;
+    max-width: 60ch;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    color: var(--ink-secondary);
+  }
+
+  .revert-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: var(--primary);
+  }
+
+  @media (min-width: 768px) {
+    .step {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+    }
+
+    .step:nth-child(even) .step-visual {
+      order: 2;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .step.step-active .step-number {
+      animation: step-pop 300ms var(--ease-out-expo);
+    }
+  }
+
+  @keyframes step-pop {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(91, 91, 244, 0);
+    }
+    40% {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 6px rgba(91, 91, 244, 0.18);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(91, 91, 244, 0);
+    }
+  }
+</style>

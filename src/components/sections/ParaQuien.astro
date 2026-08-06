@@ -1,0 +1,69 @@
+---
+const negocios = [
+  'Bodegones y minimarkets',
+  'Cafeterías y bares',
+  'Tiendas de ropa o calzado',
+  'Talleres de celulares y electrónica',
+  'Ferreterías'
+];
+---
+
+<section id="para-quien" class="para-quien">
+  <div class="container">
+    <h2>Hecho para el negocio que ya existe.</h2>
+    
+    <div class="negocios-grid">
+      {negocios.map(negocio => (
+        <div class="negocio-card">
+          <h3>{negocio}</h3>
+        </div>
+      ))}
+    </div>
+
+    <p class="section-note">
+      ¿Tu negocio no está en la lista? <a href="#">Escríbenos por WhatsApp o Telegram</a> y lo adaptamos.
+    </p>
+  </div>
+</section>
+
+<style>
+  .negocios-grid {
+    display: grid;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .negocio-card {
+    background: var(--surface);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
+    text-align: center;
+    transition: border-color 200ms ease;
+  }
+  
+  .negocio-card:hover {
+    border-color: var(--primary);
+  }
+  
+  .negocio-card h3 {
+    color: var(--ink);
+  }
+
+  .section-note {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+  }
+
+  @media (min-width: 768px) {
+    .negocios-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .negocios-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

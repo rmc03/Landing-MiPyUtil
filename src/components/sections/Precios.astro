@@ -1,0 +1,486 @@
+---
+// src/components/sections/Precios.astro
+import Button from '../ui/Button.astro';
+---
+<section id="precios" class="precios-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="title">Elige tu plan</h2>
+      <p class="subtitle">Todos los planes incluyen atención al cliente y soporte para futuras actualizaciones.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Mensual -->
+      <div class="pricing-card card-fade">
+        <div class="card-header">
+          <h3 class="plan-name">Mensual</h3>
+          <p class="plan-desc">Paga mes a mes, sin compromiso.</p>
+        </div>
+        <div class="card-price">
+          <div class="price-row">
+            <span class="currency">$</span>
+            <span class="amount">2.800</span>
+          </div>
+          <span class="period">CUP / mes</span>
+        </div>
+        <div class="card-features">
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Acceso total a las funciones
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Turnos y cuadres ilimitados
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Soporte básico por WhatsApp
+            </li>
+          </ul>
+        </div>
+        <div class="card-action">
+          <Button variant="secondary" href="#descarga" fullWidth>Elegir plan</Button>
+        </div>
+      </div>
+
+      <!-- Trimestral (Recomendado) -->
+      <div class="pricing-card recommended card-fade">
+        <div class="badge badge-recommended">Recomendado</div>
+        <div class="card-header">
+          <h3 class="plan-name">Trimestral</h3>
+          <p class="plan-desc">Ahorra $900 cada trimestre.</p>
+        </div>
+        <div class="card-price">
+          <div class="price-row">
+            <span class="currency">$</span>
+            <span class="amount">2.500</span>
+          </div>
+          <span class="period">CUP / mes</span>
+        </div>
+        <div class="card-features">
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Todo lo del plan Mensual
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Soporte prioritario 24/7
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Ahorro de $900 al trimestre
+            </li>
+          </ul>
+        </div>
+        <div class="card-action">
+          <Button variant="primary" href="#descarga" fullWidth>Elegir plan</Button>
+        </div>
+      </div>
+
+      <!-- Anual -->
+      <div class="pricing-card card-fade">
+        <div class="badge badge-best-price">Mejor precio</div>
+        <div class="card-header">
+          <h3 class="plan-name">Anual</h3>
+          <p class="plan-desc">El mejor precio. Ahorras $9.600 al año.</p>
+        </div>
+        <div class="card-price">
+          <div class="price-row">
+            <span class="currency">$</span>
+            <span class="amount">2.000</span>
+          </div>
+          <span class="period">CUP / mes</span>
+        </div>
+        <div class="card-features">
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Todo lo del plan Trimestral
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Mejor precio garantizado
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              Ahorro de $9.600 al año
+            </li>
+          </ul>
+        </div>
+        <div class="card-action">
+          <Button variant="secondary" href="#descarga" fullWidth>Elegir plan</Button>
+        </div>
+      </div>
+    </div>
+
+    <div class="lifetime-wrapper">
+      <div class="lifetime-card dark-band card-fade">
+        <div class="lifetime-content">
+          <div class="lifetime-header">
+            <h3 class="plan-name">De por vida</h3>
+            <p class="plan-desc">Un solo pago, acceso para siempre.</p>
+          </div>
+          <div class="card-price">
+            <div class="price-row">
+              <span class="currency">$</span>
+              <span class="amount">50</span>
+            </div>
+            <span class="period">USD pago único</span>
+          </div>
+          <div class="card-features">
+            <ul>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Pago único, sin suscripciones
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Actualizaciones gratuitas de por vida
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Soporte VIP directo
+              </li>
+            </ul>
+          </div>
+          <div class="card-action">
+            <Button variant="primary" href="#descarga" fullWidth>Elegir plan</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .precios-section {
+    padding: var(--space-section-lg, 80px) 0;
+  }
+  
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl, 32px);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-xl, 48px);
+  }
+
+  .title {
+    font-size: var(--fs-display, 3rem);
+    line-height: var(--lh-display, 1.2);
+    color: var(--ink, #16161F);
+    margin-bottom: var(--space-sm, 16px);
+  }
+
+  .subtitle {
+    font-size: var(--fs-lead, 1.125rem);
+    color: var(--ink-secondary, #4B4B5C);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg, 24px);
+    margin-bottom: var(--space-xl, 32px);
+  }
+
+  .pricing-card {
+    position: relative;
+    background: var(--surface, #FFFFFF);
+    border: 1px solid var(--line, #E5E5E5);
+    border-radius: var(--radius-lg, 16px);
+    padding: var(--space-xl, 32px);
+    display: flex;
+    flex-direction: column;
+    transition: border-color var(--dur-routine, 250ms) var(--ease-out-expo, cubic-bezier(0.19, 1, 0.22, 1));
+  }
+
+  .pricing-card:hover {
+    border-color: var(--primary, #5B5BF4);
+  }
+
+  .pricing-card.recommended {
+    border-color: var(--primary, #5B5BF4);
+    box-shadow: 0 0 0 1px var(--primary, #5B5BF4);
+  }
+
+  .badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary, #5B5BF4);
+    color: #FFFFFF;
+    font-size: var(--fs-label, 0.75rem);
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: var(--radius-pill, 9999px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .badge-best-price {
+    background: var(--primary-deep, #4A4AD4);
+  }
+
+  .card-header {
+    margin-bottom: var(--space-md, 24px);
+  }
+
+  .plan-name {
+    font-size: var(--fs-title, 1.5rem);
+    font-weight: 700;
+    color: var(--ink, #16161F);
+    margin-bottom: var(--space-xs, 8px);
+  }
+
+  .plan-desc {
+    font-size: var(--fs-small, 0.875rem);
+    color: var(--ink-secondary, #4B4B5C);
+    min-height: 40px;
+  }
+
+  .card-price {
+    margin-bottom: var(--space-lg, 24px);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .currency {
+    font-size: var(--fs-title, 1.5rem);
+    font-weight: 700;
+    color: var(--ink, #16161F);
+  }
+
+  .amount {
+    font-size: var(--fs-stat, 3rem);
+    font-weight: 800;
+    color: var(--ink, #16161F);
+    line-height: 1;
+  }
+
+  .period {
+    font-size: var(--fs-small, 0.875rem);
+    color: var(--ink-secondary, #4B4B5C);
+  }
+
+  .card-features {
+    margin-bottom: var(--space-xl, 32px);
+    flex-grow: 1;
+  }
+
+  .card-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm, 16px);
+  }
+
+  .card-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xs, 8px);
+    font-size: var(--fs-body, 1rem);
+    color: var(--ink, #16161F);
+  }
+
+  .check-icon {
+    color: var(--primary, #5B5BF4);
+    flex-shrink: 0;
+  }
+
+  .card-action {
+    margin-top: auto;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px 28px;
+    border-radius: var(--radius-md, 12px);
+    font-size: var(--fs-body, 1rem);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--dur-routine, 250ms) var(--ease-out-expo, cubic-bezier(0.19, 1, 0.22, 1));
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--primary, #5B5BF4);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    background: var(--primary, #5B5BF4);
+    color: #FFFFFF;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--primary-deep, #4A4AD4);
+  }
+
+  .btn-secondary {
+    background: var(--surface, #FFFFFF);
+    color: var(--ink, #16161F);
+    border: 1px solid var(--line-strong, #CCCCCC);
+  }
+
+  .btn-secondary:hover {
+    background: var(--primary-subtle, #E8E8FD);
+    border-color: var(--primary-light, #8080F7);
+  }
+
+  .lifetime-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-xl, 32px);
+  }
+
+  .lifetime-card {
+    width: 100%;
+    max-width: 600px;
+    background: #16161F;
+    border-radius: var(--radius-lg, 16px);
+    padding: 1px; /* To act as a border if needed, though we use pure background */
+  }
+
+  .lifetime-content {
+    background: #1F1F2E;
+    border-radius: calc(var(--radius-lg, 16px) - 1px);
+    padding: var(--space-xl, 32px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .lifetime-header {
+    margin-bottom: var(--space-md, 24px);
+  }
+
+  .lifetime-card .plan-name {
+    color: #F0F0F8;
+  }
+
+  .lifetime-card .plan-desc {
+    color: #A0A0B0;
+    min-height: auto;
+  }
+
+  .lifetime-card .currency,
+  .lifetime-card .amount {
+    color: #F0F0F8;
+  }
+
+  .lifetime-card .period {
+    color: #A0A0B0;
+  }
+
+  .lifetime-card .card-features li {
+    color: #F0F0F8;
+    justify-content: center;
+  }
+
+  .lifetime-card .check-icon {
+    color: var(--primary-light, #8080F7);
+  }
+
+  .btn-primary-dark {
+    background: var(--primary, #5B5BF4);
+    color: #FFFFFF;
+    border: none;
+  }
+
+  .btn-primary-dark:hover {
+    background: var(--primary-light, #8080F7);
+  }
+
+  .lifetime-card .card-action {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    .pricing-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .card-price {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+    }
+    
+    .lifetime-card .card-price {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 8px;
+    }
+  }
+
+  /* Animations */
+  @media (prefers-reduced-motion: no-preference) {
+    .card-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .card-fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .recommended {
+      animation: pulse-border 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0px rgba(91, 91, 244, 0.4); }
+      50% { box-shadow: 0 0 0 4px rgba(91, 91, 244, 0.1); }
+      100% { box-shadow: 0 0 0 0px rgba(91, 91, 244, 0); }
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = document.querySelectorAll('.card-fade');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    cards.forEach((card, index) => {
+      if (card instanceof HTMLElement) {
+        card.style.transitionDelay = `${index * 100}ms`;
+      }
+      observer.observe(card);
+    });
+  });
+</script>
