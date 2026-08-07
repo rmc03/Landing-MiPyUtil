@@ -35,7 +35,7 @@ const checkItems = [
       <div class="cta-group">
         <Button variant="primary" type="link" href="#descarga" icon="download" fullWidth>
           Descargar APK
-          <span class="apk-size">~12 MB</span>
+          <span class="apk-size">~30 MB</span>
         </Button>
         <div class="secondary-ctas">
           <Button variant="secondary" type="link" href="https://wa.me/" icon="whatsapp" fullWidth>Contacto WhatsApp</Button>
@@ -144,26 +144,29 @@ const checkItems = [
     overflow: hidden;
   }
   
-  /* Gradiente de fondo que cubre todo independientemente de la altura del contenido */
+  /* Gradiente de fondo adaptativo: en móvil vertical suave, en desktop diagonal sutil */
   .hero::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, var(--background) 0%, transparent 60%);
+    background: linear-gradient(to bottom, var(--background) 0%, transparent 100%);
     pointer-events: none;
     z-index: 0;
   }
   
+  /* Glow índigo sutil solo en viewport amplio donde tiene sentido visual */
   .hero::before {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 50%;
-    height: 100%;
-    background: radial-gradient(circle at top right, var(--primary-subtle) 0%, transparent 70%);
+    width: 40%;
+    height: 60%;
+    background: radial-gradient(ellipse at top right, var(--primary-subtle) 0%, transparent 70%);
+    opacity: 0;
     pointer-events: none;
     z-index: 1;
+    transition: opacity 400ms ease;
   }
 
   .hero .container {
@@ -345,7 +348,11 @@ const checkItems = [
   /* Diseño de 2 columnas desde 48rem (DESIGN.md): texto | mockup en tablet y desktop */
   @media (min-width: 48rem) {
     .hero::after {
-      background: linear-gradient(to bottom right, var(--background) 0%, transparent 50%);
+      background: linear-gradient(135deg, var(--background) 0%, transparent 60%);
+    }
+
+    .hero::before {
+      opacity: 1;
     }
 
     .hero .container {

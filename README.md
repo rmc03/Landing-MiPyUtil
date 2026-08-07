@@ -1,69 +1,167 @@
-# MiPyUtil — Landing Page
+<div align="center">
 
-Landing page para MiPyUtil, aplicación móvil de gestión para MiPymes y TCPs en Cuba.
+# 📱 MiPyUtil Landing Page
 
-## Estructura
+**Landing page moderna y accesible para MiPyUtil**  
+*Aplicación móvil de gestión inteligente para MiPymes y TCPs en Cuba*
 
-- `src/pages/index.astro` — Página principal con todas las secciones
-- `src/layouts/Layout.astro` — Layout base con nav y footer
-- `src/components/PhoneMockup.astro` — Componente de mockup de teléfono
-- `public/screens/` — Screenshots de la app (actualmente placeholders)
+[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Screenshots requeridos
+[✨ Ver Demo](#) • [📥 Descargar APK](#) • [💬 Soporte](#contacto)
 
-Coloca las capturas reales de la app en `public/screens/` con estos nombres:
+</div>
 
-1. `01-resumen.png` — Panel Resumen (admin) ⭐ hero
-2. `02-nueva-venta.png` — POS / Nueva venta
-3. `03-confirmar-pago.png` — Confirmar pago con QR
-4. `04-inventario.png` — Lista de inventario
-5. `05-cuadres.png` — Cuadres pendientes
-6. `06-mi-turno.png` — Mi turno (dependiente)
-7. `07-temas.png` — Selector de 6 temas
-8. `08-dark-mode.png` — Pantalla en modo oscuro (opcional)
+---
 
-Ver `03-screenshots-requeridos.md` para detalles de qué debe verse en cada captura.
+## 🌟 Características
 
-## CTAs pendientes
+- ✅ **100% Responsive** — Mobile-first design optimizado para todos los dispositivos
+- 🎨 **Tema Prosperidad** — Paleta esmeralda profesional (#059669)
+- ⚡ **Ultra rápido** — Construido con Astro para máximo rendimiento
+- ♿ **Accesible** — Cumple estándares WCAG AA
+- 🌙 **Modo oscuro** — Bandas temáticas con modo noche
+- 📱 **Mockups interactivos** — Visualización elegante de la app
 
-Los enlaces de descarga y contacto actualmente apuntan a `#`. Reemplaza con destinos reales:
+## 🚀 Inicio Rápido
 
-- Descargar APK → URL de la APK
-- WhatsApp → `https://wa.me/...`
-- Telegram → `https://t.me/...`
-- Canal de Telegram → `https://t.me/MipyUtil`
+### Prerrequisitos
 
-Busca `href="#"` en `src/pages/index.astro` y reemplaza.
+- Node.js 18+ 
+- npm o yarn
 
-## Desarrollo
+### Instalación
 
 ```bash
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/mipyutil-landing.git
+
+# Navegar al directorio
+cd mipyutil-landing
+
+# Instalar dependencias
 npm install
+
+# Iniciar servidor de desarrollo
 npm run dev
 ```
 
-## Build
+El sitio estará disponible en `http://localhost:4321` 🎉
 
-```bash
-npm run build
+## 📦 Scripts Disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run dev` | Inicia el servidor de desarrollo |
+| `npm run build` | Genera build de producción en `dist/` |
+| `npm run preview` | Previsualiza el build de producción |
+| `npm run check` | Verifica tipos y sintaxis de Astro |
+
+## 🏗️ Estructura del Proyecto
+
+```
+mipyutil-landing/
+├── public/
+│   ├── screens/          # Screenshots de la app
+│   └── Icon.png          # Favicon/logo
+├── src/
+│   ├── components/
+│   │   └── PhoneMockup.astro
+│   ├── layouts/
+│   │   └── Layout.astro
+│   └── pages/
+│       └── index.astro   # Página principal
+├── astro.config.mjs
+└── package.json
 ```
 
-Los archivos estáticos se generan en `dist/`.
+## 🎨 Sistema de Diseño
 
-## Diseño
+### Colores Principales
 
-El diseño sigue el sistema documentado en `DESIGN.md`:
+```css
+/* Tema Prosperidad */
+--emerald-600: #059669;   /* Principal */
+--emerald-700: #047857;   /* Hover */
+--emerald-50:  #ecfdf5;   /* Background claro */
 
-- **Tema fijo:** Prosperidad (esmeralda #059669)
-- **Tipografía:** Inter (Google Fonts)
-- **Estructura:** "La landing es la app" — panel de control
-- **Bandas oscuras:** Modo noche en bosque (#0F1A14)
-- **Mobile-first:** Breakpoints en 640/768/1024px
+/* Modo oscuro */
+--forest-950:  #0F1A14;   /* Background oscuro */
+```
 
-## Accesibilidad
+### Tipografía
 
-- Contraste AA verificado
-- `prefers-reduced-motion` respetado
-- `lang="es"` declarado
-- Nav y FAQ operables por teclado
-- Focus visible en todos los interactivos
+- **Familia:** Inter (Google Fonts)
+- **Pesos:** 400 (Regular), 500 (Medium), 600 (Semibold), 700 (Bold)
+
+### Breakpoints
+
+| Breakpoint | Tamaño |
+|------------|--------|
+| `sm` | 640px |
+| `md` | 768px |
+| `lg` | 1024px |
+
+## 📸 Configuración de Screenshots
+
+Coloca las capturas de la app en `public/screens/` con estos nombres:
+
+| Archivo | Descripción | Uso |
+|---------|-------------|-----|
+| `01-resumen.png` | Panel Resumen (admin) | ⭐ Hero principal |
+| `02-nueva-venta.png` | POS / Nueva venta | Features |
+| `03-confirmar-pago.png` | Confirmar pago con QR | Features |
+| `04-inventario.png` | Lista de inventario | Features |
+| `05-cuadres.png` | Cuadres pendientes | Features |
+| `06-mi-turno.png` | Mi turno (dependiente) | Features |
+| `07-temas.png` | Selector de 6 temas | Gallery |
+| `08-dark-mode.png` | Modo oscuro (opcional) | Gallery |
+
+## 🔗 Configuración de Enlaces
+
+Actualiza los siguientes enlaces en `src/pages/index.astro`:
+
+```javascript
+// Buscar y reemplazar href="#" con:
+- APK Download → URL de tu APK
+- WhatsApp → https://wa.me/TU_NUMERO
+- Telegram → https://t.me/TU_USUARIO
+- Canal Telegram → https://t.me/MipyUtil
+```
+
+## ♿ Accesibilidad
+
+Esta landing cumple con:
+
+- ✅ Contraste WCAG AA verificado
+- ✅ Navegación completa por teclado
+- ✅ Focus visible en elementos interactivos
+- ✅ `prefers-reduced-motion` respetado
+- ✅ Semántica HTML5 correcta
+- ✅ `lang="es"` declarado
+
+## 🛠️ Tecnologías
+
+- [Astro](https://astro.build) - Framework web moderno
+- [Tailwind CSS](https://tailwindcss.com) - Utilidades CSS (inline)
+- [Google Fonts](https://fonts.google.com) - Tipografía Inter
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+## 💬 Contacto
+
+- **WhatsApp:** [Enviar mensaje](#)
+- **Telegram:** [Chat directo](#)
+- **Canal oficial:** [@MipyUtil](https://t.me/MipyUtil)
+
+---
+
+<div align="center">
+
+Hecho con ❤️ para las MiPymes y TCPs de Cuba
+
+[⬆ Volver arriba](#-mipyutil-landing-page)
+
+</div>

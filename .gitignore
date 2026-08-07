@@ -1,4 +1,23 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
 .astro/
+
+# OS files
 .DS_Store
+
+# AI agents and skills
+.agents/
+.codex/
+.freebuff/
+.impeccable/
+.opencode/
+.kiro/
+skills-lock.json
+opencode.json
+
+# Documentation temporal (opcional - descomenta si quieres ignorar)
+# *.md
+# !README.md
