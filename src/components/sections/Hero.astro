@@ -21,12 +21,12 @@ const checkItems = [
       </p>
       <h1>
         <span class="title-line">
-          <span class="rotating-word" data-words='["Organiza", "Gestiona", "Optimiza", "Controla", "Digitaliza"]'>Organiza</span>
+          <span class="rotating-word" data-words='["Revoluciona", "Gestiona", "Optimiza", "Controla", "Perfecciona"]'>Revoluciona</span>
         </span>
         <span class="title-line">tu MiPyme.</span>
       </h1>
       <p class="lead">
-        Inventario, ventas y turnos en un solo teléfono. Tu negocio no se detiene
+        Ventas, ingresos y stock en un solo teléfono. Tu negocio no se detiene
         aunque se vaya el internet.
       </p>
 
@@ -55,7 +55,7 @@ const checkItems = [
 
     <div class="hero-visual">
       <FloatingCards />
-      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos y stock bajo en un solo teléfono" compact />
+      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos y stock en un solo teléfono" compact />
     </div>
   </div>
 </section>
@@ -139,9 +139,19 @@ const checkItems = [
   .hero {
     padding-top: clamp(var(--space-xl), 8vw, var(--space-section-lg));
     padding-bottom: clamp(var(--space-2xl), 6vw, var(--space-section-sm));
-    background: linear-gradient(180deg, var(--background) 0%, var(--surface-secondary) 100%);
+    background: var(--surface-secondary);
     position: relative;
     overflow: hidden;
+  }
+  
+  /* Gradiente de fondo que cubre todo independientemente de la altura del contenido */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, var(--background) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
   }
   
   .hero::before {
@@ -153,6 +163,7 @@ const checkItems = [
     height: 100%;
     background: radial-gradient(circle at top right, var(--primary-subtle) 0%, transparent 70%);
     pointer-events: none;
+    z-index: 1;
   }
 
   .hero .container {
@@ -160,7 +171,7 @@ const checkItems = [
     gap: var(--space-2xl);
     align-items: center;
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   .hero-content {
@@ -333,8 +344,8 @@ const checkItems = [
 
   /* Diseño de 2 columnas desde 48rem (DESIGN.md): texto | mockup en tablet y desktop */
   @media (min-width: 48rem) {
-    .hero {
-      background: linear-gradient(135deg, var(--background) 0%, var(--surface-secondary) 100%);
+    .hero::after {
+      background: linear-gradient(to bottom right, var(--background) 0%, transparent 50%);
     }
 
     .hero .container {
