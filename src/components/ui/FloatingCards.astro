@@ -211,30 +211,29 @@ const cards = [
   /* === Posiciones (mobile-first: cards pegadas a las esquinas del teléfono) === */
   .card-top {
     top: -4%;
-    left: 0;
-    right: 0;
+    inset-inline: 0;
     width: fit-content;
     margin-inline: auto;
   }
 
   .card-tl {
     top: 22%;
-    left: 0;
+    inset-inline-start: 0;
   }
 
   .card-tr {
     top: 6%;
-    right: 0;
+    inset-inline-end: 0;
   }
 
   .card-bl {
     bottom: 18%;
-    left: 0;
+    inset-inline-start: 0;
   }
 
   .card-br {
     bottom: 2%;
-    right: 0;
+    inset-inline-end: 0;
   }
 
   /* === Tonos (chip de icono) === */
@@ -244,21 +243,21 @@ const cards = [
   }
 
   .tone-success .icon-chip {
-    background: rgba(16, 185, 129, 0.12);
+    background: color-mix(in srgb, var(--success) 12%, transparent);
     color: var(--success);
   }
 
   .tone-error .icon-chip {
-    background: rgba(239, 68, 68, 0.12);
+    background: color-mix(in srgb, var(--error) 12%, transparent);
     color: var(--error);
   }
 
   .tone-warning .icon-chip {
-    background: rgba(245, 158, 11, 0.14);
+    background: color-mix(in srgb, var(--warning) 14%, transparent);
     color: var(--warning);
   }
 
-  @media (max-width: 374px) {
+  @media (max-width: 23.375rem) {
     .card {
       padding: 8px 10px;
     }
@@ -269,21 +268,21 @@ const cards = [
     }
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .card-tl {
-      left: -2%;
+      inset-inline-start: -2%;
     }
 
     .card-tr {
-      right: -2%;
+      inset-inline-end: -2%;
     }
 
     .card-bl {
-      left: -3%;
+      inset-inline-start: -3%;
     }
 
     .card-br {
-      right: -3%;
+      inset-inline-end: -3%;
     }
 
     .card-top {
@@ -291,21 +290,21 @@ const cards = [
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 64rem) {
     .card-tl {
-      left: -4%;
+      inset-inline-start: -4%;
     }
 
     .card-tr {
-      right: -4%;
+      inset-inline-end: -4%;
     }
 
     .card-bl {
-      left: -5%;
+      inset-inline-start: -5%;
     }
 
     .card-br {
-      right: -5%;
+      inset-inline-end: -5%;
     }
 
     .card-top {

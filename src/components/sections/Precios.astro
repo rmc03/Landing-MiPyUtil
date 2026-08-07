@@ -1,256 +1,297 @@
 ---
 // src/components/sections/Precios.astro
+// "La Caja": la sección de precios se comporta como una pantalla de la app.
+// Los límites se muestran como filas de Configuración (etiqueta + valor a la
+// derecha), el toggle de facturación hace rodar el importe como el registro
+// del POS (odómetro), y el modo anual revela la línea de "cambio": los 2 meses
+// gratis con el ahorro exacto (aritmética: anual = 10 × mensual).
 import Button from '../ui/Button.astro';
+
+const plans = [
+  {
+    name: 'Básico',
+    monthly: 3,
+    annual: 30,
+    recommended: false,
+    limits: [
+      { label: 'Productos', value: '200' },
+      { label: 'Dependientes', value: '3' },
+      { label: 'Administradores', value: '1' }
+    ],
+    features: []
+  },
+  {
+    name: 'Negocio',
+    monthly: 5,
+    annual: 50,
+    recommended: true,
+    limits: [
+      { label: 'Productos', value: '500' },
+      { label: 'Dependientes', value: '5' },
+      { label: 'Administradores', value: '2' }
+    ],
+    features: []
+  },
+  {
+    name: 'Pro',
+    monthly: 8,
+    annual: 80,
+    recommended: false,
+    limits: [
+      { label: 'Productos', value: '1000' },
+      { label: 'Dependientes', value: '8' },
+      { label: 'Administradores', value: '4' }
+    ],
+    features: ['Atención prioritaria.']
+  }
+];
 ---
+
 <section id="precios" class="precios-section">
   <div class="container">
     <div class="section-header">
       <h2 class="title">Elige tu plan</h2>
-      <p class="subtitle">Todos los planes incluyen atención al cliente y soporte para futuras actualizaciones.</p>
+      <p class="subtitle">Todos los planes incluyen acceso total a las funciones y soporte por WhatsApp.</p>
+    </div>
+
+    <div class="billing-toggle" role="group" aria-label="Frecuencia de pago">
+      <span class="billing-thumb" aria-hidden="true"></span>
+      <button type="button" class="billing-option" data-billing="monthly" aria-pressed="true">Mensual</button>
+      <button type="button" class="billing-option" data-billing="annual" aria-pressed="false">
+        Anual
+        <span class="save-chip">2 meses gratis</span>
+      </button>
     </div>
 
     <div class="pricing-grid">
-      <!-- Mensual -->
-      <div class="pricing-card card-fade">
-        <div class="card-header">
-          <h3 class="plan-name">Mensual</h3>
-          <p class="plan-desc">Paga mes a mes, sin compromiso.</p>
-        </div>
-        <div class="card-price">
-          <div class="price-row">
-            <span class="currency">$</span>
-            <span class="amount">2.800</span>
+      {plans.map((plan) => (
+        <div class:list={['pricing-card', 'card-fade', { recommended: plan.recommended }]}>
+          <div class="card-header">
+            <h3 class="plan-name">{plan.name}</h3>
+            {plan.recommended && <span class="badge">Recomendado</span>}
           </div>
-          <span class="period">CUP / mes</span>
-        </div>
-        <div class="card-features">
-          <ul>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Acceso total a las funciones
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Turnos y cuadres ilimitados
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Soporte básico por WhatsApp
-            </li>
-          </ul>
-        </div>
-        <div class="card-action">
-          <Button variant="secondary" href="#descarga" fullWidth>Elegir plan</Button>
-        </div>
-      </div>
 
-      <!-- Trimestral (Recomendado) -->
-      <div class="pricing-card recommended card-fade">
-        <div class="badge badge-recommended">Recomendado</div>
-        <div class="card-header">
-          <h3 class="plan-name">Trimestral</h3>
-          <p class="plan-desc">Ahorra $900 cada trimestre.</p>
-        </div>
-        <div class="card-price">
-          <div class="price-row">
-            <span class="currency">$</span>
-            <span class="amount">2.500</span>
-          </div>
-          <span class="period">CUP / mes</span>
-        </div>
-        <div class="card-features">
-          <ul>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Todo lo del plan Mensual
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Soporte prioritario 24/7
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Ahorro de $900 al trimestre
-            </li>
-          </ul>
-        </div>
-        <div class="card-action">
-          <Button variant="primary" href="#descarga" fullWidth>Elegir plan</Button>
-        </div>
-      </div>
-
-      <!-- Anual -->
-      <div class="pricing-card card-fade">
-        <div class="badge badge-best-price">Mejor precio</div>
-        <div class="card-header">
-          <h3 class="plan-name">Anual</h3>
-          <p class="plan-desc">El mejor precio. Ahorras $9.600 al año.</p>
-        </div>
-        <div class="card-price">
-          <div class="price-row">
-            <span class="currency">$</span>
-            <span class="amount">2.000</span>
-          </div>
-          <span class="period">CUP / mes</span>
-        </div>
-        <div class="card-features">
-          <ul>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Todo lo del plan Trimestral
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Mejor precio garantizado
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Ahorro de $9.600 al año
-            </li>
-          </ul>
-        </div>
-        <div class="card-action">
-          <Button variant="secondary" href="#descarga" fullWidth>Elegir plan</Button>
-        </div>
-      </div>
-    </div>
-
-    <div class="lifetime-wrapper">
-      <div class="lifetime-card dark-band card-fade">
-        <div class="lifetime-content">
-          <div class="lifetime-header">
-            <h3 class="plan-name">De por vida</h3>
-            <p class="plan-desc">Un solo pago, acceso para siempre.</p>
-          </div>
           <div class="card-price">
             <div class="price-row">
-              <span class="currency">$</span>
-              <span class="amount">50</span>
+              <span class="currency" aria-hidden="true">$</span>
+              <span class="amount" data-monthly={plan.monthly} data-annual={plan.annual}>
+                <span class="amount-register" data-value={plan.monthly}>{plan.monthly}</span>
+              </span>
             </div>
-            <span class="period">USD pago único</span>
+            <span class="period" data-monthly-text="/ mes" data-annual-text="/ año">/ mes</span>
+            <div class="change-line">
+              <span class="change-line-text">
+                2 meses gratis · Ahorro de ${plan.monthly * 2} USD al año
+              </span>
+            </div>
+            <span class="price-status" aria-live="polite"></span>
           </div>
-          <div class="card-features">
-            <ul>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Pago único, sin suscripciones
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Actualizaciones gratuitas de por vida
-              </li>
-              <li>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Soporte VIP directo
-              </li>
-            </ul>
+
+          <div class="card-limits">
+            {plan.limits.map((limit) => (
+              <div class="limit-row">
+                <span class="limit-label">{limit.label}</span>
+                <span class="limit-value">{limit.value}</span>
+              </div>
+            ))}
           </div>
+
+          {plan.features.length > 0 && (
+            <div class="card-features">
+              <ul>
+                {plan.features.map((feature) => (
+                  <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div class="card-action">
-            <Button variant="primary" href="#descarga" fullWidth>Elegir plan</Button>
+            <Button variant={plan.recommended ? 'primary' : 'secondary'} href="#descarga" fullWidth>Elegir plan</Button>
           </div>
         </div>
-      </div>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
   .precios-section {
-    padding: var(--space-section-lg, 80px) 0;
+    padding: clamp(var(--space-2xl), 8vw, var(--space-section-lg)) 0;
   }
-  
+
   .container {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 0 var(--space-xl, 32px);
+    padding: 0 clamp(16px, 4vw, 24px);
   }
 
   .section-header {
     text-align: center;
-    margin-bottom: var(--space-xl, 48px);
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
   }
 
   .title {
-    font-size: var(--fs-display, 3rem);
-    line-height: var(--lh-display, 1.2);
-    color: var(--ink, #16161F);
-    margin-bottom: var(--space-sm, 16px);
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+    font-weight: 700;
+    line-height: var(--lh-headline);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
   }
 
   .subtitle {
-    font-size: var(--fs-lead, 1.125rem);
-    color: var(--ink-secondary, #4B4B5C);
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
+    color: var(--ink-secondary);
     max-width: 600px;
     margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .billing-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface-secondary);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    margin: 0 auto clamp(var(--space-xl), 5vw, var(--space-2xl));
+    width: fit-content;
+    max-width: calc(100vw - 32px);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .billing-thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    border-radius: var(--radius-pill);
+    background: var(--surface);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+    pointer-events: none;
+    transition: transform var(--dur-routine) var(--ease-out-expo),
+                width var(--dur-routine) var(--ease-out-expo);
+  }
+
+  .billing-option {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(4px, 1vw, 6px);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: clamp(8px, 2vw, 10px) clamp(14px, 3vw, 20px);
+    min-height: 44px;
+    font-family: var(--font-family);
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
+    font-weight: 600;
+    color: var(--ink-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color var(--dur-routine) ease, color var(--dur-routine) ease;
+  }
+
+  .billing-option:hover {
+    color: var(--primary);
+    background: var(--hover-overlay);
+  }
+
+  .billing-option:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .billing-option[aria-pressed="true"] {
+    color: var(--primary);
+  }
+
+  .save-chip {
+    display: inline-block;
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--primary);
+    background: var(--primary-subtle);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
+
+  .billing-option[aria-pressed="true"] .save-chip {
+    background: var(--primary);
+    color: #FFFFFF;
+  }
+
+  .billing-option[aria-pressed="true"],
+  .billing-option:hover {
+    color: var(--primary-light);
   }
 
   .pricing-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-lg, 24px);
-    margin-bottom: var(--space-xl, 32px);
+    gap: clamp(var(--space-md), 4vw, var(--space-lg));
   }
 
   .pricing-card {
     position: relative;
-    background: var(--surface, #FFFFFF);
-    border: 1px solid var(--line, #E5E5E5);
-    border-radius: var(--radius-lg, 16px);
-    padding: var(--space-xl, 32px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: clamp(var(--space-lg), 5vw, var(--space-xl));
     display: flex;
     flex-direction: column;
-    transition: border-color var(--dur-routine, 250ms) var(--ease-out-expo, cubic-bezier(0.19, 1, 0.22, 1));
+    height: 100%;
   }
 
   .pricing-card:hover {
-    border-color: var(--primary, #5B5BF4);
+    border-color: var(--primary);
   }
 
   .pricing-card.recommended {
-    border-color: var(--primary, #5B5BF4);
-    box-shadow: 0 0 0 1px var(--primary, #5B5BF4);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
   }
 
   .badge {
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary, #5B5BF4);
+    display: inline-block;
+    background: var(--primary);
     color: #FFFFFF;
-    font-size: var(--fs-label, 0.75rem);
+    font-size: var(--fs-label);
     font-weight: 700;
-    padding: 6px 16px;
-    border-radius: var(--radius-pill, 9999px);
-    text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
     white-space: nowrap;
-    z-index: 1;
-  }
-
-  .badge-best-price {
-    background: var(--primary-deep, #4A4AD4);
   }
 
   .card-header {
-    margin-bottom: var(--space-md, 24px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
   }
 
   .plan-name {
-    font-size: var(--fs-title, 1.5rem);
-    font-weight: 700;
-    color: var(--ink, #16161F);
-    margin-bottom: var(--space-xs, 8px);
-  }
-
-  .plan-desc {
-    font-size: var(--fs-small, 0.875rem);
-    color: var(--ink-secondary, #4B4B5C);
-    min-height: 40px;
+    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
+    font-weight: 600;
+    color: var(--ink);
   }
 
   .card-price {
-    margin-bottom: var(--space-lg, 24px);
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -259,29 +300,118 @@ import Button from '../ui/Button.astro';
   .price-row {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: clamp(2px, 1vw, 4px);
+    flex-wrap: wrap;
   }
 
   .currency {
-    font-size: var(--fs-title, 1.5rem);
+    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
     font-weight: 700;
-    color: var(--ink, #16161F);
+    color: var(--ink);
   }
 
   .amount {
-    font-size: var(--fs-stat, 3rem);
+    font-size: clamp(1.5rem, 4vw, var(--fs-stat));
     font-weight: 800;
-    color: var(--ink, #16161F);
+    color: var(--ink);
     line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    position: relative;
+  }
+
+  .amount-register {
+    display: inline-block;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+
+  .amount-register.transitioning {
+    opacity: 0;
+    transform: translateY(-8px);
   }
 
   .period {
-    font-size: var(--fs-small, 0.875rem);
-    color: var(--ink-secondary, #4B4B5C);
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+    transition: opacity 200ms ease-out;
+  }
+
+  .period.transitioning {
+    opacity: 0;
+  }
+
+  .change-line {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur-overlay) var(--ease-out-expo);
+  }
+
+  .change-line-text {
+    min-height: 0;
+    overflow: hidden;
+    color: var(--primary);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity var(--dur-routine) var(--ease-out-expo),
+                transform var(--dur-routine) var(--ease-out-expo);
+  }
+
+  .change-line.show .change-line-text {
+    opacity: 1;
+    transform: none;
+  }
+
+  .change-line-text {
+    color: var(--primary-light);
+  }
+
+  /* Estado anunciado a lectores de pantalla: el registro visible se reconstruye
+     en celdas durante el roll, así que el precio final se anuncia aquí. */
+  .price-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .card-limits {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+    margin-bottom: var(--space-xl);
+  }
+
+  .limit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .limit-label {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+  }
+
+  .limit-value {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
 
   .card-features {
-    margin-bottom: var(--space-xl, 32px);
+    margin-bottom: var(--space-xl);
     flex-grow: 1;
   }
 
@@ -291,181 +421,192 @@ import Button from '../ui/Button.astro';
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm, 16px);
+    gap: var(--space-md, 12px);
   }
 
   .card-features li {
     display: flex;
     align-items: flex-start;
     gap: var(--space-xs, 8px);
-    font-size: var(--fs-body, 1rem);
-    color: var(--ink, #16161F);
+    font-size: var(--fs-body);
+    color: var(--ink);
   }
 
   .check-icon {
-    color: var(--primary, #5B5BF4);
+    color: var(--primary);
     flex-shrink: 0;
+  }
+
+  .check-icon {
+    color: var(--primary-light);
   }
 
   .card-action {
     margin-top: auto;
   }
 
-  .btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 16px 28px;
-    border-radius: var(--radius-md, 12px);
-    font-size: var(--fs-body, 1rem);
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all var(--dur-routine, 250ms) var(--ease-out-expo, cubic-bezier(0.19, 1, 0.22, 1));
-  }
-
-  .btn:focus-visible {
-    outline: 2px solid var(--primary, #5B5BF4);
-    outline-offset: 2px;
-  }
-
-  .btn-primary {
-    background: var(--primary, #5B5BF4);
-    color: #FFFFFF;
-    border: none;
-  }
-
-  .btn-primary:hover {
-    background: var(--primary-deep, #4A4AD4);
-  }
-
-  .btn-secondary {
-    background: var(--surface, #FFFFFF);
-    color: var(--ink, #16161F);
-    border: 1px solid var(--line-strong, #CCCCCC);
-  }
-
-  .btn-secondary:hover {
-    background: var(--primary-subtle, #E8E8FD);
-    border-color: var(--primary-light, #8080F7);
-  }
-
-  .lifetime-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--space-xl, 32px);
-  }
-
-  .lifetime-card {
-    width: 100%;
-    max-width: 600px;
-    background: #16161F;
-    border-radius: var(--radius-lg, 16px);
-    padding: 1px; /* To act as a border if needed, though we use pure background */
-  }
-
-  .lifetime-content {
-    background: #1F1F2E;
-    border-radius: calc(var(--radius-lg, 16px) - 1px);
-    padding: var(--space-xl, 32px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .lifetime-header {
-    margin-bottom: var(--space-md, 24px);
-  }
-
-  .lifetime-card .plan-name {
-    color: #F0F0F8;
-  }
-
-  .lifetime-card .plan-desc {
-    color: #A0A0B0;
-    min-height: auto;
-  }
-
-  .lifetime-card .currency,
-  .lifetime-card .amount {
-    color: #F0F0F8;
-  }
-
-  .lifetime-card .period {
-    color: #A0A0B0;
-  }
-
-  .lifetime-card .card-features li {
-    color: #F0F0F8;
-    justify-content: center;
-  }
-
-  .lifetime-card .check-icon {
-    color: var(--primary-light, #8080F7);
-  }
-
-  .btn-primary-dark {
-    background: var(--primary, #5B5BF4);
-    color: #FFFFFF;
-    border: none;
-  }
-
-  .btn-primary-dark:hover {
-    background: var(--primary-light, #8080F7);
-  }
-
-  .lifetime-card .card-action {
-    width: 100%;
-    max-width: 300px;
-  }
-
   /* Responsive Design */
-  @media (min-width: 768px) {
+  @media (min-width: 40rem) {
+    .pricing-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+  }
+
+  @media (min-width: 48rem) {
     .pricing-grid {
       grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .card-price {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0;
-    }
-    
-    .lifetime-card .card-price {
-      flex-direction: row;
-      align-items: baseline;
-      gap: 8px;
     }
   }
 
   /* Animations */
+  .card-fade {
+    transition: border-color var(--dur-routine) var(--ease-out-expo);
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .card-fade {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      transform: translateY(16px);
+      transition: opacity 0.6s var(--ease-out-expo),
+                  transform 0.6s var(--ease-out-expo),
+                  border-color var(--dur-routine) var(--ease-out-expo);
+    }
+
+    .card-fade:nth-child(2) {
+      transition-delay: 120ms, 120ms, 0ms;
+    }
+
+    .card-fade:nth-child(3) {
+      transition-delay: 240ms, 240ms, 0ms;
     }
 
     .card-fade.visible {
       opacity: 1;
       transform: translateY(0);
     }
-
-    .recommended {
-      animation: pulse-border 3s infinite ease-in-out;
-    }
-
-    @keyframes pulse-border {
-      0% { box-shadow: 0 0 0 0px rgba(91, 91, 244, 0.4); }
-      50% { box-shadow: 0 0 0 4px rgba(91, 91, 244, 0.1); }
-      100% { box-shadow: 0 0 0 0px rgba(91, 91, 244, 0); }
-    }
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TRANSITION_DURATION = 250;
+
+    const group = document.querySelector('.billing-toggle');
+    if (!group) return;
+
+    const options = Array.from(group.querySelectorAll<HTMLElement>('.billing-option'));
+    const thumb = group.querySelector<HTMLElement>('.billing-thumb');
+    const registers = Array.from(document.querySelectorAll<HTMLElement>('.amount-register'));
+    const periods = Array.from(document.querySelectorAll<HTMLElement>('.period'));
+    const changeLines = Array.from(document.querySelectorAll<HTMLElement>('.change-line'));
+    const statuses = Array.from(document.querySelectorAll<HTMLElement>('.price-status'));
+
+    let isTransitioning = false;
+
+    // Píldora deslizante
+    const positionThumb = (target: HTMLElement) => {
+      if (!thumb) return;
+      const groupRect = group.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      thumb.style.width = `${targetRect.width}px`;
+      thumb.style.transform = `translateX(${targetRect.left - groupRect.left - 4}px)`;
+    };
+
+    const activeOption = options.find((opt) => opt.getAttribute('aria-pressed') === 'true') || options[0];
+    positionThumb(activeOption);
+
+    window.addEventListener('resize', () => {
+      const current = options.find((opt) => opt.getAttribute('aria-pressed') === 'true');
+      positionThumb(current || options[0]);
+    });
+
+    const applyBilling = async (mode: string) => {
+      if (isTransitioning) return;
+      
+      const isAnnual = mode === 'annual';
+      const target = options.find((opt) => opt.dataset.billing === mode);
+      
+      // Verificar si ya estamos en ese modo
+      const currentMode = options.find((opt) => opt.getAttribute('aria-pressed') === 'true');
+      if (currentMode?.dataset.billing === mode) return;
+
+      isTransitioning = true;
+
+      // Actualizar toggle
+      options.forEach((opt) => {
+        opt.setAttribute('aria-pressed', String(opt.dataset.billing === mode));
+      });
+      if (target) positionThumb(target);
+
+      if (!reduceMotion) {
+        // Fase 1: Fade out simultáneo de números y períodos
+        registers.forEach((register) => register.classList.add('transitioning'));
+        periods.forEach((period) => period.classList.add('transitioning'));
+
+        // Esperar a que termine el fade out
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        // Fase 2: Cambiar contenido
+        registers.forEach((register) => {
+          const amount = register.closest<HTMLElement>('.amount');
+          const newValue = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
+          register.textContent = newValue;
+          register.dataset.value = newValue;
+        });
+
+        periods.forEach((period) => {
+          const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
+          period.textContent = text || period.textContent || '';
+        });
+
+        // Forzar reflow para asegurar que los cambios se apliquen
+        void registers[0]?.offsetHeight;
+
+        // Fase 3: Fade in
+        registers.forEach((register) => register.classList.remove('transitioning'));
+        periods.forEach((period) => period.classList.remove('transitioning'));
+
+      } else {
+        // Sin animación
+        registers.forEach((register) => {
+          const amount = register.closest<HTMLElement>('.amount');
+          const newValue = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
+          register.textContent = newValue;
+          register.dataset.value = newValue;
+        });
+
+        periods.forEach((period) => {
+          const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
+          period.textContent = text || period.textContent || '';
+        });
+      }
+
+      // Actualizar línea de ahorro
+      changeLines.forEach((el) => {
+        el.classList.toggle('show', isAnnual);
+      });
+
+      // Actualizar status para accesibilidad
+      statuses.forEach((status) => {
+        const card = status.closest<HTMLElement>('.card-price');
+        const amount = card?.querySelector<HTMLElement>('.amount');
+        const period = card?.querySelector<HTMLElement>('.period');
+        const price = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
+        const suffix = isAnnual ? (period?.dataset.annualText || '') : (period?.dataset.monthlyText || '');
+        status.textContent = `$${price} USD ${suffix}`.trim();
+      });
+
+      await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION));
+      isTransitioning = false;
+    };
+
+    options.forEach((opt) => {
+      opt.addEventListener('click', () => applyBilling(opt.dataset.billing || ''));
+    });
+
+    // Intersection Observer para animación de entrada
     const cards = document.querySelectorAll('.card-fade');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -476,10 +617,7 @@ import Button from '../ui/Button.astro';
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
-    cards.forEach((card, index) => {
-      if (card instanceof HTMLElement) {
-        card.style.transitionDelay = `${index * 100}ms`;
-      }
+    cards.forEach((card) => {
       observer.observe(card);
     });
   });

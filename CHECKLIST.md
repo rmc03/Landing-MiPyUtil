@@ -40,7 +40,7 @@ Abrir `src/pages/index.astro` y buscar `href="#"` para reemplazar:
 #### Hero
 - [ ] Línea ~66: "Descargar APK" → URL de la APK
 - [ ] Línea ~68: "Escríbenos por WhatsApp" → `https://wa.me/TU_NUMERO`
-- [ ] Línea ~69: "Únete al canal de Telegram" → `https://t.me/TU_CANAL`
+- [ ] Línea ~69: "Únete al canal de Telegram" → `https://t.me/MipyUtil` ✓ (aplicado)
 
 #### Ventas (inline CTA)
 - [ ] Línea ~177: "Escríbenos" (banco) → `https://wa.me/TU_NUMERO`
@@ -52,7 +52,7 @@ Abrir `src/pages/index.astro` y buscar `href="#"` para reemplazar:
 - [ ] Línea ~277: "Descargar APK" → URL de la APK
 - [ ] Línea ~279: "WhatsApp" → `https://wa.me/TU_NUMERO`
 - [ ] Línea ~280: "Telegram" → `https://t.me/TU_USUARIO`
-- [ ] Línea ~284: "Únete al canal de Telegram" → `https://t.me/TU_CANAL`
+- [ ] Línea ~284: "Únete al canal de Telegram" → `https://t.me/MipyUtil` ✓ (aplicado)
 
 #### FAQ (pregunta 5)
 - [ ] Línea ~311: "Escríbenos por WhatsApp" → `https://wa.me/TU_NUMERO`

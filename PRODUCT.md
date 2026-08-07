@@ -28,6 +28,18 @@ Un solo teléfono que lleva el negocio completo sin depender de internet: invent
 - Dos roles: **Admin** (Resumen, Inventario, Cuadres, Temas, Equipo, Configuración) y **Dependiente** (Mi turno, Nueva venta).
 - Moneda `$` genérica, fechas `dd/MM/yyyy`, horas `hh:mm a`.
 
+## Pricing (proporcionado por el dueño del producto, nov 2024)
+
+Planes en USD, con toggle mensual/anual. Anual cobra 10 meses ("2 meses gratis"): el precio anual es 10× el mensual. El plan "De por vida" (pago único) fue eliminado por decisión del dueño.
+
+| Plan | Mensual | Anual (10 meses) | Productos | Dependientes | Admins |
+|---|---|---|---|---|---|
+| Básico | $3 | $30 | 200 | 3 | 1 |
+| Negocio (recomendado) | $5 | $50 | 500 | 5 | 2 |
+| Pro | $8 | $80 | 1000 | 8 | 4 |
+
+Todos los planes incluyen acceso total a las funciones y soporte por WhatsApp (dicho una sola vez en el subtítulo de la sección, no repetido en cada tarjeta). El plan **Pro** añade atención prioritaria y acceso anticipado a nuevas funcionalidades. Los CTA de compra son marcadores (sin destino de pago aún).
+
 ## Capabilities and Constraints
 
 Capacidades verificadas en código (docs 01/02):
@@ -39,7 +51,7 @@ Capacidades verificadas en código (docs 01/02):
 - Onboarding interactivo de 6 páginas.
 - Stack app: Flutter 3.12 · Riverpod · go_router · sqflite · Supabase (Auth/Postgres/Storage, desconectado por defecto) · connectivity_plus · Material 3 · Lucide icons · Inter.
 
-Restricciones de copy (no inventar): precios o planes de suscripción; nombres de clientes reales o testimonios; cifras de rendimiento ("aumenta tus ventas un X%"); afirmar que la sincronización en la nube ya está operativa; marcas que no aparezcan en el código.
+Restricciones de copy (no inventar): nombres de clientes reales o testimonios; cifras de rendimiento ("aumenta tus ventas un X%"); afirmar que la sincronización en la nube ya está operativa; marcas que no aparezcan en el código. Precios y planes: ver sección Pricing — no modificarlos sin el dueño.
 
 ## Brand Commitments
 
@@ -53,7 +65,7 @@ Restricciones de copy (no inventar): precios o planes de suscripción; nombres d
 
 - Fuentes: `01-producto-posicionamiento.md`, `02-funciones-y-pantallas.md`, `03-screenshots-requeridos.md`, `04-copy-es.md`, `05-direccion-visual.md` (raíz del proyecto).
 - Copy final aprobado sección por sección (04) y lista de 8 screenshots requeridas con nombres exactos (03).
-- Ausencias que no deben fabricarse: no hay screenshots reales todavía (placeholder hasta que el usuario los coloque); no hay enlaces reales de CTAs (APK / WhatsApp / Telegram / canal → marcadores `#`); no hay precios, testimonios, clientes ni métricas de rendimiento.
+- Ausencias que no deben fabricarse: no hay screenshots reales todavía (placeholder hasta que el usuario los coloque); no hay enlaces reales de CTAs (APK / WhatsApp / Telegram / canal → marcadores `#`); no hay testimonios, clientes ni métricas de rendimiento. Precios: ya no es ausencia — ver sección Pricing.
 
 ## Product Principles
 

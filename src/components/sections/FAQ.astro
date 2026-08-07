@@ -14,8 +14,8 @@ const faqs: FAQItem[] = [
     answer: 'Sí: la APK se instala directa. Se comparte por <strong>WhatsApp, Telegram o Zapya</strong> y se instala como cualquier APK, sin cuenta de Google.'
   },
   {
-    question: '¿Es solo para bodegones?',
-    answer: 'No: inventario, ventas, turnos y cuadres sirven a cualquier negocio de retail o servicio — <strong>cafeterías, talleres, ferreterías, tiendas de ropa</strong>, lo que vendas con mercancía y empleados.'
+    question: '¿Es solo para puntos de venta?',
+    answer: 'No: inventario, ventas, turnos y cuadres sirven a cualquier negocio de retail o servicio — <strong>cafeterías, talleres, ferreterías, tiendas de ropa, almacenes</strong>, lo que vendas con mercancía y empleados.'
   },
   {
     question: '¿Puedo ver las ventas de cada dependiente?',
@@ -80,18 +80,19 @@ const faqs: FAQItem[] = [
 <style is:global>
   .faq {
     background: var(--surface);
-    padding: var(--space-3xl) 0;
+    padding: clamp(var(--space-2xl), 8vw, var(--space-3xl)) 0;
   }
 
   .faq .container {
     max-width: 1120px;
     margin: 0 auto;
-    padding: 0 var(--space-lg);
+    padding: 0 clamp(16px, 4vw, 24px);
   }
 
   .faq h2 {
     text-align: center;
-    margin-bottom: var(--space-2xl);
+    margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
   }
 
   .faq-list {
@@ -116,8 +117,8 @@ const faqs: FAQItem[] = [
 
   button.faq-question {
     width: 100%;
-    min-height: 64px;
-    padding: var(--space-lg) var(--space-md);
+    min-height: 56px;
+    padding: clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
     background: none;
     border: none;
     border-radius: 0;
@@ -125,7 +126,7 @@ const faqs: FAQItem[] = [
     -webkit-appearance: none;
     -moz-appearance: none;
     font-family: var(--font-family);
-    font-size: var(--fs-title);
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-title));
     font-weight: 600;
     line-height: var(--lh-title);
     color: var(--ink);
@@ -139,16 +140,18 @@ const faqs: FAQItem[] = [
     margin: 0;
     box-shadow: none;
     outline: 0;
+    gap: clamp(var(--space-sm), 3vw, var(--space-md));
   }
 
   button.faq-question::after {
     content: '+';
-    font-size: var(--fs-xl);
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-xl));
     font-weight: 300;
     color: var(--primary);
     flex-shrink: 0;
-    margin-left: var(--space-md);
     transition: transform var(--dur-routine) var(--ease-out-expo);
+    min-width: 28px;
+    text-align: center;
   }
 
   .faq-item.open button.faq-question::after {
@@ -167,6 +170,8 @@ const faqs: FAQItem[] = [
 
   .faq-question-text {
     flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .faq-panel {
@@ -182,8 +187,9 @@ const faqs: FAQItem[] = [
   .faq-panel p {
     overflow: hidden;
     min-height: 0;
-    padding: var(--space-md) var(--space-md) var(--space-lg) var(--space-md);
+    padding: clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
     color: var(--ink-secondary);
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
     line-height: 1.7;
     opacity: 0;
     transform: translateY(-4px);
@@ -208,5 +214,11 @@ const faqs: FAQItem[] = [
 
   .faq-panel a:hover {
     color: var(--primary-light);
+  }
+
+  @media (min-width: 48rem) {
+    button.faq-question {
+      min-height: 64px;
+    }
   }
 </style>

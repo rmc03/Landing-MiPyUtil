@@ -162,15 +162,20 @@ const icons = {
     color: var(--ink);
   }
 
+  .problema h2 {
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+  }
+
   .problema-grid {
     display: grid;
-    gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    gap: clamp(var(--space-md), 4vw, var(--space-lg));
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
   }
 
   .problema-card {
     background: var(--surface);
-    padding: var(--space-xl);
+    padding: clamp(var(--space-lg), 5vw, var(--space-xl));
     border-radius: var(--radius-lg);
     border: 1px solid var(--line);
     transition: border-color 200ms ease;
@@ -181,9 +186,9 @@ const icons = {
   }
 
   .problema-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--space-lg);
+    width: clamp(40px, 10vw, 48px);
+    height: clamp(40px, 10vw, 48px);
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
     color: var(--primary);
   }
 
@@ -193,39 +198,59 @@ const icons = {
   }
 
   .problema-card h3 {
-    margin-bottom: var(--space-md);
+    margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
     color: var(--ink);
+    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
   }
   
   .problema-card p {
     color: var(--ink-secondary);
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
+    line-height: 1.6;
   }
 
   .problema-cierre {
-    font-size: var(--fs-lead);
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     font-weight: 500;
     line-height: var(--lh-lead);
     text-align: center;
     max-width: 60ch;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: var(--space-md);
-    padding: var(--space-lg);
+    gap: clamp(var(--space-sm), 3vw, var(--space-md));
+    padding: clamp(var(--space-md), 4vw, var(--space-lg));
     background: var(--primary-subtle);
     border-radius: var(--radius-lg);
     border: 1px solid var(--primary);
+    flex-wrap: wrap;
   }
 
   .check-offline {
-    width: 24px;
-    height: 24px;
+    width: clamp(20px, 5vw, 24px);
+    height: clamp(20px, 5vw, 24px);
     flex-shrink: 0;
     color: var(--primary);
+    margin-top: 2px;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 40rem) {
+    .problema-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .problema-cierre {
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    .check-offline {
+      margin-top: 0;
+    }
+  }
+
+  @media (min-width: 48rem) {
     .problema-grid {
       grid-template-columns: repeat(3, 1fr);
     }

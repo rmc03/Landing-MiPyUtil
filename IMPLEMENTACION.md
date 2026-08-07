@@ -73,7 +73,7 @@ Buscar `href="#"` en `src/pages/index.astro` y reemplazar con:
 - **Descargar APK** → URL de la APK (repetido 2 veces)
 - **WhatsApp** → `https://wa.me/...` (3 veces)
 - **Telegram** → `https://t.me/...` (2 veces)
-- **Canal de Telegram** → `https://t.me/...` (2 veces)
+- **Canal de Telegram** → `https://t.me/MipyUtil` (2 veces)
 
 ### 3. Meta tags y SEO
 Agregar en `src/layouts/Layout.astro`:

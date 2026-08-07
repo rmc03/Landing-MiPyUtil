@@ -248,7 +248,7 @@
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    background: var(--success);
+    background: var(--accent-green-deep);
     color: #FFFFFF;
     border-radius: var(--rounded-pill);
     font-size: var(--fs-caption);
@@ -393,7 +393,7 @@
   }
 
   /* Responsive adjustments */
-  @media (max-width: 374px) {
+  @media (max-width: 23.375rem) {
     .metrics-grid {
       gap: var(--space-sm);
     }
@@ -403,52 +403,13 @@
     }
 
     .metric-label {
-      font-size: 0.6875rem;
+      font-size: var(--fs-caption);
     }
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .live-dashboard {
       max-width: 420px;
-    }
-  }
-
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .live-dashboard {
-      background: var(--dark-surface, var(--surface));
-    }
-
-    .dashboard-title {
-      color: var(--dark-ink, var(--ink));
-    }
-
-    .metric-label {
-      color: var(--dark-ink-secondary, var(--ink-secondary));
-    }
-
-    .metric-value {
-      color: var(--primary-light);
-    }
-
-    .section-label {
-      color: var(--dark-ink-secondary, var(--ink-secondary));
-    }
-
-    .product-name {
-      color: var(--dark-ink, var(--ink));
-    }
-
-    .product-count {
-      color: var(--dark-ink-secondary, var(--ink-secondary));
-    }
-
-    .product-bar {
-      background: var(--dark-elevated, var(--surface-secondary));
-    }
-
-    .top-products {
-      border-top-color: var(--dark-line, var(--line));
     }
   }
 </style>

@@ -31,7 +31,7 @@ Los enlaces de descarga y contacto actualmente apuntan a `#`. Reemplaza con dest
 - Descargar APK → URL de la APK
 - WhatsApp → `https://wa.me/...`
 - Telegram → `https://t.me/...`
-- Canal de Telegram → `https://t.me/...`
+- Canal de Telegram → `https://t.me/MipyUtil`
 
 Busca `href="#"` en `src/pages/index.astro` y reemplaza.
 

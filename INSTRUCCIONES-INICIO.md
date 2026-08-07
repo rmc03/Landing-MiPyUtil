@@ -40,7 +40,7 @@ Abre `src/pages/index.astro` y busca `href="#"` para reemplazar con URLs reales:
 - Descargar APK
 - WhatsApp (`https://wa.me/TU_NUMERO`)
 - Telegram (`https://t.me/TU_USUARIO`)
-- Canal de Telegram (`https://t.me/TU_CANAL`)
+- Canal de Telegram (`https://t.me/MipyUtil`) — ya configurado en Hero, Descarga y footer
 
 ## 5. Build para producción
 

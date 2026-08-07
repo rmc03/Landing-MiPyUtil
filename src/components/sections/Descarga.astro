@@ -3,7 +3,7 @@ import Button from '../ui/Button.astro';
 
 const stats = [
   { value: '~12 MB', label: 'Tamaño total' },
-  { value: '~2 min', label: 'Con señal de Etecsa' },
+  { value: '~2 min', label: 'Descarga con señal de Etecsa' },
   { value: 'Android 8+', label: 'Cualquier teléfono reciente' }
 ];
 ---
@@ -30,7 +30,7 @@ const stats = [
       <p class="cta-divider">O escríbenos por:</p>
       <div class="secondary-ctas">
         <Button variant="secondary" icon="whatsapp">Contacto WhatsApp</Button>
-        <Button variant="secondary" icon="telegram">Canal de Telegram</Button>
+        <Button variant="secondary" type="link" href="https://t.me/MipyUtil" icon="telegram">Canal de Telegram</Button>
       </div>
     </div>
   </div>
@@ -59,28 +59,34 @@ const stats = [
     text-decoration: underline;
   }
 
+  .descarga h2 {
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+  }
+
   .lead {
-    font-size: var(--fs-lead);
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     line-height: var(--lh-lead);
-    margin: 0 auto var(--space-xl);
+    margin: 0 auto clamp(var(--space-lg), 5vw, var(--space-xl));
     max-width: 70ch;
     color: var(--ink-secondary);
   }
 
   .download-stats {
     display: grid;
-    gap: var(--space-lg);
-    max-width: 800px;
-    margin: var(--space-2xl) auto;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: clamp(var(--space-md), 4vw, var(--space-lg));
+    max-width: 900px;
+    margin: clamp(var(--space-xl), 6vw, var(--space-2xl)) auto;
+    grid-template-columns: 1fr;
   }
 
   .stat {
     background: var(--surface);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     border-radius: var(--radius-lg);
     border: 1px solid var(--line);
     transition: border-color 200ms ease;
+    text-align: center;
   }
   
   .stat:hover {
@@ -88,24 +94,25 @@ const stats = [
   }
 
   .stat-value {
-    font-size: var(--fs-stat);
+    font-size: clamp(var(--fs-xl), 4vw, var(--fs-stat));
     font-weight: 700;
     line-height: 1.15;
     color: var(--primary-light);
-    margin-bottom: var(--space-sm);
+    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
     font-variant-numeric: tabular-nums;
   }
 
   .stat-label {
-    font-size: var(--fs-small);
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
     color: var(--ink-secondary);
+    line-height: 1.4;
   }
 
   .cta-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
+    gap: clamp(var(--space-xs), 2vw, var(--space-sm));
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
     align-items: stretch;
     width: 100%;
     max-width: 500px;
@@ -118,16 +125,16 @@ const stats = [
   }
   
   .cta-divider {
-    font-size: var(--fs-small);
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
     color: var(--ink-secondary);
-    margin: var(--space-sm) 0;
+    margin: clamp(var(--space-xs), 2vw, var(--space-sm)) 0;
     text-align: center;
   }
 
   .secondary-ctas {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: clamp(var(--space-xs), 2vw, var(--space-sm));
     width: 100%;
   }
   
@@ -137,18 +144,37 @@ const stats = [
   
   .size-badge {
     opacity: 0.8;
-    font-size: var(--fs-small);
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
     font-weight: 500;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .secondary-ctas {
       flex-direction: row;
       gap: var(--space-md);
     }
+
+    .cta-group {
+      gap: var(--space-sm);
+    }
+
+    .download-stats {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .stat {
+      padding: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .download-stats {
+      gap: var(--space-xl);
+    }
   }
 
   .descarga-note {
-    font-size: var(--fs-small);
+    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
   }
 </style>

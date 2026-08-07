@@ -39,7 +39,7 @@ const checkItems = [
         </Button>
         <div class="secondary-ctas">
           <Button variant="secondary" type="link" href="https://wa.me/" icon="whatsapp" fullWidth>Contacto WhatsApp</Button>
-          <Button variant="secondary" type="link" href="https://t.me/" icon="telegram" fullWidth>Canal de Telegram</Button>
+          <Button variant="secondary" type="link" href="https://t.me/MipyUtil" icon="telegram" fullWidth>Canal de Telegram</Button>
         </div>
       </div>
 
@@ -49,7 +49,7 @@ const checkItems = [
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
-        Se instala por APK directa. Sin Play Store, sin complicaciones.
+        Se instala por APK directa. Sin Play Store, sin complicaciones..
       </p>
     </div>
 
@@ -137,9 +137,9 @@ const checkItems = [
   /* impeccable-disable gradient-text -- acento de marca aprobado en la palabra rotativa del hero */
 
   .hero {
-    padding-top: clamp(var(--space-2xl), 8vw, var(--space-section-lg));
-    padding-bottom: var(--space-section-sm);
-    background: linear-gradient(135deg, var(--background) 0%, var(--surface-secondary) 100%);
+    padding-top: clamp(var(--space-xl), 8vw, var(--space-section-lg));
+    padding-bottom: clamp(var(--space-2xl), 6vw, var(--space-section-sm));
+    background: linear-gradient(180deg, var(--background) 0%, var(--surface-secondary) 100%);
     position: relative;
     overflow: hidden;
   }
@@ -185,9 +185,10 @@ const checkItems = [
   .hero h1 {
     font-size: var(--fs-display);
     line-height: var(--lh-display);
-    margin-bottom: var(--space-lg);
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
     overflow-wrap: break-word;
     word-wrap: break-word;
+    hyphens: auto;
   }
 
   .title-line {
@@ -200,10 +201,10 @@ const checkItems = [
   }
 
   .lead {
-    font-size: clamp(var(--fs-body), 3vw, var(--fs-lead));
-    line-height: var(--lh-body);
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
+    line-height: var(--lh-lead);
     color: var(--ink-secondary);
-    margin-bottom: var(--space-xl);
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
     max-width: 60ch;
   }
 
@@ -258,42 +259,60 @@ const checkItems = [
   }
 
   /* En móvil el mockup estira el scroll en una sola columna sin aportar: se oculta */
-  @media (max-width: 639px) {
+  @media (max-width: 39.9375rem) {
     .hero-visual {
       display: none;
     }
   }
 
   /* Small mobile optimization */
-  @media (max-width: 374px) {
+  @media (max-width: 23.375rem) {
     .hero {
-      padding-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+      padding-bottom: var(--space-xl);
     }
 
     .hero h1 {
-      font-size: clamp(2.25rem, 11vw, 2.75rem);
+      font-size: clamp(2rem, 10vw, 2.5rem);
+      margin-bottom: var(--space-md);
     }
 
     .eyebrow {
       gap: 6px;
+      font-size: clamp(0.7rem, 3vw, var(--fs-label));
     }
 
     .title-line:first-child {
       margin-bottom: 0;
     }
+
+    .lead {
+      font-size: clamp(0.9rem, 4vw, var(--fs-body));
+      margin-bottom: var(--space-lg);
+    }
+
+    .cta-group {
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
   }
 
-  @media (min-width: 375px) and (max-width: 639px) {
+  @media (min-width: 23.4375rem) and (max-width: 39.9375rem) {
     .hero {
-      padding-top: var(--space-3xl);
+      padding-top: var(--space-2xl);
+      padding-bottom: var(--space-2xl);
     }
 
     .title-line:first-child {
       margin-bottom: 0.02em;
     }
+
+    .hero h1 {
+      font-size: clamp(2.25rem, 9vw, 3rem);
+    }
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .hero .container {
       gap: var(--space-3xl);
     }
@@ -312,9 +331,10 @@ const checkItems = [
     }
   }
 
-  @media (min-width: 1024px) {
+  /* Diseño de 2 columnas desde 48rem (DESIGN.md): texto | mockup en tablet y desktop */
+  @media (min-width: 48rem) {
     .hero {
-      padding-bottom: var(--space-section-lg);
+      background: linear-gradient(135deg, var(--background) 0%, var(--surface-secondary) 100%);
     }
 
     .hero .container {
@@ -328,9 +348,15 @@ const checkItems = [
     }
   }
 
-  @media (min-width: 1280px) {
+  @media (min-width: 64rem) {
+    .hero {
+      padding-bottom: var(--space-section-lg);
+    }
+  }
+
+  @media (min-width: 80rem) {
     .hero .container {
-      gap: 80px;
+      gap: var(--space-section-sm);
     }
   }
 
@@ -402,7 +428,7 @@ const checkItems = [
     color: transparent;
     position: relative;
     min-width: 4.5em;
-    text-align: left;
+    text-align: start;
     vertical-align: baseline;
   }
 
@@ -415,19 +441,19 @@ const checkItems = [
   }
 
   /* Ajustar ancho mínimo según viewport */
-  @media (max-width: 374px) {
+  @media (max-width: 23.375rem) {
     .rotating-word {
       min-width: 4em;
     }
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .rotating-word {
       min-width: 5em;
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 64rem) {
     .rotating-word {
       min-width: 5.5em;
     }

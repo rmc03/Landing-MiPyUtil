@@ -13,7 +13,7 @@ import '../styles/global.css';
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     <title>{title}</title>
     
@@ -25,11 +25,9 @@ import '../styles/global.css';
       rel="stylesheet"
     />
     
-    <!-- Theme initialization script (prevent FOUC) -->
+    <!-- Force dark theme -->
     <script is:inline>
-      const theme = localStorage.getItem('theme') || 
-                   (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('data-theme', 'dark');
     </script>
   </head>
   <body>
@@ -66,22 +64,7 @@ import '../styles/global.css';
           </a>
         </div>
         
-        <button class="theme-toggle" aria-label="Cambiar tema claro/oscuro">
-          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
+
       </div>
     </nav>
 
@@ -99,8 +82,7 @@ import '../styles/global.css';
 
         <div class="footer-links">
           <a href="#">WhatsApp</a>
-          <a href="#">Telegram</a>
-          <a href="#">Canal de Telegram</a>
+          <a href="https://t.me/MipyUtil">Canal de Telegram</a>
         </div>
 
         <p class="footer-note">
@@ -133,8 +115,9 @@ import '../styles/global.css';
       .nav {
         position: sticky;
         top: 0;
-        z-index: 100;
-        background: var(--surface);
+        z-index: 1000;
+        background: rgba(22, 22, 31, 0.92);
+        -webkit-backdrop-filter: blur(12px);
         backdrop-filter: blur(12px);
         border-bottom: 1px solid var(--line);
       }
@@ -142,7 +125,10 @@ import '../styles/global.css';
       .nav-container {
         max-width: 1120px;
         margin: 0 auto;
-        padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 24px);
+        padding:
+          calc(clamp(12px, 3vw, 16px) + env(safe-area-inset-top, 0px))
+          clamp(16px, 4vw, 24px)
+          clamp(12px, 3vw, 16px);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -186,15 +172,18 @@ import '../styles/global.css';
       .nav-menu {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-        position: fixed;
-        top: 65px;
-        left: 0;
-        right: 0;
+        gap: 4px;
+        /* Anclado al nav real (top: 100%), no a 65px fijos: sobrevive al zoom
+           y a la altura del safe-area sin desalinearse */
+        position: absolute;
+        top: 100%;
+        inset-inline: 0;
         background: var(--surface);
-        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
         padding: 24px;
-        max-height: calc(100vh - 65px);
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
         overflow-y: auto;
         transform: translateY(-100%);
         opacity: 0;
@@ -203,7 +192,7 @@ import '../styles/global.css';
         transition: transform var(--dur-routine) var(--ease-out-expo),
                     opacity var(--dur-routine) ease,
                     visibility var(--dur-routine);
-        z-index: 99;
+        z-index: 999;
       }
 
       .nav-menu.open {
@@ -224,56 +213,18 @@ import '../styles/global.css';
       .nav-menu a:hover {
         color: var(--primary);
       }
-      
-      .theme-toggle {
-        background: var(--surface-secondary);
-        border: 1px solid var(--line);
-        border-radius: var(--radius-md);
-        min-width: 44px;
-        min-height: 44px;
-        padding: 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 200ms ease;
-        color: var(--ink);
-        flex-shrink: 0;
-        order: 3;
-      }
-      
-      .theme-toggle:hover {
-        background: var(--hover-overlay);
-        border-color: var(--primary);
-        color: var(--primary);
-      }
-      
-      .theme-toggle:focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-      }
-      
-      .theme-toggle svg {
-        width: 20px;
-        height: 20px;
-      }
-      
-      /* Ocultar en móvil - se usa prefers-color-scheme automático */
-      @media (max-width: 767px) {
-        .theme-toggle {
-          display: none;
+
+      /* En móvil los enlaces del menú necesitan área táctil de 44px */
+      @media (max-width: 47.999rem) {
+        .nav-menu a {
+          padding: 10px 8px;
+        }
+
+        .nav-menu .nav-cta {
+          padding: 12px 20px;
         }
       }
       
-      [data-theme="light"] .moon-icon,
-      [data-theme="dark"] .sun-icon {
-        display: none;
-      }
-      
-      [data-theme="light"] .sun-icon,
-      [data-theme="dark"] .moon-icon {
-        display: block;
-      }
 
       .nav-cta {
         display: inline-flex;
@@ -308,7 +259,7 @@ import '../styles/global.css';
         }
       }
 
-      @media (min-width: 768px) {
+      @media (min-width: 48rem) {
         .nav-toggle {
           display: none;
         }
@@ -331,18 +282,30 @@ import '../styles/global.css';
         }
       }
 
+      /* Tablets estrechas (48–60rem): comprimir el nav para que la fila completa
+         entre sin desbordar antes de colapsar al menú hamburguesa */
+      @media (min-width: 48rem) and (max-width: 59.999rem) {
+        .nav-container {
+          gap: 16px;
+        }
+
+        .nav-menu {
+          gap: 16px;
+        }
+      }
+
       /* === FOOTER === */
       .footer {
         background: var(--surface-elevated);
         color: var(--ink);
-        padding: 64px 0 32px;
+        padding: 64px 0 calc(32px + env(safe-area-inset-bottom, 0px));
         border-top: 1px solid var(--line);
       }
 
       .footer-container {
         max-width: 1120px;
         margin: 0 auto;
-        padding: 0 24px;
+        padding: 0 clamp(16px, 4vw, 24px);
         text-align: center;
       }
 
@@ -381,6 +344,9 @@ import '../styles/global.css';
         text-decoration: none;
         font-weight: 500;
         transition: color 200ms ease;
+        /* Área táctil 44px sin cambiar el ritmo visual (margen negativo) */
+        padding: 12px 10px;
+        margin: -12px -10px;
       }
 
       .footer-links a:hover {
@@ -433,29 +399,7 @@ import '../styles/global.css';
         });
       }
       
-      // Theme toggle (solo desktop)
-      const themeToggle = document.querySelector('.theme-toggle') as HTMLButtonElement;
 
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          const applyTheme = () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-          };
-
-          const docWithTransition = document as Document & { startViewTransition?: (callback: () => void) => void };
-          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-          if (docWithTransition.startViewTransition && !reduceMotion) {
-            docWithTransition.startViewTransition(applyTheme);
-          } else {
-            applyTheme();
-          }
-        });
-      }
     </script>
   </body>
 </html>

@@ -20,7 +20,7 @@ const screenId = screenshot.replace(/\.png$/i, '');
       <ScreenSkeleton screen={screenId} />
       <img
         class="phone-shot"
-        src={lightSrc}
+        src={darkSrc}
         data-light-src={lightSrc}
         data-dark-src={darkSrc}
         alt={alt}
@@ -32,36 +32,19 @@ const screenId = screenshot.replace(/\.png$/i, '');
 
 <script>
   const shots = Array.from(document.querySelectorAll<HTMLImageElement>('.phone-shot'));
-  const root = document.documentElement;
   const darkFailed = new WeakSet<HTMLImageElement>();
-
-  function applyTheme(img: HTMLImageElement) {
-    const light = img.dataset.lightSrc!;
-    const dark = img.dataset.darkSrc!;
-    const current = img.getAttribute('src');
-
-    if (root.dataset.theme === 'dark' && !darkFailed.has(img) && current !== dark) {
-      img.setAttribute('src', dark);
-    } else if (root.dataset.theme !== 'dark' && current !== light) {
-      img.setAttribute('src', light);
-    }
-  }
 
   shots.forEach((img) => {
     img.addEventListener('error', () => {
       const current = img.getAttribute('src');
-      if (current === img.dataset.darkSrc) {
+      if (current === img.dataset.darkSrc && !darkFailed.has(img)) {
         darkFailed.add(img);
         img.setAttribute('src', img.dataset.lightSrc!);
       } else {
         img.classList.add('img-failed');
       }
     });
-    applyTheme(img);
   });
-
-  const observer = new MutationObserver(() => shots.forEach(applyTheme));
-  observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 </script>
 
 <style>
@@ -76,11 +59,11 @@ const screenId = screenshot.replace(/\.png$/i, '');
   .phone-frame {
     position: relative;
     width: 100%;
-    max-width: min(280px, 90vw);
+    max-width: min(260px, 85vw);
     aspect-ratio: 9 / 19.5;
     background: var(--ink);
-    border-radius: clamp(20px, 5vw, var(--radius-phone)); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
-    padding: clamp(8px, 2vw, 12px);
+    border-radius: clamp(16px, 4vw, var(--radius-phone)); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
+    padding: clamp(6px, 1.5vw, 12px);
     box-shadow: var(--shadow-subtle);
   }
 
@@ -102,13 +85,13 @@ const screenId = screenshot.replace(/\.png$/i, '');
 
   .phone-notch {
     position: absolute;
-    top: clamp(8px, 2vw, 12px);
+    top: clamp(6px, 1.5vw, 12px);
     left: 50%;
     transform: translateX(-50%);
-    width: clamp(80px, 20vw, 120px);
-    height: clamp(16px, 4vw, 24px);
+    width: clamp(70px, 18vw, 120px);
+    height: clamp(14px, 3.5vw, 24px);
     background: var(--surface);
-    border-radius: 0 0 clamp(12px, 3vw, 16px) clamp(12px, 3vw, 16px); /* impeccable-disable-line design-system-radius -- radio fluido de la muesca */
+    border-radius: 0 0 clamp(10px, 2.5vw, 16px) clamp(10px, 2.5vw, 16px); /* impeccable-disable-line design-system-radius -- radio fluido de la muesca */
     z-index: 2;
   }
 
@@ -116,7 +99,7 @@ const screenId = screenshot.replace(/\.png$/i, '');
     width: 100%;
     height: 100%;
     background: var(--surface);
-    border-radius: calc(clamp(20px, 5vw, var(--radius-phone)) - 8px); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
+    border-radius: calc(clamp(16px, 4vw, var(--radius-phone)) - 6px); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
     overflow: hidden;
     position: relative;
   }
@@ -136,22 +119,32 @@ const screenId = screenshot.replace(/\.png$/i, '');
 
   /* Compact (hero): teléfono más pequeño para no robar protagonismo al texto */
   .phone-mockup.compact .phone-frame {
-    max-width: min(230px, 80vw);
+    max-width: min(200px, 75vw);
   }
 
-  @media (min-width: 375px) {
+  @media (min-width: 23.4375rem) {
     .phone-frame {
-      max-width: min(300px, 85vw);
+      max-width: min(280px, 80vw);
     }
 
     .phone-mockup.compact .phone-frame {
-      max-width: 230px;
+      max-width: min(220px, 75vw);
     }
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 40rem) {
     .phone-frame {
-      max-width: 280px;
+      max-width: 270px;
+    }
+
+    .phone-mockup.compact .phone-frame {
+      max-width: 240px;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .phone-frame {
+      max-width: 290px;
     }
 
     .phone-mockup.compact .phone-frame {
@@ -159,13 +152,7 @@ const screenId = screenshot.replace(/\.png$/i, '');
     }
   }
 
-  @media (min-width: 768px) {
-    .phone-frame {
-      max-width: 300px;
-    }
-  }
-
-  @media (min-width: 1024px) {
+  @media (min-width: 64rem) {
     .phone-frame {
       max-width: 320px;
     }

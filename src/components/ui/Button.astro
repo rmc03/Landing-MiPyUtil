@@ -90,9 +90,9 @@ const {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 24px;
-    font-size: var(--fs-body);
+    gap: clamp(6px, 1.5vw, 8px);
+    padding: clamp(10px, 2.5vw, 12px) clamp(18px, 4vw, 24px);
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
     font-weight: 600;
     font-family: var(--font-family);
     border-radius: var(--radius-md);
@@ -108,7 +108,10 @@ const {
     text-decoration: none;
     line-height: 1.4;
     letter-spacing: -0.01em;
-    white-space: nowrap;
+    /* Sin nowrap: a 200% de zoom o en pantallas estrechas el texto envuelve
+       en vez de desbordar la página */
+    white-space: normal;
+    min-height: 44px;
   }
   
   .btn-full {
@@ -117,6 +120,14 @@ const {
 
   .btn:active {
     transform: translateY(1px);
+  }
+  
+  /* Área táctil mínima para puntero grueso */
+  @media (pointer: coarse) {
+    .btn {
+      min-height: 48px;
+      padding: 12px 20px;
+    }
   }
   
   .btn[disabled] {
@@ -136,7 +147,7 @@ const {
     background: var(--primary-deep);
     border-color: var(--primary-deep);
     color: white;
-    box-shadow: 0 4px 12px rgba(91, 91, 244, 0.25);
+    box-shadow: 0 4px 12px var(--focus-ring);
   }
 
   /* === SECONDARY === */
@@ -154,15 +165,15 @@ const {
 
   /* Dark band overrides */
   :global(.dark-band) .btn-secondary {
-    background: rgba(240, 240, 248, 0.06);
-    color: #F0F0F8;
-    border-color: #3A3A50;
+    background: var(--hover-overlay);
+    color: var(--ink);
+    border-color: var(--line);
   }
 
   :global(.dark-band) .btn-secondary:hover {
-    background: rgba(240, 240, 248, 0.1);
-    color: #8080F7;
-    border-color: #8080F7;
+    background: var(--active-overlay);
+    color: var(--primary-light);
+    border-color: var(--primary-light);
   }
 
   /* === SPINNER === */
@@ -186,8 +197,8 @@ const {
 
   /* === ICONS === */
   .btn-icon {
-    width: 20px;
-    height: 20px;
+    width: clamp(18px, 4vw, 20px);
+    height: clamp(18px, 4vw, 20px);
     flex-shrink: 0;
     transition: transform var(--dur-routine) var(--ease-out-expo);
   }
@@ -206,11 +217,11 @@ const {
   }
 
   :global(.dark-band) .btn-secondary .btn-icon {
-    color: #C0C0D0;
+    color: var(--ink-secondary);
   }
 
   :global(.dark-band) .btn-secondary:hover .btn-icon {
-    color: #8080F7;
+    color: var(--primary-light);
   }
 
   /* === FOCUS === */

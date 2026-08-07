@@ -4,7 +4,7 @@
   --primary: #5B5BF4;
   --primary-deep: #4A4AD4;
   --primary-light: #8080F7;
-  --primary-subtle: #E8E8FD;
+  --primary-subtle: rgba(91, 91, 244, 0.12);
   
   /* Accent Colors */
   --accent-green: #059669;
@@ -17,39 +17,39 @@
   --error: #EF4444;
   --info: #3B82F6;
   
-  /* Light Theme */
-  --background: #F5F5FA;
-  --surface: #FFFFFF;
-  --surface-elevated: #FFFFFF;
-  --surface-secondary: #F0F0F8;
-  --surface-tertiary: #E8E8F5;
+  /* Theme Colors (dark only) */
+  --background: #16161F;
+  --surface: #1F1F2E;
+  --surface-elevated: #2A2A3E;
+  --surface-secondary: #252535;
+  --surface-tertiary: #2F2F45;
   
-  --ink: #1A1A2E;
-  --ink-secondary: #4A4A5E;
-  --muted: #6B7280;
-  --line: #E5E5EF;
-  --line-strong: #D0D0E0;
+  --ink: #F0F0F8;
+  --ink-secondary: #C8C8D8;
+  --muted: #A0A0B8;
+  --line: #3A3A50;
+  --line-strong: #4A4A60;
   
   /* Interactive States */
-  --hover-overlay: rgba(91, 91, 244, 0.08);
-  --active-overlay: rgba(91, 91, 244, 0.12);
-  --focus-ring: rgba(91, 91, 244, 0.4);
+  --hover-overlay: rgba(240, 240, 248, 0.06);
+  --active-overlay: rgba(240, 240, 248, 0.1);
+  --focus-ring: rgba(91, 91, 244, 0.5);
   --overlay-strong: rgba(0, 0, 0, 0.5);
 
   /* Typography */
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* Type roles — sizes (align with DESIGN.md typography ramp) */
-  --fs-display: clamp(2.75rem, 6vw, 4rem);
-  --fs-headline: clamp(1.75rem, 3vw, 2.25rem);
-  --fs-title: 1.125rem;
-  --fs-lead: 1.125rem;
+  --fs-display: clamp(2.25rem, 8vw + 0.5rem, 4rem);
+  --fs-headline: clamp(1.5rem, 4vw + 0.5rem, 2.25rem);
+  --fs-title: clamp(1rem, 2vw + 0.5rem, 1.125rem);
+  --fs-lead: clamp(1rem, 2vw + 0.25rem, 1.125rem);
   --fs-body: 1rem;
   --fs-small: 0.875rem;
   --fs-label: 0.8125rem;
   --fs-caption: 0.75rem;
-  --fs-xl: 1.5rem;
-  --fs-stat: 2rem;
+  --fs-xl: clamp(1.25rem, 3vw + 0.5rem, 1.5rem);
+  --fs-stat: clamp(1.5rem, 4vw + 0.5rem, 2rem);
 
   /* Type roles — leading */
   --lh-display: 1.05;
@@ -84,13 +84,13 @@
   --space-xl: 32px;
   --space-2xl: 48px;
   --space-3xl: 64px;
-  --space-section-sm: 80px;
-  --space-section-lg: 120px;
+  --space-section-sm: clamp(48px, 10vw, 80px);
+  --space-section-lg: clamp(64px, 12vw, 120px);
 
   /* Shadows */
-  --shadow-subtle: 0 1px 2px rgba(26, 26, 46, 0.04), 0 2px 4px rgba(26, 26, 46, 0.02);
-  --shadow-card: 0 2px 8px rgba(26, 26, 46, 0.06), 0 4px 16px rgba(26, 26, 46, 0.04);
-  --shadow-elevated: 0 4px 16px rgba(26, 26, 46, 0.08), 0 8px 32px rgba(26, 26, 46, 0.06);
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.24), 0 8px 32px rgba(0, 0, 0, 0.20);
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -100,83 +100,6 @@
   --dur-focal: 650ms;
 }
 
-/* Dark Theme */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Theme Colors (matching app screenshots) */
-    --background: #16161F;
-    --surface: #1F1F2E;
-    --surface-elevated: #2A2A3E;
-    --surface-secondary: #252535;
-    --surface-tertiary: #2F2F45;
-    
-    --ink: #F0F0F8;
-    --ink-secondary: #C8C8D8;
-    --muted: #A0A0B8;
-    --line: #3A3A50;
-    --line-strong: #4A4A60;
-    
-    /* Primary adjusted for dark */
-    --primary-subtle: rgba(91, 91, 244, 0.12);
-    
-    /* Interactive States for Dark */
-    --hover-overlay: rgba(240, 240, 248, 0.06);
-    --active-overlay: rgba(240, 240, 248, 0.1);
-    --focus-ring: rgba(91, 91, 244, 0.5);
-    
-    /* Shadows for Dark */
-    --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12);
-    --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.24), 0 8px 32px rgba(0, 0, 0, 0.20);
-  }
-}
-
-/* Manual Dark Mode Toggle */
-[data-theme="dark"] {
-  --background: #16161F;
-  --surface: #1F1F2E;
-  --surface-elevated: #2A2A3E;
-  --surface-secondary: #252535;
-  --surface-tertiary: #2F2F45;
-  
-  --ink: #F0F0F8;
-  --ink-secondary: #C8C8D8;
-  --muted: #A0A0B8;
-  --line: #3A3A50;
-  --line-strong: #4A4A60;
-  
-  --primary-subtle: rgba(91, 91, 244, 0.12);
-  --hover-overlay: rgba(240, 240, 248, 0.06);
-  --active-overlay: rgba(240, 240, 248, 0.1);
-  --focus-ring: rgba(91, 91, 244, 0.5);
-  
-  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.24), 0 8px 32px rgba(0, 0, 0, 0.20);
-}
-
-[data-theme="light"] {
-  --background: #F5F5FA;
-  --surface: #FFFFFF;
-  --surface-elevated: #FFFFFF;
-  --surface-secondary: #F0F0F8;
-  --surface-tertiary: #E8E8F5;
-  
-  --ink: #1A1A2E;
-  --ink-secondary: #4A4A5E;
-  --muted: #6B7280;
-  --line: #E5E5EF;
-  --line-strong: #D0D0E0;
-  
-  --primary-subtle: #E8E8FD;
-  --hover-overlay: rgba(91, 91, 244, 0.08);
-  --active-overlay: rgba(91, 91, 244, 0.12);
-  --focus-ring: rgba(91, 91, 244, 0.4);
-  
-  --shadow-subtle: 0 1px 2px rgba(26, 26, 46, 0.04), 0 2px 4px rgba(26, 26, 46, 0.02);
-  --shadow-card: 0 2px 8px rgba(26, 26, 46, 0.06), 0 4px 16px rgba(26, 26, 46, 0.04);
-  --shadow-elevated: 0 4px 16px rgba(26, 26, 46, 0.08), 0 8px 32px rgba(26, 26, 46, 0.06);
-}
 
 /* === RESET & BASE === */
 * {
@@ -208,6 +131,7 @@ body {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 /* === TYPOGRAPHY === */
@@ -277,45 +201,30 @@ a:focus-visible {
 }
 
 section {
-  padding: clamp(48px, 8vw, 80px) 0;
-  scroll-margin-top: 80px;
+  padding: clamp(40px, 10vw, 80px) 0;
+  scroll-margin-top: 70px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   section {
-    padding: clamp(64px, 10vw, 96px) 0;
+    padding: clamp(56px, 10vw, 96px) 0;
+    scroll-margin-top: max(80px, 12vh);
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   section {
     padding: var(--space-section-lg) 0;
   }
 }
 
-/* === DARK BAND (modo noche) ===
-   Bandas que exhiben el modo oscuro del producto: renderizan la paleta
-   oscura siempre, independiente del toggle de tema de la página. */
+/* === DARK BAND ===
+   Bandas que fuerzan un fondo ligeramente diferente al --background general. */
 .dark-band {
   background: #16161F;
   color: #F0F0F8;
-
-  --surface: #1F1F2E;
-  --surface-elevated: #2A2A3E;
-  --surface-secondary: #252535;
-  --surface-tertiary: #2F2F45;
-
-  --ink: #F0F0F8;
   --ink-secondary: #C0C0D0;
   --muted: #9090A8;
-  --line: #3A3A50;
-  --line-strong: #4A4A60;
-
-  --primary-light: #8080F7;
-  --primary-subtle: rgba(91, 91, 244, 0.12);
-  --hover-overlay: rgba(240, 240, 248, 0.06);
-  --active-overlay: rgba(240, 240, 248, 0.1);
-  --focus-ring: rgba(91, 91, 244, 0.5);
 }
 
 /* Luz sobre oscuro: compensar en los tres ejes perceptuales — más leading,
@@ -337,5 +246,11 @@ section {
   /* FAQ items */
   .faq-item .faq-question:active {
     background: var(--hover-overlay);
+  }
+  
+  /* Touch target minimum 44x44px */
+  a, button, [role="button"], input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
