@@ -30,7 +30,46 @@ const icons = {
 };
 ---
 
-<section id="problema" class="problema dark-band" data-atmosphere="apagon">
+<script is:inline>
+  (() => {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const root = document.documentElement;
+    // Estado inicial oculto ANTES de que la sección se pinte.
+    root.classList.add('js-reveal');
+
+    const arm = () => {
+      const targets = document.querySelectorAll(
+        '#problema .problema-card, #problema .problema-cierre'
+      );
+      if (!targets.length) {
+        // Failsafe: jamás dejar contenido invisible.
+        root.classList.remove('js-reveal');
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          });
+        },
+        { threshold: 0, rootMargin: '0px 0px -12% 0px' }
+      );
+      targets.forEach((t) => io.observe(t));
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', arm, { once: true });
+    } else {
+      arm();
+    }
+  })();
+</script>
+
+<section id="problema" class="problema dark-band">
   <div class="container">
     <h2>El día a día de tu negocio no espera por el internet.</h2>
 
@@ -57,26 +96,6 @@ const icons = {
   </div>
 </section>
 
-<script>
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const section = document.querySelector('[data-atmosphere="apagon"]');
-
-  if (section && !prefersReducedMotion && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            section.classList.add('apagon-on');
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(section);
-  }
-</script>
-
 <style>
   .dark-band {
     color: var(--ink);
@@ -85,57 +104,31 @@ const icons = {
     border-bottom: 1px solid var(--line);
   }
 
-  .dark-band::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--background);
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0;
-  }
-
-  .dark-band.apagon-on::before {
-    animation: apagon-fade var(--dur-focal) var(--ease-out-expo) forwards;
-  }
-
-  .dark-band .container {
-    position: relative;
-    z-index: 2;
-  }
-
   @media (prefers-reduced-motion: no-preference) {
-    .dark-band.apagon-on .problema-card {
-      animation: emerge-dark 500ms var(--ease-out-expo) backwards;
-    }
-
-    .dark-band.apagon-on .problema-card:nth-child(1) {
-      animation-delay: 120ms;
-    }
-
-    .dark-band.apagon-on .problema-card:nth-child(2) {
-      animation-delay: 200ms;
-    }
-
-    .dark-band.apagon-on .problema-card:nth-child(3) {
-      animation-delay: 280ms;
-    }
-
-    .dark-band.apagon-on .check-offline {
-      animation: glow-restore 800ms var(--ease-out-expo);
-    }
-  }
-
-  @keyframes apagon-fade {
-    from {
-      opacity: 1;
-    }
-    to {
+    /* Estado inicial: solo cuando el script inline confirmó JS + motion */
+    :global(html.js-reveal) .problema-card,
+    :global(html.js-reveal) .problema-cierre {
       opacity: 0;
+      transform: translateY(12px);
+    }
+
+    :global(html.js-reveal) .problema-card.is-in,
+    :global(html.js-reveal) .problema-cierre.is-in {
+      animation: rise-in 500ms var(--ease-out-expo) forwards;
+    }
+
+    /* En desktop las tres tarjetas comparten fila: escalonar para que se lea */
+    @media (min-width: 48rem) {
+      :global(html.js-reveal) .problema-card:nth-child(2).is-in {
+        animation-delay: 80ms;
+      }
+      :global(html.js-reveal) .problema-card:nth-child(3).is-in {
+        animation-delay: 160ms;
+      }
     }
   }
 
-  @keyframes emerge-dark {
+  @keyframes rise-in {
     from {
       opacity: 0;
       transform: translateY(12px);
@@ -143,16 +136,6 @@ const icons = {
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-
-  @keyframes glow-restore {
-    0%, 100% {
-      opacity: 1;
-    }
-    40% {
-      opacity: 1;
-      filter: drop-shadow(0 0 6px var(--primary));
     }
   }
 
