@@ -1,167 +1,124 @@
-<div align="center">
+# MiPyUtil Landing Page
 
-# 📱 MiPyUtil Landing Page
+Landing page para MiPyUtil, aplicación móvil de gestión para MiPymes y TCPs en Cuba.
 
-**Landing page moderna y accesible para MiPyUtil**  
-*Aplicación móvil de gestión inteligente para MiPymes y TCPs en Cuba*
+## Requisitos
 
-[![Built with Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01?style=flat&logo=astro&logoColor=white)](https://astro.build)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+- Node.js >= 18.0.0
+- npm >= 9.0.0
 
-[✨ Ver Demo](#) • [📥 Descargar APK](#) • [💬 Soporte](#contacto)
-
-</div>
-
----
-
-## 🌟 Características
-
-- ✅ **100% Responsive** — Mobile-first design optimizado para todos los dispositivos
-- 🎨 **Tema Prosperidad** — Paleta esmeralda profesional (#059669)
-- ⚡ **Ultra rápido** — Construido con Astro para máximo rendimiento
-- ♿ **Accesible** — Cumple estándares WCAG AA
-- 🌙 **Modo oscuro** — Bandas temáticas con modo noche
-- 📱 **Mockups interactivos** — Visualización elegante de la app
-
-## 🚀 Inicio Rápido
-
-### Prerrequisitos
-
-- Node.js 18+ 
-- npm o yarn
-
-### Instalación
+## Instalación
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/tu-usuario/mipyutil-landing.git
-
-# Navegar al directorio
 cd mipyutil-landing
-
-# Instalar dependencias
 npm install
+```
 
-# Iniciar servidor de desarrollo
+## Desarrollo
+
+```bash
 npm run dev
 ```
 
-El sitio estará disponible en `http://localhost:4321` 🎉
+El servidor de desarrollo inicia en `http://localhost:4321`
 
-## 📦 Scripts Disponibles
+## Comandos disponibles
 
 | Comando | Descripción |
 |---------|-------------|
 | `npm run dev` | Inicia el servidor de desarrollo |
-| `npm run build` | Genera build de producción en `dist/` |
-| `npm run preview` | Previsualiza el build de producción |
+| `npm run build` | Genera el build de producción en `dist/` |
+| `npm run preview` | Previsualiza el build localmente |
 | `npm run check` | Verifica tipos y sintaxis de Astro |
+## Estructura del proyecto
 
-## 🏗️ Estructura del Proyecto
-
-```
+```text
 mipyutil-landing/
 ├── public/
-│   ├── screens/          # Screenshots de la app
-│   └── Icon.png          # Favicon/logo
+│   ├── screens/          # Screenshots de la aplicación
+│   └── icon.png          # Ícono del proyecto
 ├── src/
-│   ├── components/
-│   │   └── PhoneMockup.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro   # Página principal
-├── astro.config.mjs
-└── package.json
+│   ├── components/       # Componentes Astro reutilizables
+│   ├── layouts/          # Layouts base
+│   ├── pages/            # Páginas de la aplicación
+│   └── styles/           # Estilos globales
+├── astro.config.mjs      # Configuración de Astro
+├── package.json          # Dependencias y scripts
+└── tsconfig.json         # Configuración de TypeScript
 ```
 
-## 🎨 Sistema de Diseño
+## Configuración
 
-### Colores Principales
+### Screenshots
+
+Coloca las capturas de pantalla de la app en `public/screens/` con los siguientes nombres:
+
+- `01-resumen.png` - Panel de resumen (administrador)
+- `02-nueva-venta.png` - Punto de venta
+- `03-confirmar-pago.png` - Confirmación de pago con QR
+- `04-inventario.png` - Lista de inventario
+- `05-cuadres.png` - Cuadres pendientes
+- `06-mi-turno.png` - Vista de dependiente
+- `07-ganancias.png` - Reporte de ganancias
+- `08-temas.png` - Selector de temas (opcional)
+
+### Enlaces externos
+
+En `src/pages/index.astro` y componentes relacionados, actualiza los siguientes enlaces:
+
+- URL de descarga del APK
+- Números de WhatsApp (`https://wa.me/TU_NUMERO`)
+- Usuarios de Telegram (`https://t.me/TU_USUARIO`)
+- Canal de Telegram (`https://t.me/MipyUtil`)
+
+## Sistema de diseño
+
+### Colores
 
 ```css
-/* Tema Prosperidad */
---emerald-600: #059669;   /* Principal */
---emerald-700: #047857;   /* Hover */
---emerald-50:  #ecfdf5;   /* Background claro */
-
-/* Modo oscuro */
---forest-950:  #0F1A14;   /* Background oscuro */
+--violet-600: #7C3AED;    /* Color principal */
+--violet-700: #6D28D9;    /* Hover states */
+--neutral-950: #16161F;   /* Background */
+--neutral-900: #1F1F2E;   /* Surface */
 ```
 
 ### Tipografía
 
-- **Familia:** Inter (Google Fonts)
-- **Pesos:** 400 (Regular), 500 (Medium), 600 (Semibold), 700 (Bold)
+Familia: Plus Jakarta Sans  
+Pesos: 400, 500, 600, 700, 800
 
 ### Breakpoints
 
-| Breakpoint | Tamaño |
-|------------|--------|
+| Punto de quiebre | Ancho mínimo |
+|------------------|--------------|
 | `sm` | 640px |
 | `md` | 768px |
 | `lg` | 1024px |
+| `xl` | 1280px |
 
-## 📸 Configuración de Screenshots
+## Accesibilidad
 
-Coloca las capturas de la app en `public/screens/` con estos nombres:
+El proyecto implementa:
 
-| Archivo | Descripción | Uso |
-|---------|-------------|-----|
-| `01-resumen.png` | Panel Resumen (admin) | ⭐ Hero principal |
-| `02-nueva-venta.png` | POS / Nueva venta | Features |
-| `03-confirmar-pago.png` | Confirmar pago con QR | Features |
-| `04-inventario.png` | Lista de inventario | Features |
-| `05-cuadres.png` | Cuadres pendientes | Features |
-| `06-mi-turno.png` | Mi turno (dependiente) | Features |
-| `07-temas.png` | Selector de 6 temas | Gallery |
-| `08-dark-mode.png` | Modo oscuro (opcional) | Gallery |
+- Contraste de color conforme a WCAG AA
+- Navegación por teclado
+- Focus visible en elementos interactivos
+- Respeto a `prefers-reduced-motion`
+- Semántica HTML5
+- Atributo `lang=\"es\"` declarado
 
-## 🔗 Configuración de Enlaces
+## Stack tecnológico
 
-Actualiza los siguientes enlaces en `src/pages/index.astro`:
+- [Astro](https://astro.build) ^7.1.6 - Framework web
+- [TypeScript](https://www.typescriptlang.org) ^6.0.3 - Tipado estático
 
-```javascript
-// Buscar y reemplazar href="#" con:
-- APK Download → URL de tu APK
-- WhatsApp → https://wa.me/TU_NUMERO
-- Telegram → https://t.me/TU_USUARIO
-- Canal Telegram → https://t.me/MipyUtil
-```
+## Licencia
 
-## ♿ Accesibilidad
+MIT
 
-Esta landing cumple con:
+## Contacto
 
-- ✅ Contraste WCAG AA verificado
-- ✅ Navegación completa por teclado
-- ✅ Focus visible en elementos interactivos
-- ✅ `prefers-reduced-motion` respetado
-- ✅ Semántica HTML5 correcta
-- ✅ `lang="es"` declarado
-
-## 🛠️ Tecnologías
-
-- [Astro](https://astro.build) - Framework web moderno
-- [Tailwind CSS](https://tailwindcss.com) - Utilidades CSS (inline)
-- [Google Fonts](https://fonts.google.com) - Tipografía Inter
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## 💬 Contacto
-
-- **WhatsApp:** [Enviar mensaje](#)
-- **Telegram:** [Chat directo](#)
-- **Canal oficial:** [@MipyUtil](https://t.me/MipyUtil)
-
----
-
-<div align="center">
-
-Hecho con ❤️ para las MiPymes y TCPs de Cuba
-
-[⬆ Volver arriba](#-mipyutil-landing-page)
-
-</div>
+- WhatsApp: [Enlace por configurar]
+- Telegram: [Enlace por configurar]
+- Canal: [@MipyUtil](https://t.me/MipyUtil)
