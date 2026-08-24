@@ -10,11 +10,13 @@ dist/
 
 # AI agents and skills
 .agents/
+.claude/
 .codex/
 .freebuff/
 .impeccable/
 .opencode/
 .kiro/
+.kilo/
 skills-lock.json
 opencode.json
 

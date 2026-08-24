@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<Layout
+  title="Página no encontrada | MiPyUtil"
+  description="Esta pantalla no existe en MiPyUtil."
+>
+  <section class="not-found">
+    <div class="container">
+      <svg class="not-found-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9.5 9a3 3 0 1 1 4.24 4.24L12 15" />
+        <line x1="12" y1="18" x2="12.01" y2="18" />
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+      <p class="not-found-code">404</p>
+      <h1>Esta pantalla no existe.</h1>
+      <p class="not-found-lead">
+        El enlace puede estar roto o la página se movió. Vuelve al inicio y sigue desde ahí.
+      </p>
+      <Button variant="primary" type="link" href="/">Volver al inicio</Button>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .not-found {
+    min-height: calc(100dvh - 320px);
+    display: flex;
+    align-items: center;
+  }
+
+  .not-found .container {
+    text-align: center;
+    max-width: 480px;
+  }
+
+  .not-found-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary-light);
+    margin: 0 auto var(--space-lg);
+  }
+
+  .not-found-code {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .not-found h1 {
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+    margin-bottom: var(--space-md);
+  }
+
+  .not-found-lead {
+    font-size: var(--fs-body);
+    line-height: var(--lh-lead);
+    color: var(--ink-secondary);
+    max-width: 42ch;
+    margin: 0 auto var(--space-xl);
+  }
+</style>

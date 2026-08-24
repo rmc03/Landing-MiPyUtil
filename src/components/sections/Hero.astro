@@ -6,9 +6,9 @@ import CheckList from '../ui/CheckList.astro';
 import OfflineBadge from '../ui/OfflineBadge.astro';
 
 const checkItems = [
-  { highlight: 'Funciona offline', text: ' — apagones y señal mala no paran tu negocio.' },
-  { highlight: 'Control de caja diario', text: ' — cada dependiente rinde cuentas al cerrar su turno.' },
-  { highlight: 'Sin papel ni Excel', text: ' — todo queda registrado.' }
+  { highlight: 'Funciona offline.', text: ' Apagones y señal mala no paran tu negocio.' },
+  { highlight: 'Control de caja diario.', text: ' Cada dependiente rinde cuentas al cerrar su turno.' },
+  { highlight: 'Sin papel ni Excel.', text: ' Todo queda registrado.' }
 ];
 ---
 
@@ -16,18 +16,19 @@ const checkItems = [
   <div class="container">
     <div class="hero-content">
       <p class="eyebrow">
-        Para MiPymes y TCPs · 
+        Para MiPyMEs y TCPs ·
         <OfflineBadge />
       </p>
       <h1>
         <span class="title-line">
           <span class="rotating-word" data-words='["Revoluciona", "Gestiona", "Optimiza", "Controla", "Perfecciona"]'>Revoluciona</span>
         </span>
-        <span class="title-line">tu MiPyme.</span>
+        <span class="title-line">tu MiPyME.</span>
       </h1>
       <p class="lead">
-        Ventas, ingresos y stock en un solo teléfono. Tu negocio no se detiene
-        aunque se vaya el internet.
+        MiPyUtil le da a cada dependiente su propia app para vender y cerrar
+        turno, y a ti la tuya para controlar ventas, ingresos e inventario,
+        todo sin depender del internet.
       </p>
 
       <CheckList items={checkItems} />
@@ -49,13 +50,13 @@ const checkItems = [
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
-        Se instala por APK directa. Sin Play Store, sin complicaciones..
+        Se instala por APK directa. Sin Play Store, sin complicaciones.
       </p>
     </div>
 
     <div class="hero-visual">
       <FloatingCards />
-      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos y stock en un solo teléfono" compact />
+      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos e inventario desde el teléfono del administrador" compact />
     </div>
   </div>
 </section>
@@ -134,10 +135,8 @@ const checkItems = [
 </script>
 
 <style>
-  /* impeccable-disable gradient-text -- acento de marca aprobado en la palabra rotativa del hero */
-
   .hero {
-    padding-top: clamp(var(--space-xl), 8vw, var(--space-section-lg));
+    padding-top: clamp(var(--space-lg), 4vw, 64px);
     padding-bottom: clamp(var(--space-2xl), 6vw, var(--space-section-sm));
     background: var(--surface-secondary);
     position: relative;
@@ -154,7 +153,7 @@ const checkItems = [
     z-index: 0;
   }
   
-  /* Glow índigo sutil solo en viewport amplio donde tiene sentido visual */
+  /* Glow violeta sutil solo en viewport amplio donde tiene sentido visual */
   .hero::before {
     content: '';
     position: absolute;
@@ -188,7 +187,7 @@ const checkItems = [
     line-height: 1.2;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--primary);
+    color: var(--primary-light);
     margin-bottom: var(--space-md);
     display: flex;
     align-items: center;
@@ -258,7 +257,7 @@ const checkItems = [
     width: 16px;
     height: 16px;
     flex-shrink: 0;
-    color: var(--primary);
+    color: var(--primary-light);
     margin-top: 2px;
   }
 
@@ -366,12 +365,6 @@ const checkItems = [
     }
   }
 
-  @media (min-width: 64rem) {
-    .hero {
-      padding-bottom: var(--space-section-lg);
-    }
-  }
-
   @media (min-width: 80rem) {
     .hero .container {
       gap: var(--space-section-sm);
@@ -418,7 +411,7 @@ const checkItems = [
     from {
       opacity: 0;
       transform: translateY(16px) scale(0.98);
-      box-shadow: 0 2px 4px rgba(26, 26, 46, 0);
+      box-shadow: 0 2px 4px rgba(10, 10, 22, 0);
     }
     to {
       opacity: 1;
@@ -439,23 +432,11 @@ const checkItems = [
   /* === ROTATING WORD ANIMATION === */
   .rotating-word {
     display: inline-block;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    color: var(--primary-light);
     position: relative;
     min-width: 4.5em;
     text-align: start;
     vertical-align: baseline;
-  }
-
-  @supports not ((background-clip: text) or (-webkit-background-clip: text)) {
-    .rotating-word {
-      background: none;
-      color: var(--primary);
-      -webkit-text-fill-color: currentColor;
-    }
   }
 
   /* Ajustar ancho mínimo según viewport */

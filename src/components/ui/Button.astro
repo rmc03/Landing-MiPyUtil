@@ -147,7 +147,7 @@ const {
     background: var(--primary-deep);
     border-color: var(--primary-deep);
     color: white;
-    box-shadow: 0 4px 12px var(--focus-ring);
+    box-shadow: var(--shadow-elevated);
   }
 
   /* === SECONDARY === */
@@ -159,8 +159,8 @@ const {
 
   .btn-secondary:hover {
     background: var(--surface-secondary);
-    color: var(--primary);
-    border-color: var(--primary);
+    color: var(--primary-light);
+    border-color: var(--primary-light);
   }
 
   /* Dark band overrides */
@@ -213,7 +213,7 @@ const {
   }
 
   .btn-secondary:hover .btn-icon {
-    color: var(--primary);
+    color: var(--primary-light);
   }
 
   :global(.dark-band) .btn-secondary .btn-icon {
@@ -226,7 +226,7 @@ const {
 
   /* === FOCUS === */
   .btn:focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 2px solid var(--primary-light);
     outline-offset: 2px;
   }
 

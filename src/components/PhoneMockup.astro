@@ -35,6 +35,13 @@ const screenId = screenshot.replace(/\.png$/i, '');
   const darkFailed = new WeakSet<HTMLImageElement>();
 
   shots.forEach((img) => {
+    const reveal = () => img.classList.add('img-loaded');
+    if (img.complete && img.naturalWidth > 0) {
+      reveal();
+    } else {
+      img.addEventListener('load', reveal);
+    }
+
     img.addEventListener('error', () => {
       const current = img.getAttribute('src');
       if (current === img.dataset.darkSrc && !darkFailed.has(img)) {
@@ -111,6 +118,11 @@ const screenId = screenshot.replace(/\.png$/i, '');
     height: 100%;
     object-fit: cover;
     display: block;
+    opacity: 0;
+  }
+
+  .phone-screen .phone-shot.img-loaded {
+    opacity: 1;
   }
 
   .phone-screen .phone-shot.img-failed {

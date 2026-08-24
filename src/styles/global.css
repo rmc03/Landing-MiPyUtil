@@ -1,21 +1,21 @@
 /* === TOKENS === */
 :root {
-  /* Brand Colors - Primary (from app) */
-  --primary: #5B5BF4;
-  --primary-deep: #4A4AD4;
-  --primary-light: #8080F7;
-  --primary-subtle: rgba(91, 91, 244, 0.12);
-  
+  /* Brand Colors - Primary (violeta del ícono de la app) */
+  --primary: #7C3AED;
+  --primary-deep: #6D28D9;
+  --primary-light: #A78BFA;
+  --primary-pale: #D8B4FE;
+  --primary-subtle: rgba(124, 58, 237, 0.12);
+
   /* Accent Colors */
   --accent-green: #059669;
   --accent-green-deep: #047857;
   --accent-green-light: #34D399;
-  
+
   /* Semantic Colors */
   --success: #10B981;
   --warning: #F59E0B;
   --error: #EF4444;
-  --info: #3B82F6;
   
   /* Theme Colors (dark only) */
   --background: #16161F;
@@ -33,11 +33,10 @@
   /* Interactive States */
   --hover-overlay: rgba(240, 240, 248, 0.06);
   --active-overlay: rgba(240, 240, 248, 0.1);
-  --focus-ring: rgba(91, 91, 244, 0.5);
   --overlay-strong: rgba(0, 0, 0, 0.5);
 
   /* Typography */
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
   /* Type roles — sizes (align with DESIGN.md typography ramp) */
   --fs-display: clamp(2.25rem, 8vw + 0.5rem, 4rem);
@@ -87,10 +86,10 @@
   --space-section-sm: clamp(48px, 10vw, 80px);
   --space-section-lg: clamp(64px, 12vw, 120px);
 
-  /* Shadows */
-  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.24), 0 8px 32px rgba(0, 0, 0, 0.20);
+  /* Shadows — teñidas hacia el hue del fondo (#16161F) en vez de negro puro */
+  --shadow-subtle: 0 1px 2px rgba(10, 10, 22, 0.12), 0 2px 4px rgba(10, 10, 22, 0.08);
+  --shadow-card: 0 2px 8px rgba(10, 10, 22, 0.16), 0 4px 16px rgba(10, 10, 22, 0.12);
+  --shadow-elevated: 0 4px 16px rgba(10, 10, 22, 0.24), 0 8px 32px rgba(10, 10, 22, 0.20);
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -177,17 +176,17 @@ p {
 }
 
 a {
-  color: var(--primary);
+  color: var(--primary-light);
   text-decoration: none;
   transition: color 200ms ease;
 }
 
 a:hover {
-  color: var(--primary-deep);
+  color: var(--primary-pale);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--primary-light);
   outline-offset: 2px;
   border-radius: 2px;
 }

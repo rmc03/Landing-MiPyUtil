@@ -3,13 +3,12 @@
  * THESIS: La landing es la app. Refusa el patrón SaaS genérico (hero + grid + pricing)
  * y replica el panel de control de MiPyUtil: cada sección es una pantalla real.
  * 
- * OWN-WORLD: Clean Focus, tema Confianza índigo (#5B5BF4) sobre neutros (#F5F5FA paper,
- * #FFFFFF cards, #E5E5EF lines, #1A1A2E ink) con modo claro/oscuro por toggle. Bandas
- * "modo noche" con la paleta oscura del producto (#16161F / #1F1F2E) siempre. Inter
+ * OWN-WORLD: Clean Focus, tema violeta (#7C3AED, del ícono de la app) sobre neutros oscuros
+ * (#16161F background, #1F1F2E surface). Plus Jakarta Sans
  * everywhere (400/500/600/700/800). Radios 8/12/16/32, cards planas, sombra subtle solo
  * en mockups. Screenshots dentro de mockups de teléfono como material central.
  * 
- * STORY: Dueño de MiPyme cubana reconoce su tienda, entiende que inventario/ventas/turnos/cuadre
+ * STORY: Dueño de MiPyME cubana reconoce su tienda, entiende que inventario/ventas/turnos/cuadre
  * viven en un teléfono que funciona offline, y descarga la APK por WhatsApp/Telegram.
  * 
  * MODULARIZED: Cada sección está en su propio componente para mejor mantenibilidad y reutilización.
@@ -69,19 +68,19 @@ import FAQ from '../components/sections/FAQ.astro';
     </ul>
   </FeatureSection>
 
-  <!-- Cuadre -->
+  <!-- Ganancias -->
   <FeatureSection
-    id="cuadre"
-    screenshot="05-cuadres.png"
-    alt="Pantalla de cuadres con opciones de aprobar o rechazar"
-    title="El cuadre ya no se hace a mano."
-    class="cuadre"
+    id="ganancias"
+    screenshot="07-ganancias.png"
+    alt="Pantalla de ganancias mostrando ventas totales, costo de productos, pagos al equipo y ganancia neta"
+    title="Sabe cuánto ganas de verdad, no solo cuánto vendes."
+    class="ganancias"
     band
   >
     <ul class="feature-list">
-      <li>Cada dependiente cierra su turno con un <strong>cuadre</strong> que te llega a ti.</li>
-      <li>Lo <strong>apruebas</strong> o lo <strong>rechazas</strong> con un comentario, donde estés.</li>
-      <li>Al rechazar, el stock vendido se revierte solo. Control real, sin discusiones.</li>
+      <li><strong>Resta el costo de tus productos y los pagos a tu equipo</strong> de forma automática.</li>
+      <li>Compara tu ganancia de <strong>hoy, la semana o el mes</strong> contra el período anterior.</li>
+      <li>Ve tus <strong>productos más vendidos</strong> sin sacar cuentas a mano.</li>
     </ul>
   </FeatureSection>
 

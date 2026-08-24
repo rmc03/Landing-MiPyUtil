@@ -25,6 +25,14 @@ const stats = [
       ))}
     </div>
 
+    <p class="trial-note">
+      <svg class="trial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span><strong>14 días gratis.</strong> Sin compromiso: si sigues, pagas desde $3 USD/mes por tarjeta o transferencia, nunca antes de que termine tu prueba.</span>
+    </p>
+
     <div class="cta-group">
       <Button variant="primary" icon="download" class="btn-full-width">Descargar APK <span class="size-badge">~30 MB</span></Button>
       <p class="cta-divider">O escríbenos por:</p>
@@ -55,7 +63,7 @@ const stats = [
   }
 
   .dark-band a:hover {
-    color: var(--primary-light);
+    color: var(--primary-pale);
     text-decoration: underline;
   }
 
@@ -106,6 +114,26 @@ const stats = [
     font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
     color: var(--ink-secondary);
     line-height: 1.4;
+  }
+
+  .trial-note {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    line-height: var(--lh-lead);
+    text-align: left;
+    max-width: 60ch;
+    margin: 0 auto clamp(var(--space-lg), 5vw, var(--space-xl));
+  }
+
+  .trial-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--primary-light);
+    margin-top: 2px;
   }
 
   .cta-group {
