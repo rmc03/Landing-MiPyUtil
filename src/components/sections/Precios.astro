@@ -3,15 +3,15 @@
 // "La Caja": la sección de precios se comporta como una pantalla de la app.
 // Los límites se muestran como filas de Configuración (etiqueta + valor a la
 // derecha), el toggle de facturación hace rodar el importe como el registro
-// del POS (odómetro), y el modo anual revela la línea de "cambio": los 2 meses
-// gratis con el ahorro exacto (aritmética: anual = 10 × mensual).
+// del POS (odómetro).
 import Button from '../ui/Button.astro';
 
 const plans = [
   {
     name: 'Básico',
-    monthly: 3,
-    annual: 30,
+    monthlyPrice: '1.500',
+    monthlyIntro: '1.200',
+    annualPrice: '20',
     recommended: false,
     limits: [
       { label: 'Productos', value: '75' },
@@ -22,8 +22,9 @@ const plans = [
   },
   {
     name: 'Negocio',
-    monthly: 5,
-    annual: 50,
+    monthlyPrice: '2.000',
+    monthlyIntro: '1.800',
+    annualPrice: '25',
     recommended: true,
     limits: [
       { label: 'Productos', value: '150' },
@@ -34,8 +35,9 @@ const plans = [
   },
   {
     name: 'Pro',
-    monthly: 8,
-    annual: 80,
+    monthlyPrice: '2.500',
+    monthlyIntro: '2.000',
+    annualPrice: '30',
     recommended: false,
     limits: [
       { label: 'Productos', value: '300' },
@@ -51,7 +53,7 @@ const plans = [
   <div class="container">
     <div class="section-header">
       <h2 class="title">Elige tu plan</h2>
-      <p class="subtitle">14 días de prueba gratis en cualquier plan. Acceso total a las funciones y soporte por WhatsApp.</p>
+      <p class="subtitle">14 días de prueba gratis en cualquier plan. Despliegue inmediato, acceso total a inventario y soporte directo.</p>
     </div>
 
     <div class="billing-toggle" role="group" aria-label="Frecuencia de pago">
@@ -59,7 +61,7 @@ const plans = [
       <button type="button" class="billing-option" data-billing="monthly" aria-pressed="true">Mensual</button>
       <button type="button" class="billing-option" data-billing="annual" aria-pressed="false">
         Anual
-        <span class="save-chip">2 meses gratis</span>
+        <span class="save-chip">Grandes descuentos</span>
       </button>
     </div>
 
@@ -73,20 +75,22 @@ const plans = [
 
           <div class="card-price" data-billing="monthly">
             <div class="intro-offer">
-              <strong class="intro-amount">${plan.monthly - 1}</strong>
-              <span class="intro-label">el primer mes</span>
+              <span class="intro-prefix">1.<sup>er</sup> mes:</span>
+              <strong class="intro-amount">{plan.monthlyIntro}</strong>
+              <span class="intro-currency">CUP</span>
             </div>
             <div class="price-row">
-              <span class="currency" aria-hidden="true">$</span>
-              <span class="amount" data-monthly={plan.monthly} data-annual={plan.annual}>
-                <span class="amount-register" data-value={plan.monthly}>{plan.monthly}</span>
+              <span class="price-prefix" data-monthly-text="luego " data-annual-text="">luego </span>
+              <span class="currency" data-monthly-currency="" data-annual-currency="$" aria-hidden="true"></span>
+              <span class="amount" data-monthly={plan.monthlyPrice} data-annual={plan.annualPrice}>
+                <span class="amount-register" data-value={plan.monthlyPrice}>{plan.monthlyPrice}</span>
               </span>
+              <span class="currency-unit" data-monthly-text=" CUP" data-annual-text=" USD"> CUP</span>
               <span class="period" data-monthly-text="/ mes" data-annual-text="/ año">/ mes</span>
             </div>
-            <div class="change-line">
-              <span class="change-line-text">
-                2 meses gratis · Ahorro de ${plan.monthly * 2} USD al año
-              </span>
+            <div class="payment-method-tag">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="payment-tag-icon" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+              <span class="payment-tag-text" data-monthly-text="Transferencia bancaria (CUP)" data-annual-text="Tarjeta Clásica (USD)">Transferencia bancaria (CUP)</span>
             </div>
             <span class="price-status" aria-live="polite"></span>
           </div>
@@ -190,7 +194,7 @@ const plans = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(4px, 1vw, 6px);
+    gap: clamp(4px, 1vw, 8px);
     background: transparent;
     border: none;
     border-radius: var(--radius-pill);
@@ -280,7 +284,7 @@ const plans = [
     align-items: center;
     justify-content: space-between;
     gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
   }
 
   .plan-name {
@@ -290,7 +294,7 @@ const plans = [
   }
 
   .card-price {
-    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -304,10 +308,16 @@ const plans = [
     margin-bottom: 2px;
   }
 
-  /* En modo anual no hay descuento de primer mes: se oculta y el precio
-     recurrente (.amount) recupera el protagonismo. */
+  /* En modo anual no hay oferta de 1er mes: se oculta y el precio recurrente (.amount)
+     recupera el protagonismo. */
   .card-price[data-billing="annual"] .intro-offer {
     display: none;
+  }
+
+  .intro-prefix {
+    color: var(--primary-light);
+    font-size: var(--fs-small);
+    font-weight: 600;
   }
 
   .intro-amount {
@@ -318,20 +328,30 @@ const plans = [
     font-variant-numeric: tabular-nums;
   }
 
-  .intro-label {
-    color: var(--ink-secondary);
-    font-size: var(--fs-small);
+  .intro-currency {
+    color: var(--primary-light);
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    font-weight: 700;
   }
 
   .price-row {
     display: flex;
     align-items: baseline;
-    gap: 1px;
+    gap: 2px;
     flex-wrap: wrap;
   }
 
+  .price-prefix {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+  }
+
+  .card-price[data-billing="annual"] .price-prefix {
+    display: none;
+  }
+
   .currency {
-    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
+    font-size: clamp(1.5rem, 4vw, var(--fs-stat));
     font-weight: 700;
     color: var(--ink);
   }
@@ -346,13 +366,38 @@ const plans = [
     position: relative;
   }
 
-  /* En modo mensual el precio con descuento (.intro-amount) es el protagonista;
-     este precio recurrente pasa a ser información de apoyo ("luego $X/mes"). */
-  .card-price[data-billing="monthly"] .price-row .currency,
-  .card-price[data-billing="monthly"] .price-row .amount {
-    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+  .currency-unit {
+    font-size: var(--fs-small);
     font-weight: 600;
     color: var(--ink-secondary);
+  }
+
+  /* En modo mensual el precio recurrente es información secundaria ("luego 1.500 CUP / mes"). */
+  .card-price[data-billing="monthly"] .price-row {
+    margin-top: 2px;
+  }
+
+  .card-price[data-billing="monthly"] .price-row .price-prefix,
+  .card-price[data-billing="monthly"] .price-row .currency,
+  .card-price[data-billing="monthly"] .price-row .amount,
+  .card-price[data-billing="monthly"] .price-row .currency-unit {
+    font-size: clamp(0.875rem, 2vw, 0.95rem);
+    font-weight: 500;
+    color: var(--ink-secondary);
+  }
+
+  .card-price[data-billing="annual"] .price-row .currency,
+  .card-price[data-billing="annual"] .price-row .amount {
+    font-size: clamp(1.75rem, 4.5vw, 2.25rem);
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .card-price[data-billing="annual"] .price-row .currency-unit {
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    font-weight: 700;
+    color: var(--ink-secondary);
+    margin-left: 2px;
   }
 
   .amount-register {
@@ -371,45 +416,38 @@ const plans = [
     transition: opacity 200ms ease-out;
   }
 
-  .period.transitioning {
+  .period.transitioning,
+  .currency-unit.transitioning,
+  .payment-tag-text.transitioning {
     opacity: 0;
   }
 
-  .change-line {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows var(--dur-overlay) var(--ease-out-expo);
+  /* Tag de método de pago en la tarjeta */
+  .payment-method-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    background: var(--surface-secondary);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    width: fit-content;
   }
 
-  /* La línea de ahorro anual solo existe en modo anual. */
-  .card-price[data-billing="annual"] .change-line {
-    grid-template-rows: 1fr;
-  }
-
-  .change-line-text {
-    min-height: 0;
-    overflow: hidden;
+  .payment-tag-icon {
     color: var(--primary-light);
-    font-size: var(--fs-small);
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity var(--dur-routine) var(--ease-out-expo),
-                transform var(--dur-routine) var(--ease-out-expo);
+    flex-shrink: 0;
   }
 
-  .card-price[data-billing="annual"] .change-line-text {
-    opacity: 1;
-    transform: none;
+  .payment-tag-text {
+    font-size: var(--fs-caption);
+    font-weight: 500;
+    color: var(--ink-secondary);
+    transition: opacity 200ms ease-out;
   }
 
-  .change-line-text.transitioning {
-    opacity: 0;
-  }
-
-  /* Estado anunciado a lectores de pantalla: el registro visible se reconstruye
-     en celdas durante el roll, así que el precio final se anuncia aquí. */
+  /* Estado anunciado a lectores de pantalla */
   .price-status {
     position: absolute;
     width: 1px;
@@ -426,7 +464,7 @@ const plans = [
     display: flex;
     flex-direction: column;
     border-top: 1px solid var(--line);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
   }
 
   .limit-row {
@@ -451,7 +489,7 @@ const plans = [
   }
 
   .card-features {
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     flex-grow: 1;
   }
 
@@ -536,6 +574,10 @@ const plans = [
     const thumb = group.querySelector<HTMLElement>('.billing-thumb');
     const registers = Array.from(document.querySelectorAll<HTMLElement>('.amount-register'));
     const periods = Array.from(document.querySelectorAll<HTMLElement>('.period'));
+    const pricePrefixes = Array.from(document.querySelectorAll<HTMLElement>('.price-prefix'));
+    const currencies = Array.from(document.querySelectorAll<HTMLElement>('.currency'));
+    const currencyUnits = Array.from(document.querySelectorAll<HTMLElement>('.currency-unit'));
+    const paymentTagTexts = Array.from(document.querySelectorAll<HTMLElement>('.payment-tag-text'));
     const cardPrices = Array.from(document.querySelectorAll<HTMLElement>('.card-price'));
     const statuses = Array.from(document.querySelectorAll<HTMLElement>('.price-status'));
 
@@ -577,9 +619,11 @@ const plans = [
       if (target) positionThumb(target);
 
       if (!reduceMotion) {
-        // Fase 1: Fade out simultáneo de números y períodos
+        // Fase 1: Fade out simultáneo
         registers.forEach((register) => register.classList.add('transitioning'));
         periods.forEach((period) => period.classList.add('transitioning'));
+        currencyUnits.forEach((unit) => unit.classList.add('transitioning'));
+        paymentTagTexts.forEach((tag) => tag.classList.add('transitioning'));
 
         // Esperar a que termine el fade out
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -592,9 +636,25 @@ const plans = [
           register.dataset.value = newValue;
         });
 
+        pricePrefixes.forEach((prefix) => {
+          prefix.textContent = isAnnual ? (prefix.dataset.annualText || '') : (prefix.dataset.monthlyText || '');
+        });
+
+        currencies.forEach((curr) => {
+          curr.textContent = isAnnual ? (curr.dataset.annualCurrency || '') : (curr.dataset.monthlyCurrency || '');
+        });
+
+        currencyUnits.forEach((unit) => {
+          unit.textContent = isAnnual ? (unit.dataset.annualText || '') : (unit.dataset.monthlyText || '');
+        });
+
         periods.forEach((period) => {
           const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
           period.textContent = text || period.textContent || '';
+        });
+
+        paymentTagTexts.forEach((tag) => {
+          tag.textContent = isAnnual ? (tag.dataset.annualText || '') : (tag.dataset.monthlyText || '');
         });
 
         // Forzar reflow para asegurar que los cambios se apliquen
@@ -603,6 +663,8 @@ const plans = [
         // Fase 3: Fade in
         registers.forEach((register) => register.classList.remove('transitioning'));
         periods.forEach((period) => period.classList.remove('transitioning'));
+        currencyUnits.forEach((unit) => unit.classList.remove('transitioning'));
+        paymentTagTexts.forEach((tag) => tag.classList.remove('transitioning'));
 
       } else {
         // Sin animación
@@ -613,15 +675,29 @@ const plans = [
           register.dataset.value = newValue;
         });
 
+        pricePrefixes.forEach((prefix) => {
+          prefix.textContent = isAnnual ? (prefix.dataset.annualText || '') : (prefix.dataset.monthlyText || '');
+        });
+
+        currencies.forEach((curr) => {
+          curr.textContent = isAnnual ? (curr.dataset.annualCurrency || '') : (curr.dataset.monthlyCurrency || '');
+        });
+
+        currencyUnits.forEach((unit) => {
+          unit.textContent = isAnnual ? (unit.dataset.annualText || '') : (unit.dataset.monthlyText || '');
+        });
+
         periods.forEach((period) => {
           const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
           period.textContent = text || period.textContent || '';
         });
+
+        paymentTagTexts.forEach((tag) => {
+          tag.textContent = isAnnual ? (tag.dataset.annualText || '') : (tag.dataset.monthlyText || '');
+        });
       }
 
       // Fuente única de verdad: data-billing en el contenedor de precio.
-      // Gobierna la línea de ahorro anual, la oferta de primer mes y la
-      // jerarquía tipográfica (qué número es el protagonista) por CSS.
       cardPrices.forEach((el) => {
         el.dataset.billing = mode;
       });
@@ -633,7 +709,9 @@ const plans = [
         const period = card?.querySelector<HTMLElement>('.period');
         const price = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
         const suffix = isAnnual ? (period?.dataset.annualText || '') : (period?.dataset.monthlyText || '');
-        status.textContent = `$${price} USD ${suffix}`.trim();
+        const curr = isAnnual ? '$' : '';
+        const unit = isAnnual ? 'USD' : 'CUP';
+        status.textContent = `${curr}${price} ${unit} ${suffix}`.trim();
       });
 
       await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION));

@@ -81,7 +81,7 @@ const steps: Step[] = [
 <script>
   const observeTimeline = () => {
     const stepsContainer = document.querySelector('.como-funciona .steps');
-    const progressBar = document.querySelector('.timeline-bar');
+    const progressBar = document.querySelector<HTMLElement>('.timeline-bar');
     const progressContainer = document.querySelector('.timeline-progress');
     const dots = Array.from(document.querySelectorAll('.timeline-dot'));
     const thresholds = [16.7, 50, 83.3];

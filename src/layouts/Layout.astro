@@ -60,7 +60,7 @@ import '../styles/global.css';
           <a href="#ventas">Ventas</a>
           <a href="#ganancias">Ganancias</a>
           <a href="#precios">Precios</a>
-          <a href="#descarga" class="nav-cta">
+          <a href="https://github.com/rmc03/Landing-MiPyUtil/releases/latest/download/MiPyUtil.apk" class="nav-cta" target="_blank" rel="noopener">
             <svg class="nav-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -413,26 +413,28 @@ import '../styles/global.css';
           }
         });
 
-        document.querySelectorAll<HTMLAnchorElement>('.nav-menu a[href^="#"]').forEach((link) => {
+        document.querySelectorAll<HTMLAnchorElement>('.nav-menu a').forEach((link) => {
           link.addEventListener('click', (e) => {
             const href = link.getAttribute('href');
-            const targetId = href && href.length > 1 ? href.slice(1) : null;
-            const targetEl = targetId ? document.getElementById(targetId) : null;
+            const isAnchor = href?.startsWith('#');
 
-            // Cerrar el menú y liberar el scroll ANTES de saltar al ancla: si el
-            // salto nativo del navegador ocurre mientras el body sigue con
-            // overflow:hidden, se pierde (la URL cambia pero la página no se mueve).
+            // Cerrar el menú y liberar el scroll ANTES de saltar al ancla
             navMenu.classList.remove('open');
             navToggle.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
 
-            if (targetEl) {
-              e.preventDefault();
-              const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-              requestAnimationFrame(() => {
-                targetEl.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
-              });
-              history.pushState(null, '', href);
+            if (isAnchor) {
+              const targetId = href && href.length > 1 ? href.slice(1) : null;
+              const targetEl = targetId ? document.getElementById(targetId) : null;
+
+              if (targetEl) {
+                e.preventDefault();
+                const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                requestAnimationFrame(() => {
+                  targetEl.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+                });
+                history.pushState(null, '', href);
+              }
             }
           });
         });

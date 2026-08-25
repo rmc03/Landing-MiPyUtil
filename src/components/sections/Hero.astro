@@ -89,7 +89,7 @@ const checkItems = [
     if (rotatingWord) {
       const words = JSON.parse(rotatingWord.getAttribute('data-words') || '[]');
       let currentIndex = 0;
-      let rotateInterval = null;
+      let rotateInterval: ReturnType<typeof setInterval> | null = null;
       
       const rotateWord = () => {
         rotatingWord.classList.add('word-exit');

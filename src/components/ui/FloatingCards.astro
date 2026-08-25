@@ -106,15 +106,15 @@ const cards = [
 </div>
 
 <script>
-  const cardsEl = document.querySelector('.floating-cards');
-  const counter = cardsEl && cardsEl.querySelector('.metric-count');
+  const cardsEl = document.querySelector<HTMLElement>('.floating-cards');
+  const counter = cardsEl ? cardsEl.querySelector<HTMLElement>('.metric-count') : null;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (counter) {
-    const target = parseInt(counter.dataset.target, 10) || 0;
+  if (counter && cardsEl) {
+    const target = parseInt(counter.dataset.target || '0', 10) || 0;
 
     if (reducedMotion || !('IntersectionObserver' in window)) {
-      counter.textContent = target;
+      counter.textContent = target.toString();
     } else {
       let started = false;
 
@@ -128,10 +128,10 @@ const cards = [
               const duration = 1200;
               const start = performance.now();
 
-              const tick = (now) => {
+              const tick = (now: number) => {
                 const progress = Math.min((now - start) / duration, 1);
                 const eased = 1 - Math.pow(1 - progress, 3);
-                counter.textContent = Math.round(target * eased);
+                counter.textContent = Math.round(target * eased).toString();
                 if (progress < 1) {
                   requestAnimationFrame(tick);
                 }
