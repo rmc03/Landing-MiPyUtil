@@ -1,208 +1,347 @@
 ---
 import Button from '../ui/Button.astro';
 
-const stats = [
-  { value: '~30 MB', label: 'Tamaño total' },
-  { value: '~2 min', label: 'Descarga con señal de Etecsa' },
-  { value: 'Android 8+', label: 'Cualquier teléfono reciente' }
+const packages = [
+  {
+    id: 'android-modern',
+    deviceType: 'smartphone',
+    title: 'Teléfono Android reciente',
+    tag: 'Recomendado',
+    tagStyle: 'recommended',
+    meta: '~30 MB · Android 8 o superior',
+    description: 'Para la inmensa mayoría de teléfonos comprados en los últimos 5 o 6 años (Samsung, Xiaomi, Redmi, Realme, Motorola, etc.). Pesa la mitad y descarga volando con datos de Etecsa.',
+    url: 'https://github.com/rmc03/Landing-MiPyUtil/releases/latest/download/MiPyUtil.apk',
+    btnLabel: 'APK',
+    btnVariant: 'primary' as const
+  },
+  {
+    id: 'android-universal',
+    deviceType: 'universal',
+    title: 'Cualquier teléfono Android',
+    tag: null,
+    tagStyle: null,
+    meta: '~74 MB · 32 y 64 bits',
+    description: 'Diseñada para modelos de teléfono anteriores o si la versión recomendada te muestra "Error de análisis" al intentar instalarla. Compatible con todos los procesadores.',
+    url: 'https://github.com/rmc03/Landing-MiPyUtil/releases/latest/download/MiPyUtil-universal.apk',
+    btnLabel: 'Universal',
+    btnVariant: 'secondary' as const
+  },
+  {
+    id: 'windows',
+    deviceType: 'pc',
+    title: 'Computadora o laptop',
+    tag: 'Windows 10 / 11',
+    tagStyle: 'muted',
+    meta: '~30 MB · Paquete MSIX',
+    description: 'Controla el inventario y las ventas en pantalla grande, o usa una laptop en el mostrador como caja principal de cobro. Instalador directo oficial en un solo clic.',
+    url: 'https://github.com/rmc03/Landing-MiPyUtil/releases/latest/download/MiPyUtil.msix',
+    btnLabel: 'Windows',
+    btnVariant: 'secondary' as const
+  }
 ];
 ---
 
 <section id="descarga" class="descarga dark-band">
   <div class="container">
-    <h2>Instálala en segundos, sin Play Store.</h2>
-    <p class="lead">
-      La APK se comparte directo por WhatsApp, Telegram o Zapya. Se instala en cualquier 
-      Android y queda lista para el primer turno.
-    </p>
+    <div class="editorial-measure">
 
-    <div class="download-stats">
-      {stats.map(stat => (
-        <div class="stat">
-          <div class="stat-value">{stat.value}</div>
-          <div class="stat-label">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-
-    <p class="trial-note">
-      <svg class="trial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"></circle>
-        <polyline points="12 6 12 12 16 14"></polyline>
-      </svg>
-      <span><strong>14 días gratis.</strong> Sin compromiso: si continúas, planes desde 1.500 CUP/mes por transferencia o licencias anuales en USD con Tarjeta Clásica, nunca antes de que termine tu prueba.</span>
-    </p>
-
-    <div class="cta-group">
-      <Button variant="primary" type="link" href="https://github.com/rmc03/Landing-MiPyUtil/releases/latest/download/MiPyUtil.apk" icon="download" class="btn-full-width">Descargar APK <span class="size-badge">~30 MB</span></Button>
-      <p class="cta-divider">O escríbenos por:</p>
-      <div class="secondary-ctas">
-        <Button variant="secondary" icon="whatsapp">Contacto WhatsApp</Button>
-        <Button variant="secondary" type="link" href="https://t.me/MipyUtil" icon="telegram">Canal de Telegram</Button>
+      <div class="section-header">
+        <h2>Elige el instalador para tu dispositivo.</h2>
+        <p class="lead">
+          Sin Play Store, sin cuentas de Google ni tiendas bloqueadas. Descarga directa en un toque,
+          lista para instalar y operar en tu negocio.
+        </p>
       </div>
+
+      <!-- Lista de instaladores: sin tarjetas, filas separadas por línea fina -->
+      <div class="install-list">
+        {packages.map(pkg => (
+          <div class="install-row">
+            <div class={`install-icon install-icon--${pkg.deviceType === 'pc' ? 'blue' : 'green'}`} aria-hidden="true">
+              {pkg.deviceType === 'smartphone' && (
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.583 8.356 13.847 8 12 8s-3.583.356-5.1368.9501L4.8409 5.4471a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+              )}
+              {pkg.deviceType === 'universal' && (
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+              )}
+              {pkg.deviceType === 'pc' && (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.551H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.8"/></svg>
+              )}
+            </div>
+
+            <div class="install-titlewrap">
+              <h3 class="install-title">{pkg.title}</h3>
+              {pkg.tag && (
+                <span class={`install-tag install-tag--${pkg.tagStyle}`}>{pkg.tag}</span>
+              )}
+            </div>
+
+            <p class="install-desc">{pkg.description}</p>
+            <p class="install-meta">{pkg.meta}</p>
+
+            <div class="install-action">
+              <Button
+                variant={pkg.btnVariant}
+                type="link"
+                href={pkg.url}
+                icon="download"
+                class="install-btn"
+              >
+                {pkg.btnLabel}
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Garantía de prueba y opciones de distribución cubana -->
+      <div class="support-band">
+        <div class="trial-line">
+          <svg class="trial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <p>
+            <strong>14 días de prueba gratis completa.</strong> Sin ningún compromiso: si decides continuar,
+            planes desde 1.500 CUP/mes por transferencia o licencias anuales en USD con Tarjeta Clásica,
+            nunca antes de que termine tu periodo de prueba.
+          </p>
+        </div>
+
+        <div class="share-line">
+          <p>¿Problemas de conexión o prefieres pasártela por Zapya? También podemos enviarte el archivo directo a tu WhatsApp o Telegram para que no gastes megas.</p>
+          <div class="share-ctas">
+            <Button variant="secondary" type="link" href="https://wa.me/" icon="whatsapp">
+              WhatsApp
+            </Button>
+            <Button variant="secondary" type="link" href="https://t.me/MipyUtil" icon="telegram">
+              Telegram
+            </Button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
 <style>
-  .dark-band {
+  .descarga {
     color: var(--ink);
-    text-align: center;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
+    padding: clamp(48px, 8vw, 96px) 0;
   }
 
-  .dark-band h2,
-  .dark-band p {
-    color: var(--ink);
+  .editorial-measure {
+    max-width: 52.5rem;
+    margin: 0 auto;
   }
 
-  .dark-band a {
-    color: var(--primary-light);
-    font-weight: 600;
-  }
-
-  .dark-band a:hover {
-    color: var(--primary-pale);
-    text-decoration: underline;
+  .section-header {
+    margin-bottom: clamp(40px, 6vw, 56px);
   }
 
   .descarga h2 {
-    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
-    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
   }
 
   .lead {
     font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     line-height: var(--lh-lead);
-    margin: 0 auto clamp(var(--space-lg), 5vw, var(--space-xl));
-    max-width: 70ch;
+    margin: 0;
+    max-width: 60ch;
     color: var(--ink-secondary);
   }
 
-  .download-stats {
+  /* === LISTA DE INSTALADORES === */
+  .install-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+  }
+
+  .install-row {
     display: grid;
-    gap: clamp(var(--space-md), 4vw, var(--space-lg));
-    max-width: 900px;
-    margin: clamp(var(--space-xl), 6vw, var(--space-2xl)) auto;
-    grid-template-columns: 1fr;
+    grid-template-columns: 32px 1fr;
+    grid-template-areas:
+      "icon titlewrap"
+      "desc desc"
+      "meta meta"
+      "action action";
+    column-gap: var(--space-md);
+    row-gap: 8px;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl)) 0;
+    border-bottom: 1px solid var(--line);
   }
 
-  .stat {
-    background: var(--surface);
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--line);
-    transition: border-color 200ms ease;
-    text-align: center;
-  }
-  
-  .stat:hover {
-    border-color: var(--primary-light);
+  .install-row:last-child {
+    border-bottom: none;
   }
 
-  .stat-value {
-    font-size: clamp(var(--fs-xl), 4vw, var(--fs-stat));
+  .install-icon {
+    grid-area: icon;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .install-icon--green {
+    color: var(--accent-green-light);
+  }
+
+  .install-icon--blue {
+    color: #38BDF8;
+  }
+
+  .install-titlewrap {
+    grid-area: titlewrap;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .install-title {
+    font-size: clamp(1.0625rem, 2vw, 1.1875rem);
     font-weight: 700;
-    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .install-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .install-tag--recommended {
     color: var(--primary-light);
-    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .install-tag--muted {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .install-desc {
+    grid-area: desc;
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
+    line-height: var(--lh-lead);
+    margin: 6px 0 0;
+    max-width: 58ch;
+  }
+
+  .install-meta {
+    grid-area: meta;
+    font-size: var(--fs-caption);
+    color: var(--muted);
+    margin: 6px 0 0;
     font-variant-numeric: tabular-nums;
   }
 
-  .stat-label {
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
-    color: var(--ink-secondary);
-    line-height: 1.4;
+  .install-action {
+    grid-area: action;
+    margin-top: var(--space-sm);
   }
 
-  .trial-note {
-    font-size: var(--fs-small);
-    color: var(--ink-secondary);
+  .install-action :global(.install-btn) {
+    width: 100%;
+  }
+
+  /* Soporte y distribución Zapya / WhatsApp */
+  .support-band {
+    padding-top: clamp(var(--space-xl), 5vw, var(--space-2xl));
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .trial-line {
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
+  }
+
+  .trial-line p {
+    font-size: var(--fs-small);
+    color: var(--ink-secondary);
     line-height: var(--lh-lead);
-    text-align: left;
-    max-width: 60ch;
-    margin: 0 auto clamp(var(--space-lg), 5vw, var(--space-xl));
+    margin: 0;
   }
 
   .trial-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     color: var(--primary-light);
     margin-top: 2px;
   }
 
-  .cta-group {
+  .share-line {
     display: flex;
     flex-direction: column;
-    gap: clamp(var(--space-xs), 2vw, var(--space-sm));
-    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
-    align-items: stretch;
-    width: 100%;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    gap: var(--space-md);
   }
-  
-  .cta-group :global(.btn-full-width) {
-    width: 100%;
-  }
-  
-  .cta-divider {
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
+
+  .share-line p {
+    font-size: var(--fs-small);
     color: var(--ink-secondary);
-    margin: clamp(var(--space-xs), 2vw, var(--space-sm)) 0;
-    text-align: center;
+    line-height: var(--lh-lead);
+    margin: 0;
+    max-width: 60ch;
   }
 
-  .secondary-ctas {
+  .share-ctas {
     display: flex;
     flex-direction: column;
-    gap: clamp(var(--space-xs), 2vw, var(--space-sm));
+    gap: var(--space-sm);
     width: 100%;
   }
-  
-  .secondary-ctas :global(.btn) {
-    flex: 1;
-  }
-  
-  .size-badge {
-    opacity: 0.8;
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
-    font-weight: 500;
-  }
 
-  @media (min-width: 40rem) {
-    .secondary-ctas {
+  /* Desktop / Tablet Breakpoints */
+  @media (min-width: 44rem) {
+    .share-line {
       flex-direction: row;
-      gap: var(--space-md);
-    }
-
-    .cta-group {
-      gap: var(--space-sm);
-    }
-
-    .download-stats {
-      grid-template-columns: repeat(3, 1fr);
+      align-items: center;
+      justify-content: space-between;
       gap: var(--space-lg);
     }
 
-    .stat {
-      padding: var(--space-xl);
+    .share-ctas {
+      flex-direction: row;
+      width: auto;
+      flex-shrink: 0;
     }
   }
 
-  @media (min-width: 48rem) {
-    .download-stats {
-      gap: var(--space-xl);
+  @media (min-width: 51rem) {
+    .install-row {
+      grid-template-columns: 40px 1fr auto;
+      grid-template-areas:
+        "icon titlewrap action"
+        "icon desc action"
+        "icon meta action";
+      align-items: center;
+      column-gap: var(--space-xl);
+      row-gap: 4px;
     }
-  }
 
-  .descarga-note {
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
+    .install-icon {
+      align-self: center;
+    }
+
+    .install-action {
+      margin-top: 0;
+      align-self: center;
+    }
+
+    .install-action :global(.install-btn) {
+      width: auto;
+    }
   }
 </style>
