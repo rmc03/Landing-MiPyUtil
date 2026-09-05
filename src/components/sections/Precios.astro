@@ -267,15 +267,12 @@ const WHATSAPP_NUMBER = '5353770707';
     display: flex;
     flex-direction: column;
     height: 100%;
-    cursor: pointer;
     transition: border-color var(--dur-routine) var(--ease-out-expo),
-                box-shadow var(--dur-routine) var(--ease-out-expo),
-                transform var(--dur-routine) var(--ease-out-expo);
+                box-shadow var(--dur-routine) var(--ease-out-expo);
   }
 
   .pricing-card:hover {
     border-color: var(--primary-light);
-    transform: translateY(-2px);
   }
 
   .pricing-card.recommended {
@@ -763,15 +760,6 @@ const WHATSAPP_NUMBER = '5353770707';
 
     cards.forEach((card) => {
       observer.observe(card);
-
-      // Abrir enlace del plan al tocar en cualquier parte de la tarjeta
-      card.addEventListener('click', (e) => {
-        if ((e.target as HTMLElement).closest('a, button')) return;
-        const btn = card.querySelector<HTMLAnchorElement>('.plan-cta-btn');
-        if (btn?.href) {
-          window.open(btn.href, '_blank', 'noopener,noreferrer');
-        }
-      });
     });
   });
 </script>
