@@ -9,6 +9,9 @@ interface Props {
   loading?: boolean;
   fullWidth?: boolean;
   class?: string;
+  target?: string;
+  rel?: string;
+  [key: string]: any;
 }
 
 const { 
@@ -20,7 +23,10 @@ const {
   disabled = false,
   loading = false,
   fullWidth = false,
-  class: className 
+  target,
+  rel,
+  class: className,
+  ...rest
 } = Astro.props;
 ---
 
@@ -31,6 +37,7 @@ const {
     type="button"
     disabled={disabled || loading}
     aria-busy={loading}
+    {...rest}
   >
     {loading && (
       <svg class="spinner" viewBox="0 0 24 24" aria-hidden="true">
@@ -71,7 +78,13 @@ const {
     </span>
   </button>
 ) : (
-  <a href={href} class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${className || ''}`}>
+  <a 
+    href={href} 
+    target={target} 
+    rel={rel || (target === '_blank' ? 'noopener noreferrer' : undefined)} 
+    class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${className || ''}`}
+    {...rest}
+  >
     <span class="btn-content">
       {icon === 'download' && (
         <svg class="btn-icon btn-icon--download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

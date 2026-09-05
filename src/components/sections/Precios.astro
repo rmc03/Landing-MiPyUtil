@@ -47,6 +47,8 @@ const plans = [
     features: ['Atención prioritaria.']
   }
 ];
+
+const WHATSAPP_NUMBER = '5353770707';
 ---
 
 <section id="precios" class="precios-section">
@@ -118,7 +120,17 @@ const plans = [
           )}
 
           <div class="card-action">
-            <Button variant={plan.recommended ? 'primary' : 'secondary'} href="#descarga" fullWidth>Empezar gratis</Button>
+            <Button 
+              variant={plan.recommended ? 'primary' : 'secondary'} 
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola, me interesa el plan mensual ${plan.name} de la app MiPyUtil`)}`}
+              icon="whatsapp"
+              target="_blank"
+              fullWidth
+              class="plan-cta-btn"
+              data-plan-name={plan.name}
+            >
+              Elegir plan
+            </Button>
           </div>
         </div>
       ))}
@@ -255,10 +267,15 @@ const plans = [
     display: flex;
     flex-direction: column;
     height: 100%;
+    cursor: pointer;
+    transition: border-color var(--dur-routine) var(--ease-out-expo),
+                box-shadow var(--dur-routine) var(--ease-out-expo),
+                transform var(--dur-routine) var(--ease-out-expo);
   }
 
   .pricing-card:hover {
     border-color: var(--primary-light);
+    transform: translateY(-2px);
   }
 
   .pricing-card.recommended {
@@ -580,6 +597,7 @@ const plans = [
     const paymentTagTexts = Array.from(document.querySelectorAll<HTMLElement>('.payment-tag-text'));
     const cardPrices = Array.from(document.querySelectorAll<HTMLElement>('.card-price'));
     const statuses = Array.from(document.querySelectorAll<HTMLElement>('.price-status'));
+    const planButtons = Array.from(document.querySelectorAll<HTMLAnchorElement>('.plan-cta-btn'));
 
     let isTransitioning = false;
 
@@ -714,6 +732,16 @@ const plans = [
         status.textContent = `${curr}${price} ${unit} ${suffix}`.trim();
       });
 
+      // Actualizar enlace WhatsApp con el plan y frecuencia seleccionados
+      const billingText = isAnnual ? 'anual' : 'mensual';
+      planButtons.forEach((btn) => {
+        const planName = btn.dataset.planName;
+        if (planName) {
+          const msg = `Hola, me interesa el plan ${billingText} ${planName} de la app MiPyUtil`;
+          btn.href = `https://wa.me/5353770707?text=${encodeURIComponent(msg)}`;
+        }
+      });
+
       await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION));
       isTransitioning = false;
     };
@@ -735,6 +763,15 @@ const plans = [
 
     cards.forEach((card) => {
       observer.observe(card);
+
+      // Abrir enlace del plan al tocar en cualquier parte de la tarjeta
+      card.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).closest('a, button')) return;
+        const btn = card.querySelector<HTMLAnchorElement>('.plan-cta-btn');
+        if (btn?.href) {
+          window.open(btn.href, '_blank', 'noopener,noreferrer');
+        }
+      });
     });
   });
 </script>
