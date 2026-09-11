@@ -9,6 +9,8 @@ const items = [
 
 <div class="trust-strip">
   <div class="container">
+    <span class="screw screw--left" aria-hidden="true"></span>
+    <span class="screw screw--right" aria-hidden="true"></span>
     <ul>
       {items.map((item) => (
         <li>
@@ -23,10 +25,35 @@ const items = [
 </div>
 
 <style>
+  /* Riel atornillado, no una franja del mismo fondo del hero: placa propia
+     a todo el ancho, con remaches en los extremos del contenido legible. */
   .trust-strip {
+    background: var(--plate);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
     padding: var(--space-md) 0;
+  }
+
+  .trust-strip .container {
+    position: relative;
+  }
+
+  .trust-strip .screw {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--screw);
+  }
+
+  .trust-strip .screw--left {
+    left: 0;
+  }
+
+  .trust-strip .screw--right {
+    right: 0;
   }
 
   .trust-strip ul {

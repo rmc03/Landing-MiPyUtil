@@ -25,8 +25,40 @@ const { title, reverse = false, band = false, id, class: className } = Astro.pro
 </section>
 
 <style>
+  .feature-section {
+    position: relative;
+  }
+
   .feature-section.band {
     background: var(--board-panel);
+  }
+
+  /* Misma veta del tablón que el hero y ComoFunciona (ver Hero.astro), con
+     otra curva y otro mosaico más espaciado: la misma madera, otra tabla.
+     Comparte esta única variante entre Ventas/Inventario/Ganancias porque
+     las tres son la misma franja de "ver la app en uso", no secciones
+     distintas que necesiten su propia identidad. */
+  @supports (mask-image: none) or (-webkit-mask-image: none) {
+    .feature-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: var(--ink);
+      opacity: 0.07;
+      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="340" height="220"%3E%3Cpath d="M0 40 Q60 30 120 42 T240 36 T340 44" stroke="white" stroke-width="1.2" fill="none" opacity="0.45"/%3E%3Cpath d="M0 100 Q65 110 130 98 T260 106 T340 96" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3Cpath d="M0 160 Q58 152 116 162 T232 156 T340 164" stroke="white" stroke-width="1.5" fill="none" opacity="0.45"/%3E%3C/svg%3E');
+      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="340" height="220"%3E%3Cpath d="M0 40 Q60 30 120 42 T240 36 T340 44" stroke="white" stroke-width="1.2" fill="none" opacity="0.45"/%3E%3Cpath d="M0 100 Q65 110 130 98 T260 106 T340 96" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3Cpath d="M0 160 Q58 152 116 162 T232 156 T340 164" stroke="white" stroke-width="1.5" fill="none" opacity="0.45"/%3E%3C/svg%3E');
+      -webkit-mask-size: 340px 220px;
+      mask-size: 340px 220px;
+      -webkit-mask-repeat: repeat;
+      mask-repeat: repeat;
+    }
+  }
+
+  .feature-section .container {
+    position: relative;
+    z-index: 1;
   }
 
   .feature-layout {

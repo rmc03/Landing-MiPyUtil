@@ -1,22 +1,17 @@
 ---
-interface FixRow {
-  was: string;
-  now: string;
+interface Row {
+  label: string;
+  libreta: string;
+  excel: string;
+  app: string;
 }
 
-const fixes: FixRow[] = [
-  {
-    was: 'Apagones y mala señal te paraban.',
-    now: 'Funciona sin internet, siempre.'
-  },
-  {
-    was: 'La libreta y el Excel, un lío.',
-    now: 'Inventario y ventas, al día.'
-  },
-  {
-    was: 'El cuadre a mano, nunca exacto.',
-    now: 'Cuadre diario, aprobado por ti.'
-  }
+const rows: Row[] = [
+  { label: 'Funciona en el apagón', libreta: 'Sí', excel: 'No', app: 'Sí' },
+  { label: 'Avisa cuando el inventario se acaba', libreta: 'No', excel: 'No', app: 'Automática' },
+  { label: 'Cuadre de caja', libreta: 'A mano', excel: 'A mano', app: 'Automático' },
+  { label: 'Un sistema para dueño y equipo', libreta: 'Cada uno la suya', excel: 'Uno a la vez', app: 'Multiusuario' },
+  { label: 'Ganancias vs. mes anterior', libreta: 'No', excel: 'A mano', app: 'Automático' }
 ];
 ---
 
@@ -24,25 +19,57 @@ const fixes: FixRow[] = [
   <div class="container">
     <h2>El día a día de tu negocio no espera por el internet.</h2>
 
-    <div class="plate-panel fix-plate">
+    <div class="plate-panel compare-plate">
       <span class="screw screw--tl" aria-hidden="true"></span>
       <span class="screw screw--tr" aria-hidden="true"></span>
       <span class="screw screw--bl" aria-hidden="true"></span>
       <span class="screw screw--br" aria-hidden="true"></span>
-      <ul class="fix-list">
-        {fixes.map(fix => (
-          <li class="fix-row">
-            <p class="fix-was"><del>{fix.was}</del></p>
-            <p class="fix-now">
-              <svg class="fix-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-              </svg>
-              {fix.now}
-            </p>
-          </li>
-        ))}
-      </ul>
+
+      <div class="compare-scroll-wrap">
+      <div class="compare-scroll">
+        <table class="compare-table">
+          <caption class="sr-only">Comparación entre llevar el negocio a mano, en Excel o con MiPyUtil</caption>
+          <colgroup>
+            <col class="compare-col-label" />
+            <col class="compare-col-data" />
+            <col class="compare-col-data" />
+            <col class="compare-col-app" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr-only">Capacidad</span></th>
+              <th scope="col" class="compare-col-data">Libreta</th>
+              <th scope="col" class="compare-col-data">Excel</th>
+              <th scope="col" class="compare-col-winner">MiPyUtil</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(row => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                <td class="compare-col-data">{row.libreta}</td>
+                <td class="compare-col-data">{row.excel}</td>
+                <td class="compare-col-winner">{row.app}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+      <div class="compare-estimate">
+        <p class="compare-estimate__figures">
+          <span class="compare-estimate__num">≈20 min</span>
+          <svg class="compare-estimate__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+          <span class="compare-estimate__num compare-estimate__num--after">menos de 2 min</span>
+        </p>
+        <p class="compare-estimate__caption">
+          Lo que puede tardar un cuadre a mano, comparado con aprobarlo ya calculado en MiPyUtil.
+        </p>
+      </div>
     </div>
   </div>
 </section>
@@ -54,78 +81,217 @@ const fixes: FixRow[] = [
   }
 
   .problema h2 {
-    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
+    margin-bottom: clamp(var(--space-xl), 5vw, var(--space-2xl));
     font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
-    max-width: 24ch;
   }
 
-  .fix-plate {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .compare-plate {
+    background: var(--plate);
     padding: clamp(var(--space-md), 4vw, var(--space-lg));
   }
 
-  .fix-list {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  /* La tabla se desborda con scroll horizontal en móvil en vez de colapsar
+     columnas: "Libreta" y "Excel" difieren en la fila del apagón, así que
+     fusionarlas perdería una distinción real. */
+  .compare-scroll {
+    overflow-x: auto;
   }
 
-  .fix-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
+  /* Envoltorio sin scroll propio: el degradado vive aquí, no en
+     .compare-scroll, para que quede fijo al borde visible del panel en vez
+     de desplazarse junto con la tabla. Avisa que la columna MiPyUtil sigue
+     ahí incluso cuando el ancho mínimo de la tabla la saca de pantalla. */
+  .compare-scroll-wrap {
+    position: relative;
+  }
+
+  .compare-scroll-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 28px;
+    background: linear-gradient(to right, transparent, var(--plate));
+    pointer-events: none;
+  }
+
+  @media (min-width: 40rem) {
+    .compare-scroll-wrap::after {
+      display: none;
+    }
+  }
+
+  .compare-table {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: collapse;
+  }
+
+  .compare-table th,
+  .compare-table td {
+    text-align: left;
+    padding: clamp(12px, 2.5vw, var(--space-md)) clamp(10px, 2vw, var(--space-md));
+    font-size: clamp(0.875rem, 2vw, var(--fs-body));
+    white-space: nowrap;
+  }
+
+  /* Las tres columnas de datos (Libreta/Excel/MiPyUtil) centradas: son
+     valores cortos que se comparan de un vistazo, no prosa. La columna de
+     capacidades se queda a la izquierda porque es una etiqueta, no un dato. */
+  .compare-table th.compare-col-data,
+  .compare-table td.compare-col-data,
+  .compare-table th.compare-col-winner,
+  .compare-table td.compare-col-winner {
+    text-align: center;
+  }
+
+  /* Encabezado en tono "placa remachada": una franja de board-panel, un
+     tono más recesado que el cuerpo en plate, como una placa aparte
+     atornillada sobre el panel. */
+  .compare-table thead th {
+    background: var(--board-panel);
+    padding-top: clamp(var(--space-md), 3vw, var(--space-lg));
+    padding-bottom: clamp(var(--space-md), 3vw, var(--space-lg));
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .compare-table tbody th {
+    font-weight: 700;
+    color: var(--ink);
+    white-space: normal;
+    max-width: 9.5rem;
+  }
+
+  .compare-table tbody td {
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .compare-table tbody tr {
     border-bottom: 1px solid var(--line);
   }
 
-  .fix-row:last-child {
+  .compare-table tbody tr:last-child {
     border-bottom: none;
   }
 
-  .fix-row .fix-was {
+  /* Columna ganadora: un lavado suave del acento sobre la placa (mismo
+     patrón que Offline Badge), nunca relleno sólido, para no introducir un
+     segundo acento saturado. El texto del cuerpo se queda en --ink, no en
+     --accent: --accent sobre este lavado no alcanza 4.5:1 en el tema claro. */
+  .compare-table tbody td.compare-col-winner {
+    background: color-mix(in srgb, var(--accent) 16%, var(--plate));
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  /* La cabecera ganadora no lleva el mismo lavado: mezclado sobre
+     board-panel (más oscuro que plate) el contraste de --accent-deep cae
+     por debajo de 4.5:1. La barra superior sólida ya marca la columna sin
+     necesitar ese relleno. */
+  .compare-table thead th.compare-col-winner {
+    color: var(--accent-deep);
+    border-top: 3px solid var(--accent);
+  }
+
+  /* Encabezado de fila fijo al desplazarse en horizontal: sin esto, el
+     visitante pierde de vista qué capacidad está comparando a mitad de scroll. */
+  .compare-table tbody th[scope='row'] {
+    position: sticky;
+    left: 0;
+    background: var(--plate);
+  }
+
+  .compare-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--board-panel);
+  }
+
+  /* Separación más generosa que el padding interno del panel a propósito:
+     marca esta franja como la pausa/remate después de la tabla, no como
+     una fila más del mismo ritmo. */
+  .compare-estimate {
+    margin-top: clamp(var(--space-lg), 5vw, var(--space-xl));
+    padding-top: clamp(var(--space-md), 4vw, var(--space-lg));
+    border-top: 1px solid var(--line);
+  }
+
+  .compare-estimate__figures {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: clamp(var(--space-sm), 3vw, var(--space-lg));
     margin: 0;
-    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
-    font-weight: 600;
+    flex-wrap: wrap;
+  }
+
+  .compare-estimate__num {
+    font-size: clamp(1.75rem, 5vw + 0.3rem, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
     color: var(--ink-muted);
   }
 
-  .fix-row .fix-was del {
-    text-decoration-color: var(--accent);
-    text-decoration-thickness: 2px;
-  }
-
-  .fix-row .fix-now {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    margin: 0;
-    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
-    font-weight: 700;
+  .compare-estimate__num--after {
     color: var(--ink);
   }
 
-  .fix-arrow {
-    width: 18px;
-    height: 18px;
+  .compare-estimate__arrow {
+    width: clamp(18px, 3vw, 28px);
+    height: clamp(18px, 3vw, 28px);
     flex-shrink: 0;
     color: var(--accent);
   }
 
+  .compare-estimate__caption {
+    margin: var(--space-sm) 0 0;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
   @media (min-width: 40rem) {
-    .fix-row {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: clamp(var(--space-md), 3vw, var(--space-lg));
+    .compare-table {
+      min-width: 0;
+      table-layout: fixed;
     }
 
-    .fix-row .fix-was {
-      flex: 1;
+    .compare-table th,
+    .compare-table td {
+      white-space: normal;
     }
 
-    .fix-row .fix-now {
-      flex: 1;
+    .compare-table tbody th {
+      max-width: none;
+    }
+
+    .compare-col-label {
+      width: 36%;
+    }
+
+    .compare-col-data {
+      width: 21%;
+    }
+
+    .compare-col-app {
+      width: 22%;
     }
   }
 </style>

@@ -11,7 +11,7 @@ colors:
   line-strong-light: "rgba(38,32,25,0.30)"
   accent-light: "#B4472A"
   accent-deep-light: "#8F3820"
-  success-light: "#35603E"
+  success-light: "#6B4A10"
   board-dark: "#121210"
   board-panel-dark: "#1A1712"
   plate-dark: "#211D17"
@@ -21,7 +21,7 @@ colors:
   line-strong-dark: "rgba(237,230,216,0.24)"
   accent-dark: "#E8A33D"
   accent-deep-dark: "#F3BA63"
-  success-dark: "#5FA876"
+  success-dark: "#F0D875"
 typography:
   display:
     fontFamily: "Anton, sans-serif"
@@ -122,7 +122,7 @@ Paleta de dos estados con la misma estructura de roles; el claro es el estado po
 - **Óxido de Rótulo** (`#B4472A` claro / `#E8A33D` oscuro, tokens `accent-light` / `accent-dark`): el único acento interactivo. CTA primario, subrayado del título, alertas de stock, indicador de "encendido" en modo apagón. En claro es un óxido de rótulo pintado; en oscuro se convierte literalmente en la luz ámbar del indicador. Nunca coexiste con un segundo acento saturado en la misma vista.
 
 ### Secondary
-- **Verde Cuadre** (`#35603E` claro / `#5FA876` oscuro, tokens `success-light` / `success-dark`): exclusivo para el estado de confirmación positiva ("Cuadre: OK"). No se usa decorativamente.
+- **Dorado de Cuadre** (`#6B4A10` claro / `#F0D875` oscuro, tokens `success-light` / `success-dark`): exclusivo para el estado de confirmación positiva ("Cuadre: OK"). No se usa decorativamente. Separado de `accent` por luminosidad, no solo por matiz —en oscuro `accent` es ámbar medio y `success` es oro pálido— para que los dos seteos sigan leyéndose distintos incluso siendo ambos cálidos.
 
 ### Neutral
 - **Tablón** (`#E7DFC9` claro / `#121210` oscuro, tokens `board-light` / `board-dark`): fondo de página. En claro, pintura de madera desgastada por el sol; en oscuro, la ausencia real de luz durante un apagón.
@@ -156,7 +156,7 @@ Paleta de dos estados con la misma estructura de roles; el claro es el estado po
 
 ## Layout
 
-Contenedor máximo de 1120px, el mismo ritmo de `clamp()` que ya traía el proyecto (`clamp(40px,10vw,80px)` de relleno de sección en móvil, hasta `--space-section-lg` en escritorio) se conserva porque ya era sólido. Mobile-first de verdad: la composición se diseña primero para ~360-390px y el layout de dos columnas es la mejora progresiva a partir de 48rem, no un colapso a partir de escritorio. El visual del hero (`PhoneMockup` compacto + floating cards) aparece solo desde 48rem, entre el titular y el párrafo; en móvil el hero es solo texto, para caber sin scroll, y la prueba visual llega más abajo con "Así se trabaja un día". El fondo del hero lleva una veta de madera muy sutil (enmascara `--ink` al 9% sobre `--board`, re-tiñéndose sola entre tema claro y apagón): es el único momento con textura de todo el sistema, deliberadamente exclusivo del hero para no diluirlo repitiéndolo en cada sección.
+Contenedor máximo de 1120px, el mismo ritmo de `clamp()` que ya traía el proyecto (`clamp(40px,10vw,80px)` de relleno de sección en móvil, hasta `--space-section-lg` en escritorio) se conserva porque ya era sólido. Mobile-first de verdad: la composición se diseña primero para ~360-390px y el layout de dos columnas es la mejora progresiva a partir de 48rem, no un colapso a partir de escritorio. El visual del hero (`PhoneMockup` compacto + floating cards) aparece solo desde 48rem, entre el titular y el párrafo; en móvil el hero es solo texto, para caber sin scroll, y la prueba visual llega más abajo con "Así se trabaja un día". El fondo del hero lleva una veta de madera muy sutil (enmascara `--ink` al 9% sobre `--board`, re-tiñéndose sola entre tema claro y apagón). Esa misma veta reaparece, a propósito, en dos zonas más con su propia curva y su propio mosaico —"Así se trabaja un día" y el trío Ventas/Inventario/Ganancias— para dar identidad a secciones que antes eran fondo plano sin repetir literalmente la textura del hero ni extenderla a toda la página; Precios, Descarga y FAQ se quedan sin textura a propósito, como contraste.
 
 ## Elevation & Depth
 
@@ -186,6 +186,12 @@ Esquinas casi rectas (`3-4px`, tokens `rounded.sm`/`rounded.md`), nunca píldora
 - **Markup:** `<dl>` con pares `dt`/`dd` reales, nunca `aria-hidden`. Ver la Regla de la Placa Honesta.
 - **Estilo:** fondo `plate` sobre `board-panel`, esquina de 3px, tornillos decorativos solo en el panel contenedor, no en cada placa individual.
 - **Estado de alerta:** fondo `accent`, texto blanco, usado solo cuando el dato exige atención (stock bajo), nunca decorativamente.
+
+### Comparison Table (tabla comparativa)
+- **Uso:** comparar capacidades del producto contra el método manual (libreta, Excel) fila por fila; hoy vive en `Problema.astro`. Primera y única tabla `<table>` real del sistema: no es una placa (no muestra una cifra propia del negocio del visitante) y no es un mockup (no muestra la interfaz del producto).
+- **Markup:** `<table>` semántico con `<th scope="col">`/`<th scope="row">` reales, nunca un grid de `div`. En móvil se desborda con scroll horizontal dentro de su propio contenedor en vez de colapsar columnas: fusionar "Libreta" y "Excel" perdería distinciones reales (p. ej. "funciona en el apagón" es cierto para la libreta pero no para Excel, que necesita una PC encendida). El encabezado de fila queda fijo (`position: sticky; left: 0`) durante el scroll para no perder de vista qué capacidad se compara.
+- **Estilo:** cuerpo en `plate` (nunca `board-panel`, para separarse de la banda que la contiene); el encabezado invierte a `board-panel` a propósito, como una placa remachada aparte, un tono más recesado que el cuerpo. La columna del producto lleva un lavado suave del acento sobre `plate` (`color-mix` ~16%, igual que Offline Badge) más una barra superior sólida de `accent` en su celda de encabezado; nunca relleno sólido en el cuerpo, para no introducir un segundo acento saturado. El texto de esa columna es `ink` en el cuerpo (no `accent`: sobre el lavado no llega a 4.5:1 en tema claro) y `accent-deep` en el encabezado (sobre `board-panel` sin lavado, donde sí lo alcanza); `accent-deep` no solo sirve de hover, también es el tono de reserva del acento cuando este no tiene suficiente contraste por sí solo.
+- **Cifras estimadas:** si la tabla va acompañada de una cifra ilustrativa (p. ej. tiempo de cuadre ahorrado), esa cifra lleva una etiqueta visible "Estimado" en la propia UI —nunca solo en el copy circundante o en un mensaje aparte— y usa un tamaño de tipografía distinto de `--fs-stat` (el token reservado a cifras reales de placa). Es la línea que evita que un visitante confunda una estimación con una placa honesta.
 
 ### Cards / Containers
 - **Corner Style:** 4px.
@@ -221,6 +227,7 @@ Interruptor explícito de dos estados (sol / apagón), no una detección silenci
 - **Do** usar el componente de placa (`<dl>` real) para cualquier cifra de negocio que se muestre en el copy; hoy vive en `GananciasLedger` y en `Precios` (`card-limits`). El hero resuelve su prueba con el tour visual de producto (`PhoneMockup`), no con placas.
 - **Do** verificar `ink-muted` contra los tres fondos (`board`, `board-panel`, `plate`) de cada tema antes de usarlo en un componente nuevo.
 - **Do** usar `PhoneMockup` + `ScreenSkeleton` como tour visual de producto en el hero (visual secundario ≥48rem), en "Así se trabaja un día" y en las secciones de función; es un mockup de producto, no una placa de cifra de negocio, así que no compite con la Regla de la Placa Honesta.
+- **Do** etiquetar visiblemente cualquier cifra estimada o ilustrativa (no medida) como "Estimado" en la propia UI, para no confundirla con una placa honesta o con una cifra de adopción/uso (ver Comparison Table).
 
 ### Don't:
 - **Don't** usar violeta, glow radial, `backdrop-filter` decorativo ni ningún residuo del sistema "SaaS oscuro" anterior.
@@ -228,3 +235,4 @@ Interruptor explícito de dos estados (sol / apagón), no una detección silenci
 - **Don't** usar botones en forma de píldora ni radios grandes en ningún componente.
 - **Don't** repetir la sombra estampada en más de dos elementos por página.
 - **Don't** poner un segundo color de acento saturado en la misma vista que el acento principal.
+- **Don't** presentar una cifra de ahorro estimado con el mismo tamaño/tratamiento tipográfico que `--fs-stat` de una placa real, ni sin la etiqueta "Estimado" visible: eso es exactamente lo que la Regla de la Placa Honesta prohíbe un nivel más arriba.

@@ -25,7 +25,7 @@ const steps: Step[] = [
     number: 2,
     time: 'Durante el día',
     title: 'Vende y cobra.',
-    description: 'Efectivo, transferencia o mixto, con el cambio calculado y el stock descontado automáticamente.'
+    description: 'Efectivo, transferencia o mixto, con el cambio calculado y el inventario descontado automáticamente.'
   },
   {
     screenshot: '05-cuadres.png',
@@ -43,26 +43,21 @@ const steps: Step[] = [
     <h2>Así se trabaja un día con MiPyUtil.</h2>
     <p class="section-lead">Desde que abre la tienda hasta que se aprueba el cuadre.</p>
 
-    <div class="timeline-progress" role="progressbar" aria-label="Progreso del flujo de trabajo" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-      <div class="timeline-bar"></div>
-      <span class="timeline-dot" style="--dot-pos: 16.7%" aria-hidden="true"></span>
-      <span class="timeline-dot" style="--dot-pos: 50%" aria-hidden="true"></span>
-      <span class="timeline-dot" style="--dot-pos: 83.3%" aria-hidden="true"></span>
-    </div>
-
     <div class="steps">
+      <div class="spine-track" aria-hidden="true"></div>
+      <div class="spine-fill" aria-hidden="true"></div>
       {steps.map(step => (
         <div class="step">
-          <div class="step-visual">
-            <PhoneMockup screenshot={step.screenshot} alt={step.alt} />
-          </div>
-          <div class="step-content">
-            <div class="step-meta">
-              <span class="step-number" aria-hidden="true">{step.number}</span>
-              <span class="step-time">{step.time}</span>
+          <div class="step-marker" aria-hidden="true">{step.number}</div>
+          <div class="step-body">
+            <div class="step-visual">
+              <PhoneMockup screenshot={step.screenshot} alt={step.alt} />
             </div>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
+            <div class="step-content">
+              <span class="step-time">{step.time}</span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
           </div>
         </div>
       ))}
@@ -73,58 +68,68 @@ const steps: Step[] = [
         <polyline points="1 4 1 10 7 10"></polyline>
         <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
       </svg>
-      Si rechazas un cuadre, el stock se revierte automáticamente. Nadie se queda con el beneficio de la duda.
+      Si rechazas un cuadre, el inventario se revierte automáticamente. Nadie se queda con el beneficio de la duda.
     </p>
   </div>
 </section>
 
 <script>
-  const observeTimeline = () => {
-    const stepsContainer = document.querySelector('.como-funciona .steps');
-    const progressBar = document.querySelector<HTMLElement>('.timeline-bar');
-    const progressContainer = document.querySelector('.timeline-progress');
-    const dots = Array.from(document.querySelectorAll('.timeline-dot'));
-    const thresholds = [16.7, 50, 83.3];
+  const initSpine = () => {
+    const stepsContainer = document.querySelector<HTMLElement>('.como-funciona .steps');
+    const spineTrack = document.querySelector<HTMLElement>('.spine-track');
+    const spineFill = document.querySelector<HTMLElement>('.spine-fill');
+    const markers = Array.from(document.querySelectorAll<HTMLElement>('.step-marker'));
 
-    if (!stepsContainer || !progressBar || !progressContainer) return;
+    if (!stepsContainer || !spineTrack || !spineFill || markers.length < 2) return;
 
     let ticking = false;
 
-    const update = () => {
+    // El eje corre exactamente entre el centro del primer y el último
+    // marcador, no entre los bordes del contenedor: los pasos tienen alturas
+    // distintas (el mockup del teléfono es mucho más alto que el texto), así
+    // que solo medir el DOM da una posición correcta en cualquier viewport.
+    const positionSpine = () => {
+      const containerRect = stepsContainer.getBoundingClientRect();
+      const firstRect = markers[0].getBoundingClientRect();
+      const lastRect = markers[markers.length - 1].getBoundingClientRect();
+      const top = firstRect.top + firstRect.height / 2 - containerRect.top;
+      const bottom = lastRect.top + lastRect.height / 2 - containerRect.top;
+      const height = Math.max(0, bottom - top);
+
+      spineTrack.style.top = `${top}px`;
+      spineTrack.style.height = `${height}px`;
+      spineFill.style.top = `${top}px`;
+      spineFill.style.height = `${height}px`;
+    };
+
+    const updateFill = () => {
       ticking = false;
-      const stepsRect = stepsContainer.getBoundingClientRect();
+      const rect = stepsContainer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // El progreso se llena mientras los pasos cruzan el viewport
       const start = viewportHeight * 0.75;
       const end = viewportHeight * 0.25;
-      const totalDistance = stepsRect.height + (start - end);
-      const currentDistance = start - stepsRect.top;
+      const totalDistance = rect.height + (start - end);
+      const currentDistance = start - rect.top;
 
       const progress = Math.min(100, Math.max(0, (currentDistance / totalDistance) * 100));
-
-      progressBar.style.transform = `scaleX(${progress / 100})`;
-      progressContainer.setAttribute('aria-valuenow', Math.round(progress).toString());
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', progress >= thresholds[i]);
-      });
-
-      // La barra flotante solo se ve mientras se está dentro de los pasos
-      const isInsideSteps = stepsRect.top < viewportHeight * 0.7 && stepsRect.bottom > 140;
-      progressContainer.classList.toggle('is-sticky-active', isInsideSteps);
+      spineFill.style.transform = `scaleY(${progress / 100})`;
     };
 
     const requestUpdate = () => {
       if (!ticking) {
         ticking = true;
-        requestAnimationFrame(update);
+        requestAnimationFrame(updateFill);
       }
     };
 
-    update();
+    positionSpine();
+    updateFill();
     window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    window.addEventListener('resize', () => {
+      positionSpine();
+      requestUpdate();
+    });
   };
 
   const observeSteps = () => {
@@ -145,19 +150,48 @@ const steps: Step[] = [
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      observeTimeline();
+      initSpine();
       observeSteps();
     });
   } else {
-    observeTimeline();
+    initSpine();
     observeSteps();
   }
 </script>
 
 <style>
+  .como-funciona {
+    position: relative;
+  }
+
+  /* Misma veta del tablón que el hero (ver Hero.astro), con otra curva y
+     otro tamaño de mosaico: la misma madera, otra tabla — no un patrón
+     decorativo nuevo. */
+  @supports (mask-image: none) or (-webkit-mask-image: none) {
+    .como-funciona::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: var(--ink);
+      opacity: 0.08;
+      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Cpath d="M0 30 Q45 20 90 32 T180 26 T300 34" stroke="white" stroke-width="1.3" fill="none" opacity="0.5"/%3E%3Cpath d="M0 78 Q50 88 100 76 T200 84 T300 74" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 130 Q42 122 84 132 T168 126 T300 134" stroke="white" stroke-width="1.6" fill="none" opacity="0.5"/%3E%3Cpath d="M0 172 Q55 180 110 170 T220 178 T300 168" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Cpath d="M0 30 Q45 20 90 32 T180 26 T300 34" stroke="white" stroke-width="1.3" fill="none" opacity="0.5"/%3E%3Cpath d="M0 78 Q50 88 100 76 T200 84 T300 74" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 130 Q42 122 84 132 T168 126 T300 134" stroke="white" stroke-width="1.6" fill="none" opacity="0.5"/%3E%3Cpath d="M0 172 Q55 180 110 170 T220 178 T300 168" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+      -webkit-mask-size: 300px 200px;
+      mask-size: 300px 200px;
+      -webkit-mask-repeat: repeat;
+      mask-repeat: repeat;
+    }
+  }
+
+  .como-funciona .container {
+    position: relative;
+    z-index: 1;
+  }
+
   .como-funciona h2 {
     margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
-    max-width: 26ch;
   }
 
   .section-lead {
@@ -167,59 +201,67 @@ const steps: Step[] = [
     margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
   }
 
-  .timeline-progress {
-    position: sticky;
-    top: calc(76px + env(safe-area-inset-top, 0px));
-    z-index: 50;
-    max-width: min(600px, 90vw);
-    height: clamp(6px, 1.5vw, 8px);
-    background: var(--board-panel);
-    border-radius: var(--radius-sm);
-    box-shadow: inset 0 0 0 1px var(--line-strong), var(--shadow-soft);
-    margin: 0 auto clamp(var(--space-xl), 5vw, var(--space-2xl)) auto;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 300ms ease, transform 300ms ease;
-    pointer-events: none;
-  }
-
-  .timeline-progress.is-sticky-active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .timeline-bar {
-    height: 100%;
-    background: var(--accent);
-    border-radius: inherit;
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  .timeline-dot {
-    position: absolute;
-    top: 50%;
-    left: var(--dot-pos);
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--plate);
-    border: 2px solid var(--line-strong);
-    transform: translate(-50%, -50%);
-    transition: background-color var(--dur-routine) ease, border-color var(--dur-routine) ease;
-  }
-
-  .timeline-dot.active {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
   .steps {
+    --marker-size: clamp(36px, 9vw, 40px);
+    position: relative;
     display: grid;
     gap: clamp(var(--space-2xl), 8vw, var(--space-section-sm));
   }
 
+  /* El eje que conecta los tres marcadores: pista fija + relleno que avanza
+     con el scroll, en vez de la barra flotante desconectada de antes. */
+  .spine-track,
+  .spine-fill {
+    position: absolute;
+    left: calc(var(--marker-size) / 2 - 1px);
+    width: 2px;
+    border-radius: 1px;
+  }
+
+  .spine-track {
+    background: var(--line-strong);
+  }
+
+  .spine-fill {
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
   .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--marker-size) 1fr;
+    gap: clamp(var(--space-md), 4vw, var(--space-xl));
+    align-items: start;
+  }
+
+  .step-marker {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--marker-size);
+    height: var(--marker-size);
+    background: var(--plate);
+    color: var(--ink-muted);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-title);
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    transition: background-color var(--dur-routine) ease, color var(--dur-routine) ease, border-color var(--dur-routine) ease;
+  }
+
+  .step.step-active .step-marker {
+    background: var(--accent);
+    color: var(--accent-on);
+    border-color: var(--accent);
+  }
+
+  .step-body {
     display: grid;
     gap: clamp(var(--space-lg), 5vw, var(--space-xl));
     align-items: center;
@@ -233,37 +275,14 @@ const steps: Step[] = [
     order: 1;
   }
 
-  .step-meta {
-    display: flex;
-    align-items: center;
-    gap: clamp(var(--space-sm), 3vw, var(--space-md));
-    margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
-    flex-wrap: wrap;
-  }
-
-  .step-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(36px, 9vw, 40px);
-    height: clamp(36px, 9vw, 40px);
-    background: var(--accent);
-    color: var(--accent-on);
-    border-radius: var(--radius-md);
-    font-size: var(--fs-title);
-    font-weight: 800;
-    line-height: 1;
-    flex-shrink: 0;
-    font-variant-numeric: tabular-nums;
-  }
-
   .step-time {
+    display: inline-block;
+    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
     font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--ink-muted);
-    white-space: nowrap;
   }
 
   .step h3 {
@@ -298,7 +317,7 @@ const steps: Step[] = [
   }
 
   @media (min-width: 48rem) {
-    .step {
+    .step-body {
       grid-template-columns: 1fr 1fr;
       gap: clamp(var(--space-xl), 5vw, var(--space-3xl));
     }
@@ -317,7 +336,7 @@ const steps: Step[] = [
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .step.step-active .step-number {
+    .step.step-active .step-marker {
       animation: step-pop 300ms var(--ease-out-expo);
     }
   }

@@ -100,7 +100,6 @@ const faqs: FAQItem[] = [
   .faq h2 {
     margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
     font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
-    max-width: 20ch;
   }
 
   .faq-list {
@@ -184,6 +183,7 @@ const faqs: FAQItem[] = [
   .faq-panel p {
     overflow: hidden;
     min-height: 0;
+    max-width: none;
     padding: clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
     color: var(--ink-muted);
     font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));

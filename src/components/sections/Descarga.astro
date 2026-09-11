@@ -53,7 +53,12 @@ const packages = [
         </p>
       </div>
 
-      <div class="install-list">
+      <div class="plate-panel install-panel">
+        <span class="screw screw--tl" aria-hidden="true"></span>
+        <span class="screw screw--tr" aria-hidden="true"></span>
+        <span class="screw screw--bl" aria-hidden="true"></span>
+        <span class="screw screw--br" aria-hidden="true"></span>
+        <div class="install-list">
         {packages.map(pkg => (
           <div class="install-row">
             <div class="install-icon" aria-hidden="true">
@@ -72,9 +77,9 @@ const packages = [
               )}
               {pkg.deviceType === 'universal' && (
                 <svg class="install-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                  <polyline points="2 17 12 22 22 17" />
+                  <polyline points="2 12 12 17 22 12" />
                 </svg>
               )}
               {pkg.deviceType === 'windows' && (
@@ -110,6 +115,7 @@ const packages = [
             </div>
           </div>
         ))}
+        </div>
       </div>
 
       <div class="support-band">
@@ -183,10 +189,18 @@ const packages = [
     color: var(--ink-muted);
   }
 
+  /* Una sola placa atornillada contiene las 3 filas, igual que la tabla
+     comparativa: una placa sostiene una lista, no una por fila. */
+  .install-panel {
+    background: var(--plate);
+    border-color: var(--line-strong);
+    padding: 0 clamp(var(--space-md), 4vw, var(--space-lg));
+    margin-bottom: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+  }
+
   .install-list {
     display: flex;
     flex-direction: column;
-    margin-bottom: clamp(var(--space-2xl), 6vw, var(--space-3xl));
   }
 
   .install-row {
@@ -216,7 +230,10 @@ const packages = [
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: var(--plate);
+    /* Invertido a board-panel: la placa que lo rodea ya es --plate, así que
+       el chip se hunde en vez de fundirse con el fondo (misma inversión que
+       la tabla comparativa). */
+    background: var(--board-panel);
     border: 1px solid var(--line);
     color: var(--ink);
   }
@@ -248,7 +265,7 @@ const packages = [
   }
 
   .install-tag--recommended {
-    color: var(--accent);
+    color: var(--accent-deep);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -366,8 +383,12 @@ const packages = [
       align-self: center;
     }
 
+    /* Ancho fijo, no auto: si cada botón se ajustara a su propio texto,
+       "APK" (3 letras) quedaría visiblemente más angosto que "Universal"
+       o "Windows" — las tres opciones deben pesar igual en la fila. */
     .install-action :global(.install-btn) {
-      width: auto;
+      width: 11.5rem;
+      white-space: nowrap;
     }
   }
 </style>
