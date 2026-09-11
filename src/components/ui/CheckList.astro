@@ -28,7 +28,8 @@ const { items } = Astro.props;
 <style>
   .checklist {
     list-style: none;
-    margin-bottom: var(--space-xl);
+    margin: 0 0 var(--space-xl);
+    padding: 0;
   }
 
   .checklist li {
@@ -36,13 +37,19 @@ const { items } = Astro.props;
     gap: var(--space-md);
     align-items: flex-start;
     margin-bottom: var(--space-md);
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
+    color: var(--ink-muted);
+  }
+
+  .checklist li strong {
+    color: var(--ink);
   }
 
   .check {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
-    color: var(--primary-light);
+    color: var(--accent);
     margin-top: 2px;
   }
 

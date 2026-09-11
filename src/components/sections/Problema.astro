@@ -1,241 +1,131 @@
 ---
-interface ProblemaItem {
-  icon: string;
-  title: string;
-  description: string;
+interface FixRow {
+  was: string;
+  now: string;
 }
 
-const problemas: ProblemaItem[] = [
+const fixes: FixRow[] = [
   {
-    icon: 'lightning',
-    title: 'Apagones y señal inestable.',
-    description: 'Los sistemas web se caen y la tienda queda vendiendo "a papel".'
+    was: 'Apagones y mala señal te paraban.',
+    now: 'Funciona sin internet, siempre.'
   },
   {
-    icon: 'table',
-    title: 'La libreta y el Excel.',
-    description: 'Nunca sabes qué se agotó ni cuánto se vendió hoy.'
+    was: 'La libreta y el Excel, un lío.',
+    now: 'Inventario y ventas, al día.'
   },
   {
-    icon: 'money',
-    title: 'El faltante en la caja.',
-    description: 'El cuadre se hace a mano y los números no te cuadran.'
+    was: 'El cuadre a mano, nunca exacto.',
+    now: 'Cuadre diario, aprobado por ti.'
   }
 ];
-
-const icons = {
-  lightning: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
-  table: 'M3 3h18v18H3V3zm0 6h18M9 21V9',
-  money: 'M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4M4 6v12c0 1.1.9 2 2 2h14v-4M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z'
-};
 ---
-
-<script is:inline>
-  (() => {
-    if (!('IntersectionObserver' in window)) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const root = document.documentElement;
-    // Estado inicial oculto ANTES de que la sección se pinte.
-    root.classList.add('js-reveal');
-
-    const arm = () => {
-      const targets = document.querySelectorAll(
-        '#problema .problema-card, #problema .problema-cierre'
-      );
-      if (!targets.length) {
-        // Failsafe: jamás dejar contenido invisible.
-        root.classList.remove('js-reveal');
-        return;
-      }
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add('is-in');
-            io.unobserve(entry.target);
-          });
-        },
-        { threshold: 0, rootMargin: '0px 0px -12% 0px' }
-      );
-      targets.forEach((t) => io.observe(t));
-    };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', arm, { once: true });
-    } else {
-      arm();
-    }
-  })();
-</script>
 
 <section id="problema" class="problema dark-band">
   <div class="container">
     <h2>El día a día de tu negocio no espera por el internet.</h2>
 
-    <div class="problema-grid">
-      {problemas.map(problema => (
-        <div class="problema-card">
-          <div class="problema-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d={icons[problema.icon as keyof typeof icons]} />
-            </svg>
-          </div>
-          <h3>{problema.title}</h3>
-          <p>{problema.description}</p>
-        </div>
-      ))}
+    <div class="plate-panel fix-plate">
+      <span class="screw screw--tl" aria-hidden="true"></span>
+      <span class="screw screw--tr" aria-hidden="true"></span>
+      <span class="screw screw--bl" aria-hidden="true"></span>
+      <span class="screw screw--br" aria-hidden="true"></span>
+      <ul class="fix-list">
+        {fixes.map(fix => (
+          <li class="fix-row">
+            <p class="fix-was"><del>{fix.was}</del></p>
+            <p class="fix-now">
+              <svg class="fix-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+              {fix.now}
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
-
-    <p class="problema-cierre">
-      <svg class="check-offline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="20 6 9 17 4 12"></polyline>
-      </svg>
-      MiPyUtil guarda tus datos en el propio teléfono. Si se cae la conexión, sigues vendiendo igual.
-    </p>
   </div>
 </section>
 
 <style>
-  .dark-band {
-    color: var(--ink);
-    position: relative;
+  .problema {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    /* Estado inicial: solo cuando el script inline confirmó JS + motion */
-    :global(html.js-reveal) .problema-card,
-    :global(html.js-reveal) .problema-cierre {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-
-    :global(html.js-reveal) .problema-card.is-in,
-    :global(html.js-reveal) .problema-cierre.is-in {
-      animation: rise-in 500ms var(--ease-out-expo) forwards;
-    }
-
-    /* En desktop las tres tarjetas comparten fila: escalonar para que se lea */
-    @media (min-width: 48rem) {
-      :global(html.js-reveal) .problema-card:nth-child(2).is-in {
-        animation-delay: 80ms;
-      }
-      :global(html.js-reveal) .problema-card:nth-child(3).is-in {
-        animation-delay: 160ms;
-      }
-    }
-  }
-
-  @keyframes rise-in {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .dark-band h2,
-  .dark-band h3,
-  .dark-band p {
-    color: var(--ink);
   }
 
   .problema h2 {
     margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
     font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+    max-width: 24ch;
   }
 
-  .problema-grid {
-    display: grid;
-    gap: clamp(var(--space-md), 4vw, var(--space-lg));
-    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
-  }
-
-  .problema-card {
-    background: var(--surface);
-    padding: clamp(var(--space-lg), 5vw, var(--space-xl));
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--line);
-    transition: border-color 200ms ease;
-  }
-  
-  .problema-card:hover {
-    border-color: var(--primary-light);
-  }
-
-  .problema-icon {
-    width: clamp(40px, 10vw, 48px);
-    height: clamp(40px, 10vw, 48px);
-    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
-    color: var(--primary-light);
-  }
-
-  .problema-icon svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .problema-card h3 {
-    margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
-    color: var(--ink);
-    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
-  }
-  
-  .problema-card p {
-    color: var(--ink-secondary);
-    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
-    line-height: 1.6;
-  }
-
-  .problema-cierre {
-    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
-    font-weight: 500;
-    line-height: var(--lh-lead);
-    text-align: center;
-    max-width: 60ch;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: clamp(var(--space-sm), 3vw, var(--space-md));
+  .fix-plate {
     padding: clamp(var(--space-md), 4vw, var(--space-lg));
-    background: var(--primary-subtle);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--primary-light);
-    flex-wrap: wrap;
   }
 
-  .check-offline {
-    width: clamp(20px, 5vw, 24px);
-    height: clamp(20px, 5vw, 24px);
+  .fix-list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fix-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fix-row:last-child {
+    border-bottom: none;
+  }
+
+  .fix-row .fix-was {
+    margin: 0;
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  .fix-row .fix-was del {
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .fix-row .fix-now {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin: 0;
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .fix-arrow {
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
-    color: var(--primary-light);
-    margin-top: 2px;
+    color: var(--accent);
   }
 
   @media (min-width: 40rem) {
-    .problema-grid {
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .problema-cierre {
-      flex-wrap: nowrap;
+    .fix-row {
+      flex-direction: row;
       align-items: center;
+      justify-content: space-between;
+      gap: clamp(var(--space-md), 3vw, var(--space-lg));
     }
 
-    .check-offline {
-      margin-top: 0;
+    .fix-row .fix-was {
+      flex: 1;
     }
-  }
 
-  @media (min-width: 48rem) {
-    .problema-grid {
-      grid-template-columns: repeat(3, 1fr);
+    .fix-row .fix-now {
+      flex: 1;
     }
   }
 </style>

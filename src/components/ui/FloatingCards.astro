@@ -3,7 +3,10 @@
  * FloatingCards: notificaciones de actividad viva alrededor del teléfono del hero.
  * Cada card es una mini-historia del producto: una venta, un cuadre, una alerta
  * de stock, la promesa offline y una métrica del día. Decorativo (aria-hidden):
- * la información ya vive en el copy de la página.
+ * la información ya vive en el copy y en las placas reales de la página.
+ *
+ * Solo en tablet/desktop (48rem+): sus offsets en porcentaje negativo desbordan
+ * en móvil, donde el hero se queda solo con el texto (ver Hero.astro).
  *
  * MOTION: entrance con stagger + float continuo con duraciones distintas por card
  * (sensación orgánica), count-up en la métrica. Todo respeta prefers-reduced-motion
@@ -13,8 +16,8 @@
 const cards = [
   {
     id: 'ventas',
-    position: 'top',
-    tone: 'primary',
+    position: 'tr',
+    tone: 'accent',
     icon: 'trend',
     title: 'Ventas hoy',
     metric: true
@@ -22,14 +25,14 @@ const cards = [
   {
     id: 'cuadre',
     position: 'tl',
-    tone: 'primary',
+    tone: 'accent',
     icon: 'check-circle',
     title: 'Cuadre aprobado'
   },
   {
     id: 'offline',
-    position: 'tr',
-    tone: 'error',
+    position: 'mr',
+    tone: 'accent',
     icon: 'wifi-off',
     title: 'Sin conexión',
     subtitle: 'todo guardado'
@@ -37,7 +40,7 @@ const cards = [
   {
     id: 'stock',
     position: 'bl',
-    tone: 'warning',
+    tone: 'accent',
     icon: 'alert',
     title: 'Stock bajo:',
     subtitle: 'Cascos'
@@ -151,21 +154,28 @@ const cards = [
 
 <style>
   .floating-cards {
+    display: none;
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 2;
   }
 
+  @media (min-width: 48rem) {
+    .floating-cards {
+      display: block;
+    }
+  }
+
   .card {
     position: absolute;
-    background: var(--surface);
+    background: var(--plate);
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     padding: 10px 14px;
     /* impeccable-disable-line flat-surface -- excepción intencional: las cards flotantes
        necesitan elevación para leerse como "flotando"; la regla flat-by-default rige el resto */
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-soft);
   }
 
   .card-bob {
@@ -179,7 +189,7 @@ const cards = [
     place-items: center;
     width: 32px;
     height: 32px;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
   }
 
@@ -197,7 +207,7 @@ const cards = [
   .card-title {
     font-size: var(--fs-small);
     font-weight: 600;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     white-space: nowrap;
   }
 
@@ -208,86 +218,41 @@ const cards = [
     white-space: nowrap;
   }
 
-  /* === Posiciones (mobile-first: cards pegadas a las esquinas del teléfono) === */
-  .card-top {
-    top: -8%;
-    inset-inline: 0;
-    width: fit-content;
-    margin-inline: auto;
-  }
-
+  /* === Posiciones alrededor del teléfono === */
   .card-tl {
     top: 22%;
-    inset-inline-start: -8%;
+    inset-inline-start: -2%;
   }
 
   .card-tr {
     top: 6%;
-    inset-inline-end: -8%;
+    inset-inline-end: -2%;
+  }
+
+  .card-mr {
+    top: 40%;
+    inset-inline-end: -2%;
   }
 
   .card-bl {
     bottom: 18%;
-    inset-inline-start: -8%;
+    inset-inline-start: -3%;
   }
 
   .card-br {
     bottom: 2%;
-    inset-inline-end: -8%;
+    inset-inline-end: -3%;
   }
 
-  /* === Tonos (chip de icono) === */
-  .tone-primary .icon-chip {
-    background: var(--primary-subtle);
-    color: var(--primary-light);
+  /* === Tonos (chip de icono): un solo acento, éxito reservado a confirmación === */
+  .tone-accent .icon-chip {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
   }
 
   .tone-success .icon-chip {
-    background: color-mix(in srgb, var(--success) 12%, transparent);
+    background: color-mix(in srgb, var(--success) 14%, transparent);
     color: var(--success);
-  }
-
-  .tone-error .icon-chip {
-    background: color-mix(in srgb, var(--error) 12%, transparent);
-    color: var(--error);
-  }
-
-  .tone-warning .icon-chip {
-    background: color-mix(in srgb, var(--warning) 14%, transparent);
-    color: var(--warning);
-  }
-
-  @media (max-width: 23.375rem) {
-    .card {
-      padding: 8px 10px;
-    }
-
-    .icon-chip {
-      width: 28px;
-      height: 28px;
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .card-tl {
-      inset-inline-start: -2%;
-    }
-
-    .card-tr {
-      inset-inline-end: -2%;
-    }
-
-    .card-bl {
-      inset-inline-start: -3%;
-    }
-
-    .card-br {
-      inset-inline-end: -3%;
-    }
-
-    .card-top {
-      top: -6%;
-    }
   }
 
   @media (min-width: 64rem) {
@@ -299,16 +264,16 @@ const cards = [
       inset-inline-end: -4%;
     }
 
+    .card-mr {
+      inset-inline-end: -4%;
+    }
+
     .card-bl {
       inset-inline-start: -5%;
     }
 
     .card-br {
       inset-inline-end: -5%;
-    }
-
-    .card-top {
-      top: -8%;
     }
   }
 
@@ -318,9 +283,9 @@ const cards = [
       animation: card-in 600ms var(--ease-out-expo) both;
     }
 
-    .card-top { animation-delay: 250ms; }
-    .card-tl { animation-delay: 350ms; }
-    .card-tr { animation-delay: 450ms; }
+    .card-tl { animation-delay: 250ms; }
+    .card-tr { animation-delay: 350ms; }
+    .card-mr { animation-delay: 450ms; }
     .card-bl { animation-delay: 550ms; }
     .card-br { animation-delay: 650ms; }
 
@@ -328,9 +293,9 @@ const cards = [
       animation: card-float 5s ease-in-out infinite;
     }
 
-    .card-top .card-bob { animation-duration: 5.5s; animation-delay: 0.2s; }
     .card-tl .card-bob { animation-duration: 4.6s; animation-delay: 0.6s; }
     .card-tr .card-bob { animation-duration: 5.2s; animation-delay: 1s; }
+    .card-mr .card-bob { animation-duration: 5.5s; animation-delay: 0.2s; }
     .card-bl .card-bob { animation-duration: 4.9s; animation-delay: 0.4s; }
     .card-br .card-bob { animation-duration: 5.8s; animation-delay: 0.8s; }
 

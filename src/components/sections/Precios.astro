@@ -1,9 +1,7 @@
 ---
 // src/components/sections/Precios.astro
-// "La Caja": la sección de precios se comporta como una pantalla de la app.
-// Los límites se muestran como filas de Configuración (etiqueta + valor a la
-// derecha), el toggle de facturación hace rodar el importe como el registro
-// del POS (odómetro).
+// Precios como filas de un tablón: límites en filas etiqueta/valor, el toggle
+// de facturación es un control de dos placas (nunca una píldora deslizante).
 import Button from '../ui/Button.astro';
 
 const plans = [
@@ -54,12 +52,11 @@ const WHATSAPP_NUMBER = '5353770707';
 <section id="precios" class="precios-section">
   <div class="container">
     <div class="section-header">
-      <h2 class="title">Elige tu plan</h2>
+      <h2>Elige tu plan</h2>
       <p class="subtitle">14 días de prueba gratis en cualquier plan. Despliegue inmediato, acceso total a inventario y soporte directo.</p>
     </div>
 
     <div class="billing-toggle" role="group" aria-label="Frecuencia de pago">
-      <span class="billing-thumb" aria-hidden="true"></span>
       <button type="button" class="billing-option" data-billing="monthly" aria-pressed="true">Mensual</button>
       <button type="button" class="billing-option" data-billing="annual" aria-pressed="false">
         Anual
@@ -69,7 +66,7 @@ const WHATSAPP_NUMBER = '5353770707';
 
     <div class="pricing-grid">
       {plans.map((plan) => (
-        <div class:list={['pricing-card', 'card-fade', { recommended: plan.recommended }]}>
+        <div class:list={['pricing-card', { recommended: plan.recommended }]}>
           <div class="card-header">
             <h3 class="plan-name">{plan.name}</h3>
             {plan.recommended && <span class="badge">Recomendado</span>}
@@ -97,21 +94,21 @@ const WHATSAPP_NUMBER = '5353770707';
             <span class="price-status" aria-live="polite"></span>
           </div>
 
-          <div class="card-limits">
+          <dl class="card-limits">
             {plan.limits.map((limit) => (
               <div class="limit-row">
-                <span class="limit-label">{limit.label}</span>
-                <span class="limit-value">{limit.value}</span>
+                <dt>{limit.label}</dt>
+                <dd>{limit.value}</dd>
               </div>
             ))}
-          </div>
+          </dl>
 
           {plan.features.length > 0 && (
             <div class="card-features">
               <ul>
                 {plan.features.map((feature) => (
                   <li>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="check-icon" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
                     {feature}
                   </li>
                 ))}
@@ -120,8 +117,8 @@ const WHATSAPP_NUMBER = '5353770707';
           )}
 
           <div class="card-action">
-            <Button 
-              variant={plan.recommended ? 'primary' : 'secondary'} 
+            <Button
+              variant={plan.recommended ? 'primary' : 'secondary'}
               href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola, me interesa el plan mensual ${plan.name} de la app MiPyUtil`)}`}
               icon="whatsapp"
               target="_blank"
@@ -143,113 +140,79 @@ const WHATSAPP_NUMBER = '5353770707';
     padding: clamp(var(--space-2xl), 8vw, var(--space-section-lg)) 0;
   }
 
-  .container {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 24px);
-  }
-
   .section-header {
-    text-align: center;
     margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
+    max-width: 60ch;
   }
 
-  .title {
-    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
-    font-weight: 700;
-    line-height: var(--lh-headline);
-    letter-spacing: -0.02em;
-    color: var(--ink);
+  .section-header h2 {
     margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
   }
 
   .subtitle {
     font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
-    color: var(--ink-secondary);
-    max-width: 600px;
-    margin: 0 auto;
+    color: var(--ink-muted);
     line-height: 1.6;
   }
 
+  /* === Toggle de facturación: dos placas, nunca una píldora === */
   .billing-toggle {
-    position: relative;
     display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--surface-secondary);
+    gap: 2px;
+    background: var(--board-panel);
     border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-    padding: 4px;
-    margin: 0 auto clamp(var(--space-xl), 5vw, var(--space-2xl));
-    width: fit-content;
+    border-radius: var(--radius-md);
+    padding: 3px;
+    margin: 0 0 clamp(var(--space-xl), 5vw, var(--space-2xl));
     max-width: calc(100vw - 32px);
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .billing-thumb {
-    position: absolute;
-    top: 4px;
-    bottom: 4px;
-    left: 4px;
-    border-radius: var(--radius-pill);
-    background: var(--surface);
-    box-shadow: inset 0 0 0 1px var(--line-strong);
-    pointer-events: none;
-    transition: transform var(--dur-routine) var(--ease-out-expo),
-                width var(--dur-routine) var(--ease-out-expo);
   }
 
   .billing-option {
-    position: relative;
-    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: clamp(4px, 1vw, 8px);
     background: transparent;
     border: none;
-    border-radius: var(--radius-pill);
-    padding: clamp(8px, 2vw, 10px) clamp(14px, 3vw, 20px);
+    border-radius: var(--radius-sm);
+    padding: clamp(9px, 2vw, 11px) clamp(14px, 3vw, 20px);
     min-height: 44px;
-    font-family: var(--font-family);
+    font-family: var(--font-body);
     font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
-    font-weight: 600;
-    color: var(--ink-secondary);
+    font-weight: 700;
+    color: var(--ink-muted);
     cursor: pointer;
     white-space: nowrap;
     transition: background-color var(--dur-routine) ease, color var(--dur-routine) ease;
   }
 
-  .billing-option:hover {
-    background: var(--hover-overlay);
+  .billing-option[aria-pressed='true'] {
+    background: var(--plate);
+    color: var(--ink);
+    box-shadow: var(--shadow-soft);
   }
 
   .billing-option:focus-visible {
-    outline: 2px solid var(--primary-light);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 
   .save-chip {
     display: inline-block;
-    font-size: var(--fs-label);
-    font-weight: 600;
+    font-size: var(--fs-caption);
+    font-weight: 700;
     letter-spacing: 0.02em;
-    color: var(--primary-light);
-    background: var(--primary-subtle);
-    border-radius: var(--radius-pill);
-    padding: 3px 10px;
+    color: var(--accent);
+    background: var(--board);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
     white-space: nowrap;
   }
 
-  .billing-option[aria-pressed="true"] .save-chip {
-    background: var(--primary);
-    color: #FFFFFF;
-  }
-
-  .billing-option[aria-pressed="true"],
-  .billing-option:hover {
-    color: var(--primary-light);
+  .billing-option[aria-pressed='true'] .save-chip {
+    background: var(--accent);
+    color: var(--accent-on);
   }
 
   .pricing-grid {
@@ -260,36 +223,30 @@ const WHATSAPP_NUMBER = '5353770707';
 
   .pricing-card {
     position: relative;
-    background: var(--surface);
+    background: var(--plate);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     padding: clamp(var(--space-lg), 5vw, var(--space-xl));
     display: flex;
     flex-direction: column;
     height: 100%;
-    transition: border-color var(--dur-routine) var(--ease-out-expo),
-                box-shadow var(--dur-routine) var(--ease-out-expo);
-  }
-
-  .pricing-card:hover {
-    border-color: var(--primary-light);
   }
 
   .pricing-card.recommended {
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 1px var(--primary-light);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-stamp);
   }
 
   .badge {
     display: inline-block;
-    background: var(--primary);
-    color: #FFFFFF;
-    font-size: var(--fs-label);
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: var(--fs-caption);
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 5px 12px;
-    border-radius: var(--radius-pill);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
     white-space: nowrap;
   }
 
@@ -302,8 +259,8 @@ const WHATSAPP_NUMBER = '5353770707';
   }
 
   .plan-name {
-    font-size: clamp(var(--fs-title), 2.5vw, var(--fs-xl));
-    font-weight: 600;
+    font-size: clamp(var(--fs-title), 2.5vw, 1.375rem);
+    font-weight: 700;
     color: var(--ink);
   }
 
@@ -322,20 +279,18 @@ const WHATSAPP_NUMBER = '5353770707';
     margin-bottom: 2px;
   }
 
-  /* En modo anual no hay oferta de 1er mes: se oculta y el precio recurrente (.amount)
-     recupera el protagonismo. */
-  .card-price[data-billing="annual"] .intro-offer {
+  .card-price[data-billing='annual'] .intro-offer {
     display: none;
   }
 
   .intro-prefix {
-    color: var(--primary-light);
+    color: var(--accent);
     font-size: var(--fs-small);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .intro-amount {
-    color: var(--primary-light);
+    color: var(--accent);
     font-size: clamp(1.75rem, 4.5vw, 2.25rem);
     font-weight: 800;
     line-height: 1;
@@ -343,7 +298,7 @@ const WHATSAPP_NUMBER = '5353770707';
   }
 
   .intro-currency {
-    color: var(--primary-light);
+    color: var(--accent);
     font-size: clamp(0.9375rem, 2vw, 1.0625rem);
     font-weight: 700;
   }
@@ -357,10 +312,10 @@ const WHATSAPP_NUMBER = '5353770707';
 
   .price-prefix {
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
   }
 
-  .card-price[data-billing="annual"] .price-prefix {
+  .card-price[data-billing='annual'] .price-prefix {
     display: none;
   }
 
@@ -376,41 +331,39 @@ const WHATSAPP_NUMBER = '5353770707';
     color: var(--ink);
     line-height: 1;
     font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum' 1;
     position: relative;
   }
 
   .currency-unit {
     font-size: var(--fs-small);
     font-weight: 600;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
   }
 
-  /* En modo mensual el precio recurrente es información secundaria ("luego 1.500 CUP / mes"). */
-  .card-price[data-billing="monthly"] .price-row {
+  .card-price[data-billing='monthly'] .price-row {
     margin-top: 2px;
   }
 
-  .card-price[data-billing="monthly"] .price-row .price-prefix,
-  .card-price[data-billing="monthly"] .price-row .currency,
-  .card-price[data-billing="monthly"] .price-row .amount,
-  .card-price[data-billing="monthly"] .price-row .currency-unit {
+  .card-price[data-billing='monthly'] .price-row .price-prefix,
+  .card-price[data-billing='monthly'] .price-row .currency,
+  .card-price[data-billing='monthly'] .price-row .amount,
+  .card-price[data-billing='monthly'] .price-row .currency-unit {
     font-size: clamp(0.875rem, 2vw, 0.95rem);
     font-weight: 500;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
   }
 
-  .card-price[data-billing="annual"] .price-row .currency,
-  .card-price[data-billing="annual"] .price-row .amount {
+  .card-price[data-billing='annual'] .price-row .currency,
+  .card-price[data-billing='annual'] .price-row .amount {
     font-size: clamp(1.75rem, 4.5vw, 2.25rem);
     font-weight: 800;
     color: var(--ink);
   }
 
-  .card-price[data-billing="annual"] .price-row .currency-unit {
+  .card-price[data-billing='annual'] .price-row .currency-unit {
     font-size: clamp(0.9375rem, 2vw, 1.0625rem);
     font-weight: 700;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     margin-left: 2px;
   }
 
@@ -426,7 +379,7 @@ const WHATSAPP_NUMBER = '5353770707';
 
   .period {
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     transition: opacity 200ms ease-out;
   }
 
@@ -436,32 +389,30 @@ const WHATSAPP_NUMBER = '5353770707';
     opacity: 0;
   }
 
-  /* Tag de método de pago en la tarjeta */
   .payment-method-tag {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     margin-top: 8px;
     padding: 4px 8px;
-    background: var(--surface-secondary);
+    background: var(--board-panel);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     width: fit-content;
   }
 
   .payment-tag-icon {
-    color: var(--primary-light);
+    color: var(--accent);
     flex-shrink: 0;
   }
 
   .payment-tag-text {
     font-size: var(--fs-caption);
     font-weight: 500;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     transition: opacity 200ms ease-out;
   }
 
-  /* Estado anunciado a lectores de pantalla */
   .price-status {
     position: absolute;
     width: 1px;
@@ -478,7 +429,7 @@ const WHATSAPP_NUMBER = '5353770707';
     display: flex;
     flex-direction: column;
     border-top: 1px solid var(--line);
-    margin-bottom: var(--space-lg);
+    margin: 0 0 var(--space-lg);
   }
 
   .limit-row {
@@ -490,14 +441,14 @@ const WHATSAPP_NUMBER = '5353770707';
     border-bottom: 1px solid var(--line);
   }
 
-  .limit-label {
+  .limit-row dt {
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
   }
 
-  .limit-value {
+  .limit-row dd {
     font-size: var(--fs-small);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
@@ -513,19 +464,19 @@ const WHATSAPP_NUMBER = '5353770707';
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-md, 12px);
+    gap: var(--space-md);
   }
 
   .card-features li {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-xs, 8px);
+    gap: var(--space-xs);
     font-size: var(--fs-body);
     color: var(--ink);
   }
 
   .check-icon {
-    color: var(--primary-light);
+    color: var(--accent);
     flex-shrink: 0;
   }
 
@@ -533,7 +484,6 @@ const WHATSAPP_NUMBER = '5353770707';
     margin-top: auto;
   }
 
-  /* Responsive Design */
   @media (min-width: 40rem) {
     .pricing-grid {
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -544,34 +494,6 @@ const WHATSAPP_NUMBER = '5353770707';
   @media (min-width: 48rem) {
     .pricing-grid {
       grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* Animations */
-  .card-fade {
-    transition: border-color var(--dur-routine) var(--ease-out-expo);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .card-fade {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s var(--ease-out-expo),
-                  transform 0.6s var(--ease-out-expo),
-                  border-color var(--dur-routine) var(--ease-out-expo);
-    }
-
-    .card-fade:nth-child(2) {
-      transition-delay: 120ms, 120ms, 0ms;
-    }
-
-    .card-fade:nth-child(3) {
-      transition-delay: 240ms, 240ms, 0ms;
-    }
-
-    .card-fade.visible {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 </style>
@@ -585,7 +507,6 @@ const WHATSAPP_NUMBER = '5353770707';
     if (!group) return;
 
     const options = Array.from(group.querySelectorAll<HTMLElement>('.billing-option'));
-    const thumb = group.querySelector<HTMLElement>('.billing-thumb');
     const registers = Array.from(document.querySelectorAll<HTMLElement>('.amount-register'));
     const periods = Array.from(document.querySelectorAll<HTMLElement>('.period'));
     const pricePrefixes = Array.from(document.querySelectorAll<HTMLElement>('.price-prefix'));
@@ -598,126 +519,71 @@ const WHATSAPP_NUMBER = '5353770707';
 
     let isTransitioning = false;
 
-    // Píldora deslizante
-    const positionThumb = (target: HTMLElement) => {
-      if (!thumb) return;
-      const groupRect = group.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      thumb.style.width = `${targetRect.width}px`;
-      thumb.style.transform = `translateX(${targetRect.left - groupRect.left - 4}px)`;
-    };
-
-    const activeOption = options.find((opt) => opt.getAttribute('aria-pressed') === 'true') || options[0];
-    positionThumb(activeOption);
-
-    window.addEventListener('resize', () => {
-      const current = options.find((opt) => opt.getAttribute('aria-pressed') === 'true');
-      positionThumb(current || options[0]);
-    });
-
     const applyBilling = async (mode: string) => {
       if (isTransitioning) return;
-      
+
       const isAnnual = mode === 'annual';
-      const target = options.find((opt) => opt.dataset.billing === mode);
-      
-      // Verificar si ya estamos en ese modo
       const currentMode = options.find((opt) => opt.getAttribute('aria-pressed') === 'true');
       if (currentMode?.dataset.billing === mode) return;
 
       isTransitioning = true;
 
-      // Actualizar toggle
       options.forEach((opt) => {
         opt.setAttribute('aria-pressed', String(opt.dataset.billing === mode));
       });
-      if (target) positionThumb(target);
+
+      const swap = () => {
+        registers.forEach((register) => {
+          const amount = register.closest<HTMLElement>('.amount');
+          const newValue = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
+          register.textContent = newValue;
+          register.dataset.value = newValue;
+        });
+
+        pricePrefixes.forEach((prefix) => {
+          prefix.textContent = isAnnual ? (prefix.dataset.annualText || '') : (prefix.dataset.monthlyText || '');
+        });
+
+        currencies.forEach((curr) => {
+          curr.textContent = isAnnual ? (curr.dataset.annualCurrency || '') : (curr.dataset.monthlyCurrency || '');
+        });
+
+        currencyUnits.forEach((unit) => {
+          unit.textContent = isAnnual ? (unit.dataset.annualText || '') : (unit.dataset.monthlyText || '');
+        });
+
+        periods.forEach((period) => {
+          const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
+          period.textContent = text || period.textContent || '';
+        });
+
+        paymentTagTexts.forEach((tag) => {
+          tag.textContent = isAnnual ? (tag.dataset.annualText || '') : (tag.dataset.monthlyText || '');
+        });
+      };
 
       if (!reduceMotion) {
-        // Fase 1: Fade out simultáneo
-        registers.forEach((register) => register.classList.add('transitioning'));
-        periods.forEach((period) => period.classList.add('transitioning'));
-        currencyUnits.forEach((unit) => unit.classList.add('transitioning'));
-        paymentTagTexts.forEach((tag) => tag.classList.add('transitioning'));
+        registers.forEach((r) => r.classList.add('transitioning'));
+        periods.forEach((p) => p.classList.add('transitioning'));
+        currencyUnits.forEach((u) => u.classList.add('transitioning'));
+        paymentTagTexts.forEach((t) => t.classList.add('transitioning'));
 
-        // Esperar a que termine el fade out
-        await new Promise(resolve => setTimeout(resolve, 200));
-
-        // Fase 2: Cambiar contenido
-        registers.forEach((register) => {
-          const amount = register.closest<HTMLElement>('.amount');
-          const newValue = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
-          register.textContent = newValue;
-          register.dataset.value = newValue;
-        });
-
-        pricePrefixes.forEach((prefix) => {
-          prefix.textContent = isAnnual ? (prefix.dataset.annualText || '') : (prefix.dataset.monthlyText || '');
-        });
-
-        currencies.forEach((curr) => {
-          curr.textContent = isAnnual ? (curr.dataset.annualCurrency || '') : (curr.dataset.monthlyCurrency || '');
-        });
-
-        currencyUnits.forEach((unit) => {
-          unit.textContent = isAnnual ? (unit.dataset.annualText || '') : (unit.dataset.monthlyText || '');
-        });
-
-        periods.forEach((period) => {
-          const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
-          period.textContent = text || period.textContent || '';
-        });
-
-        paymentTagTexts.forEach((tag) => {
-          tag.textContent = isAnnual ? (tag.dataset.annualText || '') : (tag.dataset.monthlyText || '');
-        });
-
-        // Forzar reflow para asegurar que los cambios se apliquen
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        swap();
         void registers[0]?.offsetHeight;
 
-        // Fase 3: Fade in
-        registers.forEach((register) => register.classList.remove('transitioning'));
-        periods.forEach((period) => period.classList.remove('transitioning'));
-        currencyUnits.forEach((unit) => unit.classList.remove('transitioning'));
-        paymentTagTexts.forEach((tag) => tag.classList.remove('transitioning'));
-
+        registers.forEach((r) => r.classList.remove('transitioning'));
+        periods.forEach((p) => p.classList.remove('transitioning'));
+        currencyUnits.forEach((u) => u.classList.remove('transitioning'));
+        paymentTagTexts.forEach((t) => t.classList.remove('transitioning'));
       } else {
-        // Sin animación
-        registers.forEach((register) => {
-          const amount = register.closest<HTMLElement>('.amount');
-          const newValue = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
-          register.textContent = newValue;
-          register.dataset.value = newValue;
-        });
-
-        pricePrefixes.forEach((prefix) => {
-          prefix.textContent = isAnnual ? (prefix.dataset.annualText || '') : (prefix.dataset.monthlyText || '');
-        });
-
-        currencies.forEach((curr) => {
-          curr.textContent = isAnnual ? (curr.dataset.annualCurrency || '') : (curr.dataset.monthlyCurrency || '');
-        });
-
-        currencyUnits.forEach((unit) => {
-          unit.textContent = isAnnual ? (unit.dataset.annualText || '') : (unit.dataset.monthlyText || '');
-        });
-
-        periods.forEach((period) => {
-          const text = isAnnual ? period.dataset.annualText : period.dataset.monthlyText;
-          period.textContent = text || period.textContent || '';
-        });
-
-        paymentTagTexts.forEach((tag) => {
-          tag.textContent = isAnnual ? (tag.dataset.annualText || '') : (tag.dataset.monthlyText || '');
-        });
+        swap();
       }
 
-      // Fuente única de verdad: data-billing en el contenedor de precio.
       cardPrices.forEach((el) => {
         el.dataset.billing = mode;
       });
 
-      // Actualizar status para accesibilidad
       statuses.forEach((status) => {
         const card = status.closest<HTMLElement>('.card-price');
         const amount = card?.querySelector<HTMLElement>('.amount');
@@ -729,7 +595,6 @@ const WHATSAPP_NUMBER = '5353770707';
         status.textContent = `${curr}${price} ${unit} ${suffix}`.trim();
       });
 
-      // Actualizar enlace WhatsApp con el plan y frecuencia seleccionados
       const billingText = isAnnual ? 'anual' : 'mensual';
       planButtons.forEach((btn) => {
         const planName = btn.dataset.planName;
@@ -739,27 +604,12 @@ const WHATSAPP_NUMBER = '5353770707';
         }
       });
 
-      await new Promise(resolve => setTimeout(resolve, TRANSITION_DURATION));
+      await new Promise((resolve) => setTimeout(resolve, TRANSITION_DURATION));
       isTransitioning = false;
     };
 
     options.forEach((opt) => {
       opt.addEventListener('click', () => applyBilling(opt.dataset.billing || ''));
-    });
-
-    // Intersection Observer para animación de entrada
-    const cards = document.querySelectorAll('.card-fade');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-
-    cards.forEach((card) => {
-      observer.observe(card);
     });
   });
 </script>

@@ -53,11 +53,10 @@ const packages = [
         </p>
       </div>
 
-      <!-- Lista de instaladores: sin tarjetas, filas separadas por línea fina -->
       <div class="install-list">
         {packages.map(pkg => (
           <div class="install-row">
-            <div class={`install-icon install-icon--${pkg.deviceType}`} aria-hidden="true">
+            <div class="install-icon" aria-hidden="true">
               {pkg.deviceType === 'android' && (
                 <svg class="install-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 10v6" />
@@ -80,10 +79,10 @@ const packages = [
               )}
               {pkg.deviceType === 'windows' && (
                 <svg class="install-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="8" height="8" rx="1.5" />
-                  <rect x="13" y="3" width="8" height="8" rx="1.5" />
-                  <rect x="3" y="13" width="8" height="8" rx="1.5" />
-                  <rect x="13" y="13" width="8" height="8" rx="1.5" />
+                  <rect x="3" y="3" width="8" height="8" rx="1" />
+                  <rect x="13" y="3" width="8" height="8" rx="1" />
+                  <rect x="3" y="13" width="8" height="8" rx="1" />
+                  <rect x="13" y="13" width="8" height="8" rx="1" />
                 </svg>
               )}
             </div>
@@ -113,7 +112,6 @@ const packages = [
         ))}
       </div>
 
-      <!-- Garantía de prueba y opciones de distribución cubana -->
       <div class="support-band">
         <div class="trial-line">
           <svg class="trial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -130,19 +128,19 @@ const packages = [
         <div class="share-line">
           <p>¿Problemas de conexión o prefieres pasártela por Zapya? También podemos enviarte el archivo directo a tu WhatsApp o Telegram para que no gastes megas.</p>
           <div class="share-ctas">
-            <Button 
-              variant="secondary" 
-              type="link" 
-              href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20recibir%20el%20instalador%20de%20MiPyUtil%20por%20WhatsApp" 
+            <Button
+              variant="secondary"
+              type="link"
+              href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20recibir%20el%20instalador%20de%20MiPyUtil%20por%20WhatsApp"
               icon="whatsapp"
               target="_blank"
             >
               WhatsApp
             </Button>
-            <Button 
-              variant="secondary" 
-              type="link" 
-              href="https://t.me/MipyUtil" 
+            <Button
+              variant="secondary"
+              type="link"
+              href="https://t.me/MipyUtil"
               icon="telegram"
               target="_blank"
             >
@@ -175,7 +173,6 @@ const packages = [
 
   .descarga h2 {
     margin-bottom: var(--space-sm);
-    letter-spacing: -0.02em;
   }
 
   .lead {
@@ -183,10 +180,9 @@ const packages = [
     line-height: var(--lh-lead);
     margin: 0;
     max-width: 60ch;
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
   }
 
-  /* === LISTA DE INSTALADORES === */
   .install-list {
     display: flex;
     flex-direction: column;
@@ -205,7 +201,6 @@ const packages = [
     row-gap: 8px;
     padding: clamp(var(--space-lg), 4vw, var(--space-xl)) 0;
     border-bottom: 1px solid var(--line);
-    transition: background-color var(--dur-routine) ease;
   }
 
   .install-row:last-child {
@@ -216,60 +211,20 @@ const packages = [
     grid-area: icon;
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: transform var(--dur-routine) var(--ease-out-expo),
-                box-shadow var(--dur-routine) var(--ease-out-expo),
-                border-color var(--dur-routine) var(--ease-out-expo);
-  }
-
-  .install-row:hover .install-icon {
-    transform: translateY(-2px);
+    background: var(--plate);
+    border: 1px solid var(--line);
+    color: var(--ink);
   }
 
   .install-svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     display: block;
-  }
-
-  .install-icon--android {
-    color: #10B981;
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.08);
-  }
-
-  .install-row:hover .install-icon--android {
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.16);
-    border-color: rgba(16, 185, 129, 0.35);
-  }
-
-  .install-icon--universal {
-    color: var(--primary-light);
-    background: rgba(124, 58, 237, 0.08);
-    border: 1px solid rgba(124, 58, 237, 0.2);
-    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.08);
-  }
-
-  .install-row:hover .install-icon--universal {
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.16);
-    border-color: rgba(124, 58, 237, 0.35);
-  }
-
-  .install-icon--windows {
-    color: #38BDF8;
-    background: rgba(56, 189, 248, 0.08);
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.08);
-  }
-
-  .install-row:hover .install-icon--windows {
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.16);
-    border-color: rgba(56, 189, 248, 0.35);
   }
 
   .install-titlewrap {
@@ -283,31 +238,30 @@ const packages = [
   .install-title {
     font-size: clamp(1.0625rem, 2vw, 1.1875rem);
     font-weight: 700;
-    letter-spacing: -0.01em;
     color: var(--ink);
     margin: 0;
   }
 
   .install-tag {
-    font-size: 0.75rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
   }
 
   .install-tag--recommended {
-    color: var(--primary-light);
+    color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
 
   .install-tag--muted {
-    color: var(--muted);
+    color: var(--ink-muted);
     font-weight: 600;
   }
 
   .install-desc {
     grid-area: desc;
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     line-height: var(--lh-lead);
     margin: 6px 0 0;
     max-width: 58ch;
@@ -316,7 +270,7 @@ const packages = [
   .install-meta {
     grid-area: meta;
     font-size: var(--fs-caption);
-    color: var(--muted);
+    color: var(--ink-muted);
     margin: 6px 0 0;
     font-variant-numeric: tabular-nums;
   }
@@ -330,7 +284,6 @@ const packages = [
     width: 100%;
   }
 
-  /* Soporte y distribución Zapya / WhatsApp */
   .support-band {
     padding-top: clamp(var(--space-xl), 5vw, var(--space-2xl));
     border-top: 1px solid var(--line);
@@ -347,7 +300,7 @@ const packages = [
 
   .trial-line p {
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     line-height: var(--lh-lead);
     margin: 0;
   }
@@ -356,7 +309,7 @@ const packages = [
     width: 18px;
     height: 18px;
     flex-shrink: 0;
-    color: var(--primary-light);
+    color: var(--accent);
     margin-top: 2px;
   }
 
@@ -368,7 +321,7 @@ const packages = [
 
   .share-line p {
     font-size: var(--fs-small);
-    color: var(--ink-secondary);
+    color: var(--ink-muted);
     line-height: var(--lh-lead);
     margin: 0;
     max-width: 60ch;
@@ -381,7 +334,6 @@ const packages = [
     width: 100%;
   }
 
-  /* Desktop / Tablet Breakpoints */
   @media (min-width: 44rem) {
     .share-line {
       flex-direction: row;
@@ -407,10 +359,6 @@ const packages = [
       align-items: center;
       column-gap: var(--space-lg);
       row-gap: 4px;
-    }
-
-    .install-icon {
-      align-self: center;
     }
 
     .install-action {

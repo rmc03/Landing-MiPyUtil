@@ -1,0 +1,68 @@
+---
+---
+
+<dl class="ledger" aria-label="Ejemplo de cálculo de ganancia neta en MiPyUtil">
+  <div class="ledger-row">
+    <dt>Ventas totales</dt>
+    <dd>$200</dd>
+  </div>
+  <div class="ledger-row">
+    <dt>Costo de productos</dt>
+    <dd>-$60</dd>
+  </div>
+  <div class="ledger-row">
+    <dt>Pagos al equipo</dt>
+    <dd>-$50</dd>
+  </div>
+  <div class="ledger-row ledger-total">
+    <dt>Ganancia neta</dt>
+    <dd>$90</dd>
+  </div>
+</dl>
+
+<style>
+  .ledger {
+    margin: clamp(var(--space-lg), 4vw, var(--space-xl)) 0 0;
+    max-width: 420px;
+    border-top: 2px solid var(--line-strong);
+  }
+
+  .ledger-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .ledger-row dt {
+    font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+
+  .ledger-row dd {
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.0625rem, 3vw, 1.25rem);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .ledger-total {
+    border-bottom: 2px solid var(--line-strong);
+    padding-top: var(--space-lg);
+  }
+
+  .ledger-total dt {
+    font-size: clamp(var(--fs-body), 3vw, var(--fs-title));
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .ledger-total dd {
+    font-size: clamp(1.75rem, 5vw, 2.25rem);
+    font-weight: 800;
+    color: var(--success);
+  }
+</style>

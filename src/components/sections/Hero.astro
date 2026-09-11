@@ -1,7 +1,7 @@
 ---
+import Button from '../ui/Button.astro';
 import PhoneMockup from '../PhoneMockup.astro';
 import FloatingCards from '../ui/FloatingCards.astro';
-import Button from '../ui/Button.astro';
 import CheckList from '../ui/CheckList.astro';
 import OfflineBadge from '../ui/OfflineBadge.astro';
 
@@ -14,67 +14,56 @@ const checkItems = [
 
 <section id="hero" class="hero">
   <div class="container">
-    <div class="hero-content">
-      <p class="eyebrow">
-        Para MiPyMEs y TCPs ·
-        <OfflineBadge />
-      </p>
-      <h1>
-        <span class="title-line">
-          <span class="rotating-word" data-words='["Revoluciona", "Gestiona", "Optimiza", "Controla", "Perfecciona"]'>Revoluciona</span>
-        </span>
-        <span class="title-line">tu MiPyME.</span>
-      </h1>
-      <p class="lead">
-        MiPyUtil le da a cada dependiente su propia app para vender y cerrar
-        turno, y a ti la tuya para controlar ventas, ingresos e inventario,
-        todo sin depender del internet.
-      </p>
+    <p class="eyebrow">
+      Para MiPyMEs y TCPs en Cuba ·
+      <OfflineBadge />
+    </p>
 
-      <CheckList items={checkItems} />
-
-      <div class="cta-group">
-        <Button variant="primary" type="link" href="#descarga" icon="download" fullWidth>
-          Descargar MiPyUtil
-          <span class="apk-size">Android · Windows</span>
-        </Button>
-        <div class="secondary-ctas">
-          <Button 
-            variant="secondary" 
-            type="link" 
-            href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20app%20MiPyUtil" 
-            icon="whatsapp" 
-            target="_blank" 
-            fullWidth
-          >
-            Contacto WhatsApp
-          </Button>
-          <Button 
-            variant="secondary" 
-            type="link" 
-            href="https://t.me/MipyUtil" 
-            icon="telegram" 
-            target="_blank" 
-            fullWidth
-          >
-            Canal de Telegram
-          </Button>
-        </div>
-      </div>
-
-      <p class="hero-note">
-        <svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="16" x2="12" y2="12"></line>
-          <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg>
-        Instalación directa para Android y Windows. Sin Play Store ni complicaciones.
-      </p>
-    </div>
+    <h1>
+      <span class="title-line">
+        <span class="rotating-word" data-words='["Revoluciona", "Gestiona", "Optimiza", "Controla", "Perfecciona"]'>Revoluciona</span>
+      </span>
+      <span class="title-line">tu MiPyME.</span>
+    </h1>
 
     <div class="hero-visual">
       <FloatingCards />
       <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos e inventario desde el teléfono del administrador" compact />
+    </div>
+
+    <p class="lead">
+      MiPyUtil le da a cada dependiente su propia app para vender y cerrar
+      turno, y a ti la tuya para controlar ventas, ingresos e inventario.
+    </p>
+
+    <CheckList items={checkItems} />
+
+    <div class="cta-group">
+      <Button variant="primary" type="link" href="#descarga" icon="download" stamp fullWidth>
+        Descargar MiPyUtil
+      </Button>
+      <div class="secondary-ctas">
+        <Button
+          variant="secondary"
+          type="link"
+          href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20app%20MiPyUtil"
+          icon="whatsapp"
+          target="_blank"
+          fullWidth
+        >
+          Contacto WhatsApp
+        </Button>
+        <Button
+          variant="secondary"
+          type="link"
+          href="https://t.me/MipyUtil"
+          icon="telegram"
+          target="_blank"
+          fullWidth
+        >
+          Canal de Telegram
+        </Button>
+      </div>
     </div>
   </div>
 </section>
@@ -101,42 +90,42 @@ const checkItems = [
     }
   }
 
-  // Rotating word animation
+  // Palabra rotativa del titular
   if (!prefersReducedMotion) {
     const rotatingWord = document.querySelector('.rotating-word');
     if (rotatingWord) {
       const words = JSON.parse(rotatingWord.getAttribute('data-words') || '[]');
       let currentIndex = 0;
       let rotateInterval: ReturnType<typeof setInterval> | null = null;
-      
+
       const rotateWord = () => {
         rotatingWord.classList.add('word-exit');
-        
+
         setTimeout(() => {
           currentIndex = (currentIndex + 1) % words.length;
           rotatingWord.textContent = words[currentIndex];
           rotatingWord.classList.remove('word-exit');
           rotatingWord.classList.add('word-enter');
-          
+
           setTimeout(() => {
             rotatingWord.classList.remove('word-enter');
           }, 500);
         }, 300);
       };
-      
+
       const startRotation = () => {
         if (!rotateInterval) {
           rotateInterval = setInterval(rotateWord, 3000);
         }
       };
-      
+
       const stopRotation = () => {
         if (rotateInterval) {
           clearInterval(rotateInterval);
           rotateInterval = null;
         }
       };
-      
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -146,7 +135,7 @@ const checkItems = [
           }
         });
       }, { threshold: 0.1 });
-      
+
       observer.observe(rotatingWord);
     }
   }
@@ -154,58 +143,49 @@ const checkItems = [
 
 <style>
   .hero {
-    padding-top: clamp(var(--space-lg), 4vw, 64px);
-    padding-bottom: clamp(var(--space-2xl), 6vw, var(--space-section-sm));
-    background: var(--surface-secondary);
     position: relative;
-    overflow: hidden;
+    padding-top: clamp(var(--space-md), 3vw, 40px);
+    padding-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
   }
-  
-  /* Gradiente de fondo adaptativo: en móvil vertical suave, en desktop diagonal sutil */
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, var(--background) 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-  }
-  
-  /* Glow violeta sutil solo en viewport amplio donde tiene sentido visual */
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 40%;
-    height: 60%;
-    background: radial-gradient(ellipse at top right, var(--primary-subtle) 0%, transparent 70%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 400ms ease;
+
+  /* === Veta del tablón: el hero es la tabla de madera misma, no una
+     superficie plana. Textura tomada del propio mundo del sistema (madera
+     pintada), nunca un patrón decorativo genérico. Enmascara --ink sobre
+     el fondo para que se re-tiña sola entre tema claro y apagón. === */
+  @supports (mask-image: none) or (-webkit-mask-image: none) {
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-color: var(--ink);
+      opacity: 0.09;
+      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Cpath d="M0 22 Q40 14 80 24 T160 18 T240 26 T320 20" stroke="white" stroke-width="1.4" fill="none" opacity="0.55"/%3E%3Cpath d="M0 62 Q55 70 110 60 T220 66 T320 58" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 106 Q48 98 96 108 T192 102 T320 110" stroke="white" stroke-width="1.7" fill="none" opacity="0.5"/%3E%3Cpath d="M0 148 Q60 156 120 146 T240 152 T320 144" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Cpath d="M0 22 Q40 14 80 24 T160 18 T240 26 T320 20" stroke="white" stroke-width="1.4" fill="none" opacity="0.55"/%3E%3Cpath d="M0 62 Q55 70 110 60 T220 66 T320 58" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 106 Q48 98 96 108 T192 102 T320 110" stroke="white" stroke-width="1.7" fill="none" opacity="0.5"/%3E%3Cpath d="M0 148 Q60 156 120 146 T240 152 T320 144" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+      -webkit-mask-size: 320px 180px;
+      mask-size: 320px 180px;
+      -webkit-mask-repeat: repeat;
+      mask-repeat: repeat;
+    }
   }
 
   .hero .container {
-    display: grid;
-    gap: var(--space-2xl);
-    align-items: center;
     position: relative;
-    z-index: 2;
-  }
-
-  .hero-content {
-    max-width: 100%;
-    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 24px);
   }
 
   .eyebrow {
     font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
-    font-weight: 600;
-    line-height: 1.2;
+    font-weight: 700;
+    line-height: 1.3;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--primary-light);
+    color: var(--ink-muted);
     margin-bottom: var(--space-md);
     display: flex;
     align-items: center;
@@ -214,9 +194,8 @@ const checkItems = [
   }
 
   .hero h1 {
-    font-size: var(--fs-display);
-    line-height: var(--lh-display);
     margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
+    max-width: 20ch;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
@@ -231,19 +210,55 @@ const checkItems = [
     margin-bottom: 0.05em;
   }
 
+  /* === ROTATING WORD === */
+  .rotating-word {
+    display: inline-block;
+    color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rotating-word {
+      transition: transform 300ms var(--ease-out-expo), opacity 300ms ease;
+    }
+
+    .rotating-word.word-exit {
+      transform: translateY(-4px);
+      opacity: 0;
+    }
+
+    .rotating-word.word-enter {
+      animation: word-in 500ms var(--ease-out-expo);
+    }
+  }
+
+  @keyframes word-in {
+    from {
+      transform: translateY(6px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
   .lead {
     font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     line-height: var(--lh-lead);
-    color: var(--ink-secondary);
-    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
-    max-width: 60ch;
+    color: var(--ink-muted);
+    margin-bottom: clamp(var(--space-sm), 3vw, var(--space-lg));
+    max-width: 52ch;
+  }
+
+  .hero :global(.checklist) {
+    margin-bottom: var(--space-lg);
   }
 
   .cta-group {
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     width: 100%;
   }
 
@@ -254,152 +269,34 @@ const checkItems = [
     width: 100%;
   }
 
-  .apk-size {
-    display: inline-block;
-    margin-left: var(--space-sm);
-    font-size: var(--fs-label);
-    font-weight: 500;
-    opacity: 0.85;
-  }
-
-  .hero-note {
-    font-size: var(--fs-small);
-    color: var(--ink-secondary);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    line-height: var(--lh-lead);
-  }
-
-  .note-icon {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    color: var(--primary-light);
-    margin-top: 2px;
-  }
-
+  /* === Visual del hero: mockup + notificaciones flotantes. Solo desde
+     48rem (ver FloatingCards.astro: sus offsets negativos desbordarían un
+     viewport angosto, y en móvil la prueba tangible llega más abajo con
+     ComoFunciona). === */
   .hero-visual {
-    display: flex;
+    display: none;
+    position: relative;
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  /* En móvil el mockup estira el scroll en una sola columna sin aportar: se oculta */
-  @media (max-width: 39.9375rem) {
-    .hero-visual {
-      display: none;
-    }
-  }
-
-  /* Small mobile optimization */
-  @media (max-width: 23.375rem) {
-    .hero {
-      padding-top: var(--space-xl);
-      padding-bottom: var(--space-xl);
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 10vw, 2.5rem);
-      margin-bottom: var(--space-md);
-    }
-
-    .eyebrow {
-      gap: 6px;
-      font-size: clamp(0.7rem, 3vw, var(--fs-label));
-    }
-
-    .title-line:first-child {
-      margin-bottom: 0;
-    }
-
-    .lead {
-      font-size: clamp(0.9rem, 4vw, var(--fs-body));
-      margin-bottom: var(--space-lg);
-    }
-
-    .cta-group {
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-  }
-
-  @media (min-width: 23.4375rem) and (max-width: 39.9375rem) {
-    .hero {
-      padding-top: var(--space-2xl);
-      padding-bottom: var(--space-2xl);
-    }
-
-    .title-line:first-child {
-      margin-bottom: 0.02em;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.25rem, 9vw, 3rem);
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .hero .container {
-      gap: var(--space-3xl);
-    }
-
-    .cta-group {
-      align-items: stretch;
-    }
-
-    .secondary-ctas {
-      flex-direction: row;
-      gap: var(--space-md);
-    }
-
-    .secondary-ctas > :global(*) {
-      flex: 1;
-    }
-  }
-
-  /* Diseño de 2 columnas desde 48rem (DESIGN.md): texto | mockup en tablet y desktop */
-  @media (min-width: 48rem) {
-    .hero::after {
-      background: linear-gradient(135deg, var(--background) 0%, transparent 60%);
-    }
-
-    .hero::before {
-      opacity: 1;
-    }
-
-    .hero .container {
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-3xl);
-      align-items: center;
-    }
-
-    .hero-visual {
-      max-width: none;
-    }
-  }
-
-  @media (min-width: 80rem) {
-    .hero .container {
-      gap: var(--space-section-sm);
-    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hero-content > * {
+    .hero .eyebrow,
+    .hero h1,
+    .hero-visual,
+    .hero .lead,
+    .hero :global(.checklist),
+    .hero .cta-group {
       animation: hero-rise 500ms var(--ease-out-expo) both;
     }
 
-    .hero-content > *:nth-child(1) { animation-delay: 0ms; }
-    .hero-content > *:nth-child(2) { animation-delay: 70ms; }
-    .hero-content > *:nth-child(3) { animation-delay: 140ms; }
-    .hero-content > *:nth-child(4) { animation-delay: 210ms; }
-    .hero-content > *:nth-child(5) { animation-delay: 280ms; }
-    .hero-content > *:nth-child(6) { animation-delay: 350ms; }
+    .hero .eyebrow { animation-delay: 0ms; }
+    .hero h1 { animation-delay: 60ms; }
+    .hero-visual { animation-delay: 110ms; }
+    .hero .lead { animation-delay: 160ms; }
+    .hero :global(.checklist) { animation-delay: 210ms; }
+    .hero .cta-group { animation-delay: 260ms; }
 
     :global(.hero .phone-frame) {
       animation: hero-phone var(--dur-focal) var(--ease-out-expo) both;
@@ -429,12 +326,10 @@ const checkItems = [
     from {
       opacity: 0;
       transform: translateY(16px) scale(0.98);
-      box-shadow: 0 2px 4px rgba(10, 10, 22, 0);
     }
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
-      box-shadow: var(--shadow-subtle);
     }
   }
 
@@ -447,58 +342,75 @@ const checkItems = [
     }
   }
 
-  /* === ROTATING WORD ANIMATION === */
-  .rotating-word {
-    display: inline-block;
-    color: var(--primary-light);
-    position: relative;
-    min-width: 4.5em;
-    text-align: start;
-    vertical-align: baseline;
-  }
-
-  /* Ajustar ancho mínimo según viewport */
-  @media (max-width: 23.375rem) {
-    .rotating-word {
-      min-width: 4em;
-    }
-  }
-
   @media (min-width: 40rem) {
-    .rotating-word {
-      min-width: 5em;
+    .cta-group {
+      align-items: stretch;
+    }
+
+    .secondary-ctas {
+      flex-direction: row;
+      gap: var(--space-md);
+    }
+
+    .secondary-ctas > :global(*) {
+      flex: 1;
     }
   }
 
-  @media (min-width: 64rem) {
-    .rotating-word {
-      min-width: 5.5em;
+  /* === Desktop: dos columnas, el visual del teléfono ocupa la segunda
+     columna completa mientras el texto fluye en la primera (ver DESIGN.md) === */
+  @media (min-width: 48rem) {
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-areas:
+        'eyebrow visual'
+        'title visual'
+        'lead visual'
+        'checklist visual'
+        'cta visual';
+      column-gap: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+      align-content: start;
+    }
+
+    .eyebrow { grid-area: eyebrow; }
+    .hero h1 { grid-area: title; max-width: none; }
+    .hero-visual { display: flex; grid-area: visual; align-self: center; }
+    .lead { grid-area: lead; }
+    .hero :global(.checklist) { grid-area: checklist; }
+    .cta-group { grid-area: cta; }
+  }
+
+  @media (min-width: 80rem) {
+    .hero .container {
+      column-gap: var(--space-section-sm);
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .rotating-word {
-      transition: transform 300ms var(--ease-out-expo), opacity 300ms ease;
+  /* === Viewport corto de escritorio: la ventana es ancha pero baja
+     (laptop con chrome del navegador), así que el hero comprime su propio
+     ritmo vertical para que el CTA siga visible sin scroll. === */
+  @media (min-width: 48rem) and (max-height: 50rem) {
+    .hero {
+      padding-top: var(--space-sm);
+      padding-bottom: var(--space-md);
     }
 
-    .rotating-word.word-exit {
-      transform: translateY(-4px);
-      opacity: 0;
+    .lead {
+      margin-bottom: var(--space-xs);
     }
 
-    .rotating-word.word-enter {
-      animation: word-in 500ms var(--ease-out-expo);
+    .hero :global(.checklist) {
+      margin-bottom: var(--space-sm);
     }
-  }
 
-  @keyframes word-in {
-    from {
-      transform: translateY(6px);
-      opacity: 0;
+    .hero :global(.checklist li) {
+      margin-bottom: var(--space-xs);
     }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+
+    .cta-group {
+      gap: var(--space-sm);
+      margin-bottom: var(--space-sm);
     }
   }
 </style>

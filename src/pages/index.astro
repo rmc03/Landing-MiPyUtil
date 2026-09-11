@@ -1,27 +1,31 @@
 ---
 /**
- * THESIS: La landing es la app. Refusa el patrón SaaS genérico (hero + grid + pricing)
- * y replica el panel de control de MiPyUtil: cada sección es una pantalla real.
- * 
- * OWN-WORLD: Clean Focus, tema violeta (#7C3AED, del ícono de la app) sobre neutros oscuros
- * (#16161F background, #1F1F2E surface). Plus Jakarta Sans
- * everywhere (400/500/600/700/800). Radios 8/12/16/32, cards planas, sombra subtle solo
- * en mockups. Screenshots dentro de mockups de teléfono como material central.
- * 
- * STORY: Dueño de MiPyME cubana reconoce su tienda, entiende que inventario/ventas/turnos/cuadre
- * viven en un teléfono que funciona offline, y descarga la APK por WhatsApp/Telegram.
- * 
- * MODULARIZED: Cada sección está en su propio componente para mejor mantenibilidad y reutilización.
+ * THESIS: reemplaza el "SaaS oscuro genérico" heredado (violeta, negro, glow) con
+ * el objeto que el dueño ya usa a diario: el tablón de precios curtido por el sol.
+ * OWN-WORLD: tablón claro (#E7DFC9), panel #DAD0B4, placas #F2ECDC, tinta #262019,
+ * acento óxido #B4472A. Anton solo en el h1 de cada página; Archivo en todo lo
+ * demás. Radios casi rectos, sombra estampada única en el CTA principal y el plan
+ * recomendado. Segundo estado activable, el apagón (#121210, ámbar #E8A33D): mismo
+ * sistema, mismos componentes, solo cambia qué tan iluminado está cada elemento.
+ * STORY: el dueño reconoce el tablón que ya usa, ve que se actualiza solo, y
+ * entiende que su equipo tiene su propio panel de turno.
+ * FIRST VIEWPORT: eyebrow, titular, mockup del teléfono (tour de producto)
+ * tejido antes del cuerpo en móvil, luego CTA de descarga.
+ * FORM: dirección 6 de 7 por resonancia (pizarra de precios de bodega), seed
+ * 4ef913d4, scope direction, mode persuade, candidate-count 7, assigned index 6.
  */
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/sections/Hero.astro';
+import TrustStrip from '../components/sections/TrustStrip.astro';
 import Problema from '../components/sections/Problema.astro';
 import ComoFunciona from '../components/sections/ComoFunciona.astro';
 import FeatureSection from '../components/sections/FeatureSection.astro';
+import GananciasLedger from '../components/sections/GananciasLedger.astro';
 import Precios from '../components/sections/Precios.astro';
 import Descarga from '../components/sections/Descarga.astro';
 import FAQ from '../components/sections/FAQ.astro';
+import PhoneMockup from '../components/PhoneMockup.astro';
 ---
 
 <Layout
@@ -29,18 +33,20 @@ import FAQ from '../components/sections/FAQ.astro';
   description="Inventario, ventas y turnos. Todo sin internet."
 >
   <Hero />
+  <TrustStrip />
   <Problema />
   <ComoFunciona />
-  
+
   <!-- Ventas -->
   <FeatureSection
     id="ventas"
-    screenshot="03-confirmar-pago.png"
-    alt="Pantalla confirmar pago mostrando modos efectivo, transferencia y mixto con QR"
     title="Cobra en efectivo… y también por transferencia."
     class="ventas"
     band
   >
+    <Fragment slot="visual">
+      <PhoneMockup screenshot="03-confirmar-pago.png" alt="Pantalla de confirmación de pago con modo de cobro y QR" />
+    </Fragment>
     <ul class="feature-list">
       <li>Modo <strong>Efectivo</strong>, <strong>Transferencia</strong> o <strong>Mixto</strong> con cálculo de cambio al vuelo.</li>
       <li>Muestra tu <strong>QR de pago</strong> en pantalla completa: el cliente escanea desde su app bancaria y paga.</li>
@@ -54,12 +60,13 @@ import FAQ from '../components/sections/FAQ.astro';
   <!-- Inventario -->
   <FeatureSection
     id="inventario"
-    screenshot="04-inventario.png"
-    alt="Lista de inventario con productos, fotos, búsqueda y alertas de stock bajo"
     title="Saber qué tienes, antes de que te pregunte un cliente."
     class="inventario"
     reverse
   >
+    <Fragment slot="visual">
+      <PhoneMockup screenshot="04-inventario.png" alt="Pantalla de inventario con alertas de stock bajo" />
+    </Fragment>
     <ul class="feature-list">
       <li>Productos con foto, categoría y precio.</li>
       <li><strong>Alertas de stock bajo:</strong> el inventario te avisa antes de que se agote.</li>
@@ -71,20 +78,20 @@ import FAQ from '../components/sections/FAQ.astro';
   <!-- Ganancias -->
   <FeatureSection
     id="ganancias"
-    screenshot="07-ganancias.png"
-    alt="Pantalla de ganancias mostrando ventas totales, costo de productos, pagos al equipo y ganancia neta"
-    title="Sabe cuánto ganas de verdad, no solo cuánto vendes."
+    title="Cuánto ganaste de verdad, no solo cuánto vendiste."
     class="ganancias"
     band
   >
-    <ul class="feature-list">
-      <li><strong>Resta el costo de tus productos y los pagos a tu equipo</strong> de forma automática.</li>
-      <li>Compara tu ganancia de <strong>hoy, la semana o el mes</strong> contra el período anterior.</li>
-      <li>Ve tus <strong>productos más vendidos</strong> sin sacar cuentas a mano.</li>
-    </ul>
+    <Fragment slot="visual">
+      <PhoneMockup screenshot="07-ganancias.png" alt="Pantalla de ganancias con el desglose de ventas, costos y pagos al equipo" />
+    </Fragment>
+    <p>
+      Cada venta descuenta el costo del producto y el pago al equipo automáticamente.
+      Lo que queda es tu ganancia neta, en tiempo real.
+    </p>
+    <GananciasLedger />
   </FeatureSection>
 
-  <!-- Precios -->
   <Precios />
 
   <Descarga />

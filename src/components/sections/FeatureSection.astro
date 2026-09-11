@@ -1,9 +1,5 @@
 ---
-import PhoneMockup from '../PhoneMockup.astro';
-
 interface Props {
-  screenshot: string;
-  alt: string;
   title: string;
   reverse?: boolean;
   band?: boolean;
@@ -11,14 +7,14 @@ interface Props {
   class?: string;
 }
 
-const { screenshot, alt, title, reverse = false, band = false, id, class: className } = Astro.props;
+const { title, reverse = false, band = false, id, class: className } = Astro.props;
 ---
 
 <section id={id} class={`feature-section ${className || ''} ${band ? 'band' : ''}`}>
   <div class="container">
     <div class={`feature-layout ${reverse ? 'reverse' : ''}`}>
       <div class="feature-visual">
-        <PhoneMockup screenshot={screenshot} alt={alt} />
+        <slot name="visual" />
       </div>
       <div class="feature-content">
         <h2>{title}</h2>
@@ -30,12 +26,12 @@ const { screenshot, alt, title, reverse = false, band = false, id, class: classN
 
 <style>
   .feature-section.band {
-    background: var(--surface-secondary);
+    background: var(--board-panel);
   }
 
   .feature-layout {
     display: grid;
-    gap: clamp(var(--space-xl), 6vw, var(--space-3xl));
+    gap: clamp(var(--space-lg), 6vw, var(--space-2xl));
     align-items: center;
   }
 
@@ -57,7 +53,7 @@ const { screenshot, alt, title, reverse = false, band = false, id, class: classN
   }
 
   .feature-content :global(li) {
-    padding-inline-start: 1.5em;
+    padding-inline-start: 1.4em;
     position: relative;
     margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
     font-size: clamp(0.9375rem, 2.5vw, 1rem);
@@ -65,11 +61,14 @@ const { screenshot, alt, title, reverse = false, band = false, id, class: classN
   }
 
   .feature-content :global(li::before) {
-    content: '✓';
+    content: '';
     position: absolute;
     inset-inline-start: 0;
-    color: var(--primary-light);
-    font-weight: 700;
+    top: 0.5em;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 2px;
   }
 
   .feature-content :global(.inline-cta) {

@@ -17,21 +17,29 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     <title>{title}</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/icon.png" />
-    
-    <!-- Google Fonts: Plus Jakarta Sans -->
+
+    <!-- Google Fonts: Anton (display, un solo uso por página) + Archivo (todo lo demás) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    
-    <!-- Force dark theme -->
+
+    <!-- Tema: claro por defecto, oscuro solo si el visitante ya lo eligió antes.
+         Se resuelve antes del primer paint para no parpadear. -->
     <script is:inline>
-      document.documentElement.setAttribute('data-theme', 'dark');
+      (function () {
+        try {
+          var saved = localStorage.getItem('mipyutil-theme');
+          if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
     </script>
   </head>
   <body>
@@ -39,21 +47,37 @@ import '../styles/global.css';
     <a href="#main-content" class="skip-link">
       Saltar al contenido principal
     </a>
-    
+
     <nav class="nav">
       <div class="nav-container">
-        <a href="/" class="logo">
-          <img src="/icon.png" alt="" class="logo-icon" />
-          MiPyUtil
-        </a>
-        
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-          <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
+        <a href="/" class="logo">MiPyUtil</a>
+
+        <div class="nav-actions">
+          <button
+            type="button"
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-pressed="false"
+            aria-label="Cambiar a modo apagón"
+          >
+            <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+            </svg>
+            <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+            </svg>
+            <span class="theme-label">Modo día</span>
+          </button>
+
+          <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
 
         <div class="nav-menu">
           <a href="#hero">Resumen</a>
@@ -62,16 +86,9 @@ import '../styles/global.css';
           <a href="#ganancias">Ganancias</a>
           <a href="#precios">Precios</a>
           <a href="#descarga" class="nav-cta">
-            <svg class="nav-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
             Descargar
           </a>
         </div>
-        
-
       </div>
     </nav>
 
@@ -82,7 +99,7 @@ import '../styles/global.css';
     <footer class="footer">
       <div class="footer-container">
         <div class="footer-brand">
-          <h3 class="footer-logo">MiPyUtil</h3>
+          <p class="footer-logo">MiPyUtil</p>
           <p class="footer-tagline">Tu MiPyME, organizada.</p>
           <p class="footer-desc">Inventario, ventas y turnos. Todo sin internet.</p>
         </div>
@@ -104,28 +121,28 @@ import '../styles/global.css';
         position: absolute;
         top: -40px;
         left: 0;
-        background: var(--primary);
-        color: white;
+        background: var(--accent);
+        color: var(--accent-on);
         padding: 8px 16px;
         text-decoration: none;
-        border-radius: 0 0 var(--radius-xs) 0;
+        border-radius: 0 0 var(--radius-sm) 0;
         z-index: 1000;
         transition: top 200ms ease;
-        font-weight: 600;
+        font-weight: 700;
       }
-      
+
       .skip-link:focus {
         top: 0;
       }
-      
-      /* === NAV === */
+
+      /* === NAV ===
+         Fondo sólido del tablón, sin blur de vidrio (ver DESIGN.md). */
       .nav {
         position: sticky;
         top: 0;
         z-index: 1000;
-        background: rgba(22, 22, 31, 0.92);
-        -webkit-backdrop-filter: blur(12px);
-        backdrop-filter: blur(12px);
+        background: var(--board);
+        border-bottom: 1px solid var(--line);
       }
 
       .nav-container {
@@ -142,24 +159,88 @@ import '../styles/global.css';
       }
 
       .logo {
+        font-family: var(--font-body);
         font-size: var(--fs-title);
         font-weight: 800;
         color: var(--ink);
         text-decoration: none;
-        transition: color 200ms ease;
+        transition: color var(--dur-routine) ease;
+      }
+
+      .logo:hover {
+        color: var(--accent);
+      }
+
+      .nav-actions {
         display: flex;
         align-items: center;
+        gap: var(--space-sm);
+        order: 2;
+      }
+
+      /* === THEME TOGGLE === */
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
         gap: 8px;
+        background: transparent;
+        border: 1.5px solid var(--line-strong);
+        border-radius: var(--radius-md);
+        padding: 8px 10px;
+        min-height: 44px;
+        min-width: 44px;
+        color: var(--ink);
+        font-family: var(--font-body);
+        font-size: var(--fs-label);
+        font-weight: 700;
+        cursor: pointer;
+        transition: border-color var(--dur-routine) ease, color var(--dur-routine) ease;
       }
-      
-      .logo-icon {
-        width: 28px;
-        height: 28px;
-        object-fit: contain;
+
+      .theme-toggle:hover {
+        border-color: var(--accent);
+        color: var(--accent);
       }
-      
-      .logo:hover {
-        color: var(--primary-light);
+
+      .theme-toggle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      .theme-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
+      .theme-icon--moon {
+        display: none;
+      }
+
+      :global([data-theme='dark']) .theme-icon--sun {
+        display: none;
+      }
+
+      :global([data-theme='dark']) .theme-icon--moon {
+        display: block;
+      }
+
+      .theme-label {
+        white-space: nowrap;
+      }
+
+      @media (max-width: 26.5rem) {
+        .theme-label {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0 0 0 0);
+          white-space: nowrap;
+          border: 0;
+        }
       }
 
       .nav-toggle {
@@ -171,12 +252,11 @@ import '../styles/global.css';
         min-height: 44px;
         padding: 10px;
         color: var(--ink);
-        transition: color 200ms ease;
-        order: 2;
+        transition: color var(--dur-routine) ease;
       }
-      
+
       .nav-toggle:hover {
-        color: var(--primary-light);
+        color: var(--accent);
       }
 
       .hamburger {
@@ -188,14 +268,13 @@ import '../styles/global.css';
         display: flex;
         flex-direction: column;
         gap: 4px;
-        /* Anclado al nav real (top: 100%), no a 65px fijos: sobrevive al zoom
-           y a la altura del safe-area sin desalinearse */
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
-        background: var(--surface);
-        box-shadow: 0 12px 32px rgba(10, 10, 22, 0.5);
+        background: var(--board);
+        border-bottom: 1px solid var(--line);
+        box-shadow: var(--shadow-soft);
         padding: 24px;
         max-height: calc(100vh - 24px);
         max-height: calc(100dvh - 24px);
@@ -208,8 +287,7 @@ import '../styles/global.css';
                     opacity var(--dur-routine) ease,
                     visibility var(--dur-routine);
         z-index: 999;
-        border: none;
-        outline: none;
+        order: 3;
       }
 
       .nav-menu.open {
@@ -221,74 +299,37 @@ import '../styles/global.css';
 
       .nav-menu a {
         font-size: clamp(var(--fs-small), 2.5vw, var(--fs-body));
-        font-weight: 500;
+        font-weight: 600;
         color: var(--ink);
         text-decoration: none;
-        transition: color 200ms ease;
-        border: none;
-        outline: none;
+        padding: 10px 8px;
+        border-radius: var(--radius-sm);
       }
-      
+
       .nav-menu a:focus-visible {
-        outline: 2px solid var(--primary-light);
-        outline-offset: 4px;
-        border-radius: 4px;
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
       }
 
       .nav-menu a:hover {
-        color: var(--primary-light);
+        color: var(--accent);
       }
-
-      /* En móvil los enlaces del menú necesitan área táctil de 44px */
-      @media (max-width: 47.999rem) {
-        .nav-menu a {
-          padding: 10px 8px;
-        }
-
-        .nav-menu .nav-cta {
-          padding: 12px 20px;
-        }
-      }
-      
 
       .nav-cta {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: var(--primary);
-        color: white;
-        padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
-        border-radius: var(--radius-pill);
-        font-weight: 600;
-        transition: all 200ms ease;
-        font-size: clamp(var(--fs-small), 2.5vw, var(--fs-body));
-        text-align: center;
-        white-space: nowrap;
-      }
-      
-      .nav-cta:focus-visible {
-        outline: 2px solid var(--primary-light);
-        outline-offset: 2px;
+        background: var(--accent);
+        color: var(--accent-on) !important;
+        padding: 12px 20px;
+        border-radius: var(--radius-md);
+        font-weight: 800;
+        margin-top: 4px;
       }
 
       .nav-cta:hover {
-        background: var(--primary-deep);
-        color: white;
-      }
-
-      .nav-cta-icon {
-        width: 18px;
-        height: 18px;
-        flex-shrink: 0;
-        transition: transform var(--dur-routine) var(--ease-out-expo);
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        .nav-cta:hover .nav-cta-icon,
-        .nav-cta:focus-visible .nav-cta-icon {
-          transform: translateY(2px);
-        }
+        background: var(--accent-deep);
       }
 
       @media (min-width: 48rem) {
@@ -301,11 +342,10 @@ import '../styles/global.css';
           position: static;
           flex-direction: row;
           align-items: center;
-          gap: clamp(20px, 4vw, 32px);
+          gap: clamp(18px, 3vw, 28px);
           background: transparent;
           box-shadow: none;
           border: none;
-          outline: none;
           padding: 0;
           transform: none;
           opacity: 1;
@@ -313,24 +353,26 @@ import '../styles/global.css';
           pointer-events: auto;
           max-height: none;
           overflow-y: visible;
-        }
-      }
-
-      /* Tablets estrechas (48–60rem): comprimir el nav para que la fila completa
-         entre sin desbordar antes de colapsar al menú hamburguesa */
-      @media (min-width: 48rem) and (max-width: 59.999rem) {
-        .nav-container {
-          gap: 16px;
+          order: unset;
         }
 
-        .nav-menu {
-          gap: 16px;
+        .nav-menu a {
+          padding: 6px 2px;
+        }
+
+        .nav-cta {
+          padding: 10px 18px;
+          margin-top: 0;
+        }
+
+        .nav-actions {
+          order: unset;
         }
       }
 
       /* === FOOTER === */
       .footer {
-        background: var(--surface-elevated);
+        background: var(--board-panel);
         color: var(--ink);
         padding: 64px 0 calc(32px + env(safe-area-inset-bottom, 0px));
         border-top: 1px solid var(--line);
@@ -344,7 +386,8 @@ import '../styles/global.css';
       }
 
       .footer-logo {
-        font-size: var(--fs-xl);
+        font-family: var(--font-body);
+        font-size: var(--fs-title);
         font-weight: 800;
         color: var(--ink);
         margin-bottom: 8px;
@@ -352,17 +395,17 @@ import '../styles/global.css';
 
       .footer-tagline {
         font-size: var(--fs-title);
-        font-weight: 600;
+        font-weight: 700;
         color: var(--ink);
         margin-bottom: 4px;
-        max-width: none; /* el p global (70ch) anclaba la caja a la izquierda y descuadraba el centro */
+        max-width: none;
       }
 
       .footer-desc {
         font-size: var(--fs-small);
-        color: var(--ink-secondary);
+        color: var(--ink-muted);
         margin-bottom: 32px;
-        max-width: none; /* ídem */
+        max-width: none;
       }
 
       .footer-links {
@@ -374,22 +417,21 @@ import '../styles/global.css';
       }
 
       .footer-links a {
-        color: var(--primary-light);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 200ms ease;
-        /* Área táctil 44px sin cambiar el ritmo visual (margen negativo) */
+        color: var(--ink);
+        font-weight: 700;
         padding: 12px 10px;
         margin: -12px -10px;
+        border-bottom: 2px solid transparent;
       }
 
       .footer-links a:hover {
-        color: var(--primary-pale);
+        color: var(--accent);
+        border-bottom-color: var(--accent);
       }
 
       .footer-note {
         font-size: var(--fs-small);
-        color: var(--muted);
+        color: var(--ink-muted);
         max-width: 60ch;
         margin: 0 auto;
       }
@@ -405,8 +447,7 @@ import '../styles/global.css';
           const isOpen = navMenu.classList.contains('open');
           navMenu.classList.toggle('open');
           navToggle.setAttribute('aria-expanded', (!isOpen).toString());
-          
-          // Lock/unlock scroll
+
           if (!isOpen) {
             document.body.style.overflow = 'hidden';
           } else {
@@ -419,7 +460,6 @@ import '../styles/global.css';
             const href = link.getAttribute('href');
             const isAnchor = href?.startsWith('#');
 
-            // Cerrar el menú y liberar el scroll ANTES de saltar al ancla
             navMenu.classList.remove('open');
             navToggle.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
@@ -439,8 +479,7 @@ import '../styles/global.css';
             }
           });
         });
-        
-        // Cerrar con Escape
+
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && navMenu.classList.contains('open')) {
             navMenu.classList.remove('open');
@@ -450,8 +489,34 @@ import '../styles/global.css';
           }
         });
       }
-      
 
+      // Interruptor de tema: sol / apagón. Claro por defecto, se activa a mano,
+      // persiste en localStorage. Ver DESIGN.md, componente Theme Toggle.
+      const themeToggle = document.getElementById('theme-toggle') as HTMLButtonElement;
+
+      if (themeToggle) {
+        const applyLabel = () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          themeToggle.setAttribute('aria-pressed', String(isDark));
+          themeToggle.setAttribute('aria-label', isDark ? 'Cambiar a modo día' : 'Cambiar a modo apagón');
+          const label = themeToggle.querySelector('.theme-label');
+          if (label) label.textContent = isDark ? 'Modo apagón' : 'Modo día';
+        };
+
+        applyLabel();
+
+        themeToggle.addEventListener('click', () => {
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) {
+            document.documentElement.removeAttribute('data-theme');
+            try { localStorage.setItem('mipyutil-theme', 'light'); } catch (e) {}
+          } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            try { localStorage.setItem('mipyutil-theme', 'dark'); } catch (e) {}
+          }
+          applyLabel();
+        });
+      }
     </script>
     <Analytics />
   </body>

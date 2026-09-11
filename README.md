@@ -50,19 +50,6 @@ mipyutil-landing/
 
 ## Configuración
 
-### Screenshots
-
-Coloca las capturas de pantalla de la app en `public/screens/` con los siguientes nombres:
-
-- `01-resumen.png` - Panel de resumen (administrador)
-- `02-nueva-venta.png` - Punto de venta
-- `03-confirmar-pago.png` - Confirmación de pago con QR
-- `04-inventario.png` - Lista de inventario
-- `05-cuadres.png` - Cuadres pendientes
-- `06-mi-turno.png` - Vista de dependiente
-- `07-ganancias.png` - Reporte de ganancias
-- `08-temas.png` - Selector de temas (opcional)
-
 ### Enlaces externos
 
 En `src/pages/index.astro` y componentes relacionados, actualiza los siguientes enlaces:
@@ -74,19 +61,20 @@ En `src/pages/index.astro` y componentes relacionados, actualiza los siguientes 
 
 ## Sistema de diseño
 
+Ver [DESIGN.md](./DESIGN.md) para el sistema completo (paleta claro/oscuro, tipografía, componentes). Resumen:
+
 ### Colores
 
 ```css
---violet-600: #7C3AED;    /* Color principal */
---violet-700: #6D28D9;    /* Hover states */
---neutral-950: #16161F;   /* Background */
---neutral-900: #1F1F2E;   /* Surface */
+--accent: #B4472A;   /* Óxido de rótulo (claro) / #E8A33D ámbar (oscuro) */
+--board: #E7DFC9;    /* Tablón, fondo de página (claro) / #121210 (oscuro) */
+--ink: #262019;      /* Tinta, texto principal (claro) / #EDE6D8 (oscuro) */
 ```
 
 ### Tipografía
 
-Familia: Plus Jakarta Sans  
-Pesos: 400, 500, 600, 700, 800
+Display: Anton (un solo uso por página, el h1 del hero)
+Body/UI: Archivo — pesos 400, 500, 600, 700, 800
 
 ### Breakpoints
 

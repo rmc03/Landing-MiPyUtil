@@ -1,81 +1,49 @@
-/* === TOKENS === */
+/* === TOKENS ===
+   El Tablón Curtido: claro por defecto (tablón pintado, curtido por el sol),
+   oscuro activado a mano (el mismo tablón durante un apagón). Ver DESIGN.md. */
 :root {
-  /* Brand Colors - Primary (violeta del ícono de la app) */
-  --primary: #7C3AED;
-  --primary-deep: #6D28D9;
-  --primary-light: #A78BFA;
-  --primary-pale: #D8B4FE;
-  --primary-subtle: rgba(124, 58, 237, 0.12);
+  /* Tema claro (por defecto) */
+  --board: #E7DFC9;
+  --board-panel: #DAD0B4;
+  --plate: #F2ECDC;
+  --ink: #262019;
+  --ink-muted: #57503F;
+  --line: rgba(38, 32, 25, 0.16);
+  --line-strong: rgba(38, 32, 25, 0.30);
+  --accent: #B4472A;
+  --accent-deep: #8F3820;
+  --accent-on: #FFFFFF;
+  --success: #35603E;
+  --shadow-rgb: 38, 32, 25;
+  --stamp-color: var(--ink);
+  --screw: #8B8578;
 
-  /* Accent Colors */
-  --accent-green: #059669;
-  --accent-green-deep: #047857;
-  --accent-green-light: #34D399;
+  /* Tipografía */
+  --font-display: 'Anton', system-ui, sans-serif;
+  --font-body: 'Archivo', system-ui, -apple-system, sans-serif;
 
-  /* Semantic Colors */
-  --success: #10B981;
-  --warning: #F59E0B;
-  --error: #EF4444;
-  
-  /* Theme Colors (dark only) */
-  --background: #16161F;
-  --surface: #1F1F2E;
-  --surface-elevated: #2A2A3E;
-  --surface-secondary: #252535;
-  --surface-tertiary: #2F2F45;
-  
-  --ink: #F0F0F8;
-  --ink-secondary: #C8C8D8;
-  --muted: #A0A0B8;
-  --line: #3A3A50;
-  --line-strong: #4A4A60;
-  
-  /* Interactive States */
-  --hover-overlay: rgba(240, 240, 248, 0.06);
-  --active-overlay: rgba(240, 240, 248, 0.1);
-  --overlay-strong: rgba(0, 0, 0, 0.5);
-
-  /* Typography */
-  --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-
-  /* Type roles — sizes (align with DESIGN.md typography ramp) */
-  --fs-display: clamp(2.25rem, 8vw + 0.5rem, 4rem);
-  --fs-headline: clamp(1.5rem, 4vw + 0.5rem, 2.25rem);
-  --fs-title: clamp(1rem, 2vw + 0.5rem, 1.125rem);
+  --fs-display: clamp(2.25rem, 8vw + 0.5rem, 4.5rem);
+  --fs-headline: clamp(1.5rem, 4vw + 0.4rem, 2.25rem);
+  --fs-title: clamp(1.0625rem, 2vw + 0.4rem, 1.25rem);
   --fs-lead: clamp(1rem, 2vw + 0.25rem, 1.125rem);
   --fs-body: 1rem;
-  --fs-small: 0.875rem;
+  --fs-small: 0.9375rem;
   --fs-label: 0.8125rem;
   --fs-caption: 0.75rem;
-  --fs-xl: clamp(1.25rem, 3vw + 0.5rem, 1.5rem);
-  --fs-stat: clamp(1.5rem, 4vw + 0.5rem, 2rem);
+  --fs-stat: clamp(1.375rem, 4vw + 0.4rem, 1.75rem);
 
-  /* Type roles — leading */
   --lh-display: 1.05;
-  --lh-headline: 1.15;
+  --lh-headline: 1.12;
   --lh-title: 1.3;
   --lh-lead: 1.5;
   --lh-body: 1.6;
 
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-pill: 9999px;
-  --radius-phone: 32px;
-  --radius-xs: 4px;
-  
-  /* Rounded aliases (for consistency) */
-  --rounded-sm: 8px;
-  --rounded-md: 12px;
-  --rounded-lg: 16px;
-  --rounded-xl: 20px;
-  --rounded-pill: 9999px;
-  --rounded-phone: 32px;
-  --rounded-xs: 4px;
+  /* Radios: casi rectos, nunca píldora */
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
 
-  /* Spacing */
+  /* Espaciado (conservado: ya era un ritmo sólido) */
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -86,12 +54,12 @@
   --space-section-sm: clamp(48px, 10vw, 80px);
   --space-section-lg: clamp(64px, 12vw, 120px);
 
-  /* Shadows — teñidas hacia el hue del fondo (#16161F) en vez de negro puro */
-  --shadow-subtle: 0 1px 2px rgba(10, 10, 22, 0.12), 0 2px 4px rgba(10, 10, 22, 0.08);
-  --shadow-card: 0 2px 8px rgba(10, 10, 22, 0.16), 0 4px 16px rgba(10, 10, 22, 0.12);
-  --shadow-elevated: 0 4px 16px rgba(10, 10, 22, 0.24), 0 8px 32px rgba(10, 10, 22, 0.20);
+  /* Sombras: suave por defecto, estampado como gesto único (ver DESIGN.md) */
+  --shadow-soft: 0 2px 6px rgba(var(--shadow-rgb), 0.12), 0 8px 24px rgba(var(--shadow-rgb), 0.10);
+  --shadow-stamp: 4px 4px 0 var(--stamp-color);
+  --shadow-stamp-pressed: 2px 2px 0 var(--stamp-color);
 
-  /* Motion */
+  /* Movimiento */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-feedback: 120ms;
   --dur-routine: 250ms;
@@ -99,6 +67,25 @@
   --dur-focal: 650ms;
 }
 
+/* Tema oscuro: el apagón. Mismo tablón, misma composición, solo cambia
+   qué tan iluminado está cada elemento. Se activa a mano; nunca es la carga
+   inicial (ver DESIGN.md, "El claro es el estado por defecto"). */
+:root[data-theme='dark'] {
+  --board: #121210;
+  --board-panel: #1A1712;
+  --plate: #211D17;
+  --ink: #EDE6D8;
+  --ink-muted: #A99C82;
+  --line: rgba(237, 230, 216, 0.12);
+  --line-strong: rgba(237, 230, 216, 0.24);
+  --accent: #E8A33D;
+  --accent-deep: #F3BA63;
+  --accent-on: #121210;
+  --success: #5FA876;
+  --shadow-rgb: 0, 0, 0;
+  --stamp-color: var(--ink);
+  --screw: #4A4030;
+}
 
 /* === RESET & BASE === */
 * {
@@ -123,22 +110,32 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: var(--font-body);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   color: var(--ink);
-  background: var(--background);
+  background: var(--board);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
+  transition: background-color var(--dur-overlay) ease, color var(--dur-overlay) ease;
 }
 
-/* === TYPOGRAPHY === */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
+
+/* === TYPOGRAPHY ===
+   La Regla del Póster Único: Anton solo en el h1 del hero de cada página.
+   Todo lo demás resuelve en Archivo (ver DESIGN.md). */
 h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: var(--fs-display);
-  font-weight: 800;
   line-height: var(--lh-display);
-  letter-spacing: -0.02em;
+  letter-spacing: 0.002em;
   color: var(--ink);
   margin-bottom: var(--space-lg);
   overflow-wrap: break-word;
@@ -147,10 +144,11 @@ h1 {
 }
 
 h2 {
+  font-family: var(--font-body);
+  font-weight: 800;
   font-size: var(--fs-headline);
-  font-weight: 700;
   line-height: var(--lh-headline);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin-bottom: var(--space-lg);
   overflow-wrap: break-word;
@@ -159,8 +157,9 @@ h2 {
 }
 
 h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
   font-size: var(--fs-title);
-  font-weight: 600;
   line-height: var(--lh-title);
   color: var(--ink);
   overflow-wrap: break-word;
@@ -176,17 +175,17 @@ p {
 }
 
 a {
-  color: var(--primary-light);
+  color: var(--accent);
   text-decoration: none;
-  transition: color 200ms ease;
+  transition: color var(--dur-routine) ease;
 }
 
 a:hover {
-  color: var(--primary-pale);
+  color: var(--accent-deep);
 }
 
 a:focus-visible {
-  outline: 2px solid var(--primary-light);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -217,37 +216,114 @@ section {
   }
 }
 
-/* === DARK BAND ===
-   Bandas que fuerzan un fondo ligeramente diferente al --background general. */
+/* === BANDA DE PANEL ===
+   Bandas que fuerzan el fondo de segundo nivel del tablón. */
 .dark-band {
-  background: #16161F;
-  color: #F0F0F8;
-  --ink-secondary: #C0C0D0;
-  --muted: #9090A8;
+  background: var(--board-panel);
+  color: var(--ink);
 }
 
-/* Luz sobre oscuro: compensar en los tres ejes perceptuales — más leading,
-   un toque de tracking y, en bandas noche, un peso ligeramente superior. */
 .dark-band p {
   line-height: 1.7;
-  letter-spacing: 0.01em;
 }
 
+/* === PLACAS (componente de firma) ===
+   La Regla de la Placa Honesta: toda cifra del negocio es contenido dl real,
+   nunca aria-hidden. Ver DESIGN.md. */
+.plate-panel {
+  position: relative;
+  background: var(--board-panel);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-soft);
+}
+
+.plate-panel .screw {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--screw);
+}
+
+.plate-panel .screw--tl { top: 10px; left: 10px; }
+.plate-panel .screw--tr { top: 10px; right: 10px; }
+.plate-panel .screw--bl { bottom: 10px; left: 10px; }
+.plate-panel .screw--br { bottom: 10px; right: 10px; }
+
+.plate-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.plate {
+  min-width: 0;
+  background: var(--plate);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+.plate dt {
+  min-width: 0;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.plate dd {
+  min-width: 0;
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-stat);
+  font-weight: 800;
+  color: var(--ink);
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Modificador para valores descriptivos (no cifras cortas): texto de cuerpo,
+   nunca --fs-stat, para que una lista de tres palabras no reviente la placa. */
+.plate--text dd {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  font-variant-numeric: normal;
+}
+
+.plate--alert {
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.plate--alert dt,
+.plate--alert dd {
+  color: var(--accent-on);
+}
+
+.plate--ok dd {
+  color: var(--success);
+}
 
 /* === TOUCH FEEDBACK === */
 @media (hover: none) and (pointer: coarse) {
-  /* Links de navegación */
   .nav-menu a:active {
     transform: scale(0.98);
     transition: transform 100ms ease;
   }
-  
-  /* FAQ items */
+
   .faq-item .faq-question:active {
-    background: var(--hover-overlay);
+    background: rgba(var(--shadow-rgb), 0.06);
   }
-  
-  /* Touch target minimum 44x44px */
+
   a, button, [role="button"], input, select, textarea {
     min-height: 44px;
     min-width: 44px;

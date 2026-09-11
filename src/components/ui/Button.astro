@@ -8,21 +8,23 @@ interface Props {
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
+  stamp?: boolean;
   class?: string;
   target?: string;
   rel?: string;
   [key: string]: any;
 }
 
-const { 
-  variant = 'primary', 
+const {
+  variant = 'primary',
   icon,
-  href = '#', 
+  href = '#',
   type = 'link',
   onClick,
   disabled = false,
   loading = false,
   fullWidth = false,
+  stamp = false,
   target,
   rel,
   class: className,
@@ -31,8 +33,8 @@ const {
 ---
 
 {type === 'button' ? (
-  <button 
-    class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${className || ''}`}
+  <button
+    class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${stamp ? 'btn-stamp' : ''} ${className || ''}`}
     onclick={onClick}
     type="button"
     disabled={disabled || loading}
@@ -55,7 +57,7 @@ const {
         </svg>
       )}
       {icon === 'android' && (
-        <svg class="btn-icon btn-icon--android" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 10v6" />
           <path d="M20 10v6" />
           <path d="M7 9h10v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9a5 5 0 0 1 10 0" />
@@ -68,11 +70,11 @@ const {
         </svg>
       )}
       {icon === 'windows' && (
-        <svg class="btn-icon btn-icon--windows" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="8" height="8" rx="1.5" />
-          <rect x="13" y="3" width="8" height="8" rx="1.5" />
-          <rect x="3" y="13" width="8" height="8" rx="1.5" />
-          <rect x="13" y="13" width="8" height="8" rx="1.5" />
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="8" height="8" rx="1" />
+          <rect x="13" y="3" width="8" height="8" rx="1" />
+          <rect x="3" y="13" width="8" height="8" rx="1" />
+          <rect x="13" y="13" width="8" height="8" rx="1" />
         </svg>
       )}
       {icon === 'whatsapp' && (
@@ -90,11 +92,11 @@ const {
     </span>
   </button>
 ) : (
-  <a 
-    href={href} 
-    target={target} 
-    rel={rel || (target === '_blank' ? 'noopener noreferrer' : undefined)} 
-    class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${className || ''}`}
+  <a
+    href={href}
+    target={target}
+    rel={rel || (target === '_blank' ? 'noopener noreferrer' : undefined)}
+    class={`btn btn-${variant} ${fullWidth ? 'btn-full' : ''} ${stamp ? 'btn-stamp' : ''} ${className || ''}`}
     {...rest}
   >
     <span class="btn-content">
@@ -106,7 +108,7 @@ const {
         </svg>
       )}
       {icon === 'android' && (
-        <svg class="btn-icon btn-icon--android" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 10v6" />
           <path d="M20 10v6" />
           <path d="M7 9h10v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V9a5 5 0 0 1 10 0" />
@@ -119,11 +121,11 @@ const {
         </svg>
       )}
       {icon === 'windows' && (
-        <svg class="btn-icon btn-icon--windows" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="8" height="8" rx="1.5" />
-          <rect x="13" y="3" width="8" height="8" rx="1.5" />
-          <rect x="3" y="13" width="8" height="8" rx="1.5" />
-          <rect x="13" y="13" width="8" height="8" rx="1.5" />
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="8" height="8" rx="1" />
+          <rect x="13" y="3" width="8" height="8" rx="1" />
+          <rect x="3" y="13" width="8" height="8" rx="1" />
+          <rect x="13" y="13" width="8" height="8" rx="1" />
         </svg>
       )}
       {icon === 'whatsapp' && (
@@ -148,45 +150,36 @@ const {
     align-items: center;
     justify-content: center;
     gap: clamp(6px, 1.5vw, 8px);
-    padding: clamp(10px, 2.5vw, 12px) clamp(18px, 4vw, 24px);
+    padding: clamp(12px, 2.5vw, 16px) clamp(20px, 4vw, 26px);
     font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
-    font-weight: 600;
-    font-family: var(--font-family);
+    font-weight: 800;
+    font-family: var(--font-body);
     border-radius: var(--radius-md);
-    transition: background-color var(--dur-routine) ease, 
-                border-color var(--dur-routine) ease, 
-                color var(--dur-routine) ease, 
-                box-shadow var(--dur-routine) ease,
+    transition: background-color var(--dur-routine) ease,
+                border-color var(--dur-routine) ease,
+                color var(--dur-routine) ease,
+                box-shadow var(--dur-feedback) ease,
                 transform var(--dur-feedback) ease;
     text-align: center;
     cursor: pointer;
-    border: 2px solid transparent;
+    border: 1.5px solid transparent;
     position: relative;
     text-decoration: none;
     line-height: 1.4;
-    letter-spacing: -0.01em;
-    /* Sin nowrap: a 200% de zoom o en pantallas estrechas el texto envuelve
-       en vez de desbordar la página */
     white-space: normal;
     min-height: 44px;
   }
-  
+
   .btn-full {
     width: 100%;
   }
 
-  .btn:active {
-    transform: translateY(1px);
-  }
-  
-  /* Área táctil mínima para puntero grueso */
   @media (pointer: coarse) {
     .btn {
       min-height: 48px;
-      padding: 12px 20px;
     }
   }
-  
+
   .btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -195,42 +188,46 @@ const {
 
   /* === PRIMARY === */
   .btn-primary {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
+    background: var(--accent);
+    color: var(--accent-on);
+    border-color: var(--accent);
   }
 
   .btn-primary:hover {
-    background: var(--primary-deep);
-    border-color: var(--primary-deep);
-    color: white;
-    box-shadow: var(--shadow-elevated);
+    background: var(--accent-deep);
+    border-color: var(--accent-deep);
   }
 
   /* === SECONDARY === */
   .btn-secondary {
-    background: var(--surface);
+    background: var(--plate);
     color: var(--ink);
     border-color: var(--line-strong);
   }
 
   .btn-secondary:hover {
-    background: var(--surface-secondary);
-    color: var(--primary-light);
-    border-color: var(--primary-light);
+    background: var(--board-panel);
+    color: var(--accent);
+    border-color: var(--accent);
   }
 
-  /* Dark band overrides */
-  :global(.dark-band) .btn-secondary {
-    background: var(--hover-overlay);
-    color: var(--ink);
-    border-color: var(--line);
+  /* === ESTAMPADO ===
+     Gesto de firma, máximo dos usos por página (ver DESIGN.md). */
+  .btn-stamp {
+    box-shadow: var(--shadow-stamp);
   }
 
-  :global(.dark-band) .btn-secondary:hover {
-    background: var(--active-overlay);
-    color: var(--primary-light);
-    border-color: var(--primary-light);
+  .btn-stamp:hover,
+  .btn-stamp:focus-visible {
+    box-shadow: var(--shadow-stamp-pressed);
+    transform: translate(2px, 2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-stamp:hover,
+    .btn-stamp:focus-visible {
+      transform: none;
+    }
   }
 
   /* === SPINNER === */
@@ -239,7 +236,7 @@ const {
     height: 20px;
     flex-shrink: 0;
   }
-  
+
   /* === CONTENT === */
   .btn-content {
     display: inline-flex;
@@ -260,30 +257,9 @@ const {
     transition: transform var(--dur-routine) var(--ease-out-expo);
   }
 
-  /* Icon colors: inherit from button text */
-  .btn-primary .btn-icon {
-    color: white;
-  }
-
-  .btn-secondary .btn-icon {
-    color: var(--ink-secondary);
-  }
-
-  .btn-secondary:hover .btn-icon {
-    color: var(--primary-light);
-  }
-
-  :global(.dark-band) .btn-secondary .btn-icon {
-    color: var(--ink-secondary);
-  }
-
-  :global(.dark-band) .btn-secondary:hover .btn-icon {
-    color: var(--primary-light);
-  }
-
   /* === FOCUS === */
   .btn:focus-visible {
-    outline: 2px solid var(--primary-light);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
 
@@ -292,16 +268,6 @@ const {
     .btn:hover .btn-icon--download,
     .btn:focus-visible .btn-icon--download {
       transform: translateY(2px);
-    }
-
-    .btn:hover .btn-icon--android,
-    .btn:focus-visible .btn-icon--android {
-      transform: translateY(-1px) scale(1.06);
-    }
-
-    .btn:hover .btn-icon--windows,
-    .btn:focus-visible .btn-icon--windows {
-      transform: translateY(-1px) scale(1.06);
     }
 
     .btn:hover .btn-icon--whatsapp,
@@ -314,8 +280,7 @@ const {
       transform: translate(1px, -1px);
     }
   }
-  
-  /* Touch feedback for mobile */
+
   @media (hover: none) and (pointer: coarse) {
     .btn:active {
       transform: translateY(0) scale(0.97);

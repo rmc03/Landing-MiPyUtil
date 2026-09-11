@@ -55,6 +55,11 @@ const screenId = screenshot.replace(/\.png$/i, '');
 </script>
 
 <style>
+  /* Marco de teléfono: metáfora de objeto físico, no una superficie de UI.
+     Por eso su radio es propio (redondeado real de bisel) y no sigue la
+     escala casi-recta de --radius-sm/md/lg (ver DESIGN.md, componente
+     Phone Mockup). El bisel se mantiene oscuro incluso en modo apagón:
+     un teléfono no se "ilumina" solo porque el tablón cambió de tema. */
   .phone-mockup {
     display: flex;
     justify-content: center;
@@ -69,9 +74,16 @@ const screenId = screenshot.replace(/\.png$/i, '');
     max-width: min(260px, 85vw);
     aspect-ratio: 9 / 19.5;
     background: var(--ink);
-    border-radius: clamp(16px, 4vw, var(--radius-phone)); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
+    border-radius: clamp(16px, 4vw, 34px);
     padding: clamp(6px, 1.5vw, 12px);
-    box-shadow: var(--shadow-subtle);
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Gris neutro deliberado: el bisel es plástico/metal real, no repinta su
+     color con el tema de la app. Si usara --board se camuflaría contra el
+     tablón casi negro del apagón y dejaría de leerse como un teléfono. */
+  :global([data-theme='dark']) .phone-frame {
+    background: #3D3D3D;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -81,13 +93,7 @@ const screenId = screenshot.replace(/\.png$/i, '');
 
     .phone-frame:hover {
       transform: translateY(-3px);
-      box-shadow: var(--shadow-card);
     }
-  }
-
-  .dark-band .phone-frame {
-    background: var(--surface-tertiary);
-    box-shadow: var(--shadow-subtle);
   }
 
   .phone-notch {
@@ -97,16 +103,16 @@ const screenId = screenshot.replace(/\.png$/i, '');
     transform: translateX(-50%);
     width: clamp(70px, 18vw, 120px);
     height: clamp(14px, 3.5vw, 24px);
-    background: var(--surface);
-    border-radius: 0 0 clamp(10px, 2.5vw, 16px) clamp(10px, 2.5vw, 16px); /* impeccable-disable-line design-system-radius -- radio fluido de la muesca */
+    background: var(--plate);
+    border-radius: 0 0 clamp(10px, 2.5vw, 16px) clamp(10px, 2.5vw, 16px);
     z-index: 2;
   }
 
   .phone-screen {
     width: 100%;
     height: 100%;
-    background: var(--surface);
-    border-radius: calc(clamp(16px, 4vw, var(--radius-phone)) - 6px); /* impeccable-disable-line design-system-radius -- radio fluido del marco */
+    background: var(--plate);
+    border-radius: calc(clamp(16px, 4vw, 34px) - 6px);
     overflow: hidden;
     position: relative;
   }

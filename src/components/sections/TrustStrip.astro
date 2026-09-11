@@ -1,0 +1,64 @@
+---
+const items = [
+  { text: 'Funciona sin internet.' },
+  { text: 'Cuadre de caja diario.' },
+  { text: 'Dueño y equipo, un sistema.' },
+  { text: 'Sin Play Store, directa.' }
+];
+---
+
+<div class="trust-strip">
+  <div class="container">
+    <ul>
+      {items.map((item) => (
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>{item.text}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .trust-strip {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-md) 0;
+  }
+
+  .trust-strip ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .trust-strip li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--ink-muted);
+    line-height: 1.35;
+  }
+
+  .trust-strip li svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  @media (min-width: 40rem) {
+    .trust-strip ul {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>
