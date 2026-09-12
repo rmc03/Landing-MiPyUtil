@@ -22,9 +22,19 @@
 
 <style>
   .ledger {
+    display: none;
     margin: clamp(var(--space-lg), 4vw, var(--space-xl)) 0 0;
     max-width: 420px;
     border-top: 2px solid var(--line-strong);
+  }
+
+  /* En móvil, el PhoneMockup de "07-ganancias.png" ya prueba la cifra;
+     la placa honesta se reserva para desktop, donde vive junto al mockup
+     en vez de repetir el mismo número justo antes de la captura. */
+  @media (min-width: 48rem) {
+    .ledger {
+      display: block;
+    }
   }
 
   .ledger-row {

@@ -103,11 +103,6 @@ const { title, reverse = false, band = false, id, class: className } = Astro.pro
     border-radius: 2px;
   }
 
-  .feature-content :global(.inline-cta) {
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-small));
-    margin-top: clamp(var(--space-md), 4vw, var(--space-lg));
-  }
-
   @media (min-width: 48rem) {
     .feature-layout {
       grid-template-columns: 1fr 1fr;

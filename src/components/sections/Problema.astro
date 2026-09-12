@@ -165,9 +165,9 @@ const rows: Row[] = [
     background: var(--board-panel);
     padding-top: clamp(var(--space-md), 3vw, var(--space-lg));
     padding-bottom: clamp(var(--space-md), 3vw, var(--space-lg));
-    font-size: var(--fs-label);
+    font-size: var(--fs-title);
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     color: var(--ink-muted);
     border-bottom: 1px solid var(--line-strong);
   }
@@ -175,8 +175,6 @@ const rows: Row[] = [
   .compare-table tbody th {
     font-weight: 700;
     color: var(--ink);
-    white-space: normal;
-    max-width: 9.5rem;
   }
 
   .compare-table tbody td {
@@ -208,7 +206,7 @@ const rows: Row[] = [
      necesitar ese relleno. */
   .compare-table thead th.compare-col-winner {
     color: var(--accent-deep);
-    border-top: 3px solid var(--accent);
+    border-top: 2px solid var(--accent);
   }
 
   /* Encabezado de fila fijo al desplazarse en horizontal: sin esto, el
@@ -225,12 +223,12 @@ const rows: Row[] = [
     background: var(--board-panel);
   }
 
-  /* Separación más generosa que el padding interno del panel a propósito:
-     marca esta franja como la pausa/remate después de la tabla, no como
-     una fila más del mismo ritmo. */
+  /* Mismo ritmo vertical que el espacio entre filas de la tabla, para que
+     esta franja no se sienta más separada de la última fila que las filas
+     entre sí. */
   .compare-estimate {
-    margin-top: clamp(var(--space-lg), 5vw, var(--space-xl));
-    padding-top: clamp(var(--space-md), 4vw, var(--space-lg));
+    margin-top: 0;
+    padding-top: clamp(12px, 2.5vw, var(--space-md));
     border-top: 1px solid var(--line);
   }
 

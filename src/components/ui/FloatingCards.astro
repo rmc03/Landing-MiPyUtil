@@ -2,7 +2,7 @@
 /**
  * FloatingCards: notificaciones de actividad viva alrededor del teléfono del hero.
  * Cada card es una mini-historia del producto: una venta, un cuadre, una alerta
- * de inventario, la promesa offline y una métrica del día. Decorativo (aria-hidden):
+ * de inventario, un turno cerrado y una métrica del día. Decorativo (aria-hidden):
  * la información ya vive en el copy y en las placas reales de la página.
  *
  * Solo en tablet/desktop (48rem+): sus offsets en porcentaje negativo desbordan
@@ -30,12 +30,12 @@ const cards = [
     title: 'Cuadre aprobado'
   },
   {
-    id: 'offline',
+    id: 'turno',
     position: 'mr',
     tone: 'accent',
-    icon: 'wifi-off',
-    title: 'Sin conexión',
-    subtitle: 'todo guardado'
+    icon: 'clock',
+    title: 'Turno cerrado',
+    subtitle: 'Ana · 8:00 PM'
   },
   {
     id: 'inventario',
@@ -43,7 +43,7 @@ const cards = [
     tone: 'accent',
     icon: 'alert',
     title: 'Inventario bajo:',
-    subtitle: 'Cascos'
+    subtitle: 'Aceite'
   },
   {
     id: 'venta',
@@ -73,12 +73,10 @@ const cards = [
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
           )}
-          {card.icon === 'wifi-off' && (
+          {card.icon === 'clock' && (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 13a10 10 0 0 1 14 0"></path>
-              <path d="M8.5 16.5a5 5 0 0 1 7 0"></path>
-              <path d="M2 8.82a15 15 0 0 1 20 0"></path>
-              <line x1="2" y1="2" x2="22" y2="22"></line>
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
           )}
           {card.icon === 'alert' && (

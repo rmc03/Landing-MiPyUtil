@@ -7,6 +7,7 @@ export interface Props {
 const { title, description } = Astro.props;
 
 import Analytics from '@vercel/analytics/astro';
+import Button from '../components/ui/Button.astro';
 import '../styles/global.css';
 ---
 
@@ -76,13 +77,13 @@ import '../styles/global.css';
 
         <div class="nav-menu">
           <a href="#hero">Resumen</a>
-          <a href="#inventario">Inventario</a>
           <a href="#ventas">Ventas</a>
+          <a href="#inventario">Inventario</a>
           <a href="#ganancias">Ganancias</a>
           <a href="#precios">Precios</a>
-          <a href="#descarga" class="nav-cta">
+          <Button variant="primary" type="link" href="#descarga" icon="download" class="nav-cta">
             Descargar
-          </a>
+          </Button>
         </div>
       </div>
     </nav>
@@ -99,7 +100,7 @@ import '../styles/global.css';
             MiPyUtil
           </p>
           <p class="footer-tagline">Tu MiPyME, organizada.</p>
-          <p class="footer-desc">Inventario, ventas y turnos. Todo sin internet.</p>
+          <p class="footer-desc">Inventario, ventas, turnos y ganancias, todo en un solo lugar.</p>
         </div>
 
         <div class="footer-links">
@@ -323,21 +324,14 @@ import '../styles/global.css';
         color: var(--accent);
       }
 
-      .nav-cta {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: var(--accent);
+      /* === NAV CTA ===
+         Usa el componente Button compartido (ver Button.astro); estas reglas
+         solo recortan el padding pensado para un CTA de página completa al
+         tamaño que cabe en una barra fija, y fijan el color de texto porque
+         ".nav-menu a" (más abajo) le gana en especificidad al estado hover. */
+      .nav-menu .nav-cta {
         color: var(--accent-on) !important;
-        padding: 12px 20px;
-        border-radius: var(--radius-md);
-        font-weight: 800;
         margin-top: 4px;
-      }
-
-      .nav-cta:hover {
-        background: var(--accent-deep);
       }
 
       @media (min-width: 48rem) {
@@ -368,9 +362,14 @@ import '../styles/global.css';
           padding: 6px 2px;
         }
 
-        .nav-cta {
-          padding: 10px 18px;
+        .nav-menu .nav-cta {
+          padding: 9px 16px;
           margin-top: 0;
+        }
+
+        .nav-menu .nav-cta :global(.btn-icon) {
+          width: 16px;
+          height: 16px;
         }
 
         .nav-actions {
@@ -476,7 +475,7 @@ import '../styles/global.css';
           }
         });
 
-        document.querySelectorAll<HTMLAnchorElement>('.nav-menu a').forEach((link) => {
+        document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not(.skip-link)').forEach((link) => {
           link.addEventListener('click', (e) => {
             const href = link.getAttribute('href');
             const isAnchor = href?.startsWith('#');
@@ -495,7 +494,6 @@ import '../styles/global.css';
                 requestAnimationFrame(() => {
                   targetEl.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
                 });
-                history.pushState(null, '', href);
               }
             }
           });
