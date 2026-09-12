@@ -8,9 +8,11 @@ const items = [
 ---
 
 <div class="trust-strip">
+  <span class="screw screw--tl" aria-hidden="true"></span>
+  <span class="screw screw--tr" aria-hidden="true"></span>
+  <span class="screw screw--bl" aria-hidden="true"></span>
+  <span class="screw screw--br" aria-hidden="true"></span>
   <div class="container">
-    <span class="screw screw--left" aria-hidden="true"></span>
-    <span class="screw screw--right" aria-hidden="true"></span>
     <ul>
       {items.map((item) => (
         <li>
@@ -26,35 +28,32 @@ const items = [
 
 <style>
   /* Riel atornillado, no una franja del mismo fondo del hero: placa propia
-     a todo el ancho, con remaches en los extremos del contenido legible. */
+     a todo el ancho. Los remaches van en las esquinas de la placa —la placa
+     llega al borde de la pantalla, así que sus extremos son esos bordes—, no
+     en los del contenedor de texto: ahí quedaban cortados por la mitad en
+     móvil y flotando en medio de la franja en pantallas anchas. */
   .trust-strip {
+    position: relative;
     background: var(--plate);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: var(--space-md) 0;
-  }
-
-  .trust-strip .container {
-    position: relative;
+    /* space-lg, no space-md: con los remaches a 10px de cada esquina, el
+       relleno de 16px los dejaba rozando el primer y el último check. */
+    padding: var(--space-lg) 0;
   }
 
   .trust-strip .screw {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     width: 7px;
     height: 7px;
     border-radius: 50%;
     background: var(--screw);
   }
 
-  .trust-strip .screw--left {
-    left: 0;
-  }
-
-  .trust-strip .screw--right {
-    right: 0;
-  }
+  .trust-strip .screw--tl { top: 10px; left: 10px; }
+  .trust-strip .screw--tr { top: 10px; right: 10px; }
+  .trust-strip .screw--bl { bottom: 10px; left: 10px; }
+  .trust-strip .screw--br { bottom: 10px; right: 10px; }
 
   .trust-strip ul {
     list-style: none;

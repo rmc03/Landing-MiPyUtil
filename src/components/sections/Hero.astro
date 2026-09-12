@@ -15,7 +15,7 @@ const checkItems = [
 <section id="hero" class="hero">
   <div class="container">
     <p class="eyebrow">
-      Para MiPyMEs y TCPs en Cuba ·
+      <span class="eyebrow__audience">Para MiPyMEs y TCPs en Cuba</span>
       <OfflineBadge />
     </p>
 
@@ -179,6 +179,9 @@ const checkItems = [
     padding: 0 clamp(16px, 4vw, 24px);
   }
 
+  /* Las dos piezas se apilan por debajo de 40rem en vez de envolver: el
+     separador es un signo de línea compartida, y al envolver quedaba
+     colgando al final de la primera línea sin nada que separar. */
   .eyebrow {
     font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
     font-weight: 700;
@@ -188,9 +191,21 @@ const checkItems = [
     color: var(--ink-muted);
     margin-bottom: var(--space-md);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-sm);
-    flex-wrap: wrap;
+  }
+
+  @media (min-width: 40rem) {
+    .eyebrow {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    /* El separador solo existe cuando ambas piezas comparten línea. */
+    .eyebrow__audience::after {
+      content: ' ·';
+    }
   }
 
   .hero h1 {
