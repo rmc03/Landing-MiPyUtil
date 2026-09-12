@@ -1,112 +1,83 @@
-# MiPyUtil Landing Page
+# MiPyUtil Landing
 
-Landing page para MiPyUtil, aplicación móvil de gestión para MiPymes y TCPs en Cuba.
+Sitio web para [MiPyUtil](https://t.me/MipyUtil), la app de gestión para MiPyMEs y TCPs en Cuba que funciona 100% sin internet.
 
-## Requisitos
+## Qué es esto
 
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+Landing page de producto hecha con Astro. Una sola página, sin rutas complicadas ni CMS. El diseño responde a la identidad visual de la app: un tablón de precios curtido por el sol en modo claro, el mismo tablón durante un apagón en modo oscuro.
 
-## Instalación
+## Correr localmente
+
+Necesitas Node 18 o superior.
 
 ```bash
-git clone https://github.com/tu-usuario/mipyutil-landing.git
-cd mipyutil-landing
 npm install
-```
-
-## Desarrollo
-
-```bash
 npm run dev
 ```
 
-El servidor de desarrollo inicia en `http://localhost:4321`
+Abre `http://localhost:4321`. Los cambios se reflejan al instante.
 
-## Comandos disponibles
+Para generar el build de producción:
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run dev` | Inicia el servidor de desarrollo |
-| `npm run build` | Genera el build de producción en `dist/` |
-| `npm run preview` | Previsualiza el build localmente |
-| `npm run check` | Verifica tipos y sintaxis de Astro |
-## Estructura del proyecto
-
-```text
-mipyutil-landing/
-├── public/
-│   ├── screens/          # Screenshots de la aplicación
-│   └── icon.png          # Ícono del proyecto
-├── src/
-│   ├── components/       # Componentes Astro reutilizables
-│   ├── layouts/          # Layouts base
-│   ├── pages/            # Páginas de la aplicación
-│   └── styles/           # Estilos globales
-├── astro.config.mjs      # Configuración de Astro
-├── package.json          # Dependencias y scripts
-└── tsconfig.json         # Configuración de TypeScript
+```bash
+npm run build
 ```
 
-## Configuración
+La salida cae en `dist/`. Para probar el build antes de desplegarlo:
 
-### Enlaces externos
+```bash
+npm run preview
+```
 
-En `src/pages/index.astro` y componentes relacionados, actualiza los siguientes enlaces:
+## Estructura
 
-- URL de descarga del APK
-- Números de WhatsApp (`https://wa.me/TU_NUMERO`)
-- Usuarios de Telegram (`https://t.me/TU_USUARIO`)
-- Canal de Telegram (`https://t.me/MipyUtil`)
+```
+src/
+├── components/
+│   ├── sections/      # Secciones de la landing (Hero, Precios, FAQ...)
+│   └── ui/            # Componentes reutilizables (Button, CheckList...)
+├── layouts/
+│   └── Layout.astro   # Layout base con meta tags y footer
+├── pages/
+│   ├── index.astro    # Página principal
+│   └── 404.astro      # Página de error
+└── styles/
+    └── global.css     # Variables CSS y estilos globales
 
-## Sistema de diseño
+public/
+├── icon.png           # Favicon e ícono de la app
+└── mipyutil-mark.png  # Marca para el hero
+```
 
-Ver [DESIGN.md](./DESIGN.md) para el sistema completo (paleta claro/oscuro, tipografía, componentes). Resumen:
+Cada sección de la landing vive en su propio componente. Para editar el contenido, abre el componente correspondiente en `src/components/sections/`.
 
-### Colores
+## Identidad visual
 
+El sistema de diseño sigue la metáfora del "tablón curtido": superficies claras y cálidas en modo claro (`#E7DFC9`), casi negro en modo oscuro (`#121210`). El acento cambia según el tema: óxido de rótulo (`#B4472A`) en claro, ámbar de indicador (`#E8A33D`) en oscuro.
+
+**Tipografía:**
+- Display: [Anton](https://fonts.google.com/specimen/Anton) — solo para el h1 del hero
+- Body: [Archivo](https://fonts.google.com/specimen/Archivo) — todo lo demás, pesos 400-800
+
+**Variables principales:**
 ```css
---accent: #B4472A;   /* Óxido de rótulo (claro) / #E8A33D ámbar (oscuro) */
---board: #E7DFC9;    /* Tablón, fondo de página (claro) / #121210 (oscuro) */
---ink: #262019;      /* Tinta, texto principal (claro) / #EDE6D8 (oscuro) */
+--accent: #B4472A;  /* óxido en claro, #E8A33D en oscuro */
+--board: #E7DFC9;   /* fondo claro, #121210 en oscuro */
+--ink: #262019;     /* texto claro, #EDE6D8 en oscuro */
 ```
 
-### Tipografía
+Los componentes respetan `prefers-color-scheme` y `prefers-reduced-motion`. La paleta cumple WCAG AA en ambos modos.
 
-Display: Anton (un solo uso por página, el h1 del hero)
-Body/UI: Archivo — pesos 400, 500, 600, 700, 800
+## Contacto real
 
-### Breakpoints
+El sitio usa estos enlaces de contacto:
 
-| Punto de quiebre | Ancho mínimo |
-|------------------|--------------|
-| `sm` | 640px |
-| `md` | 768px |
-| `lg` | 1024px |
-| `xl` | 1280px |
+- WhatsApp: [+53 5377 0707](https://wa.me/5353770707)
+- Telegram: [@MipyUtil](https://t.me/MipyUtil)
 
-## Accesibilidad
+Si necesitas cambiarlos, busca `WHATSAPP_NUMBER` en `src/components/sections/Precios.astro` y los enlaces directos en `src/layouts/Layout.astro`.
 
-El proyecto implementa:
+## Stack
 
-- Contraste de color conforme a WCAG AA
-- Navegación por teclado
-- Focus visible en elementos interactivos
-- Respeto a `prefers-reduced-motion`
-- Semántica HTML5
-- Atributo `lang=\"es\"` declarado
-
-## Stack tecnológico
-
-- [Astro](https://astro.build) ^7.1.6 - Framework web
-- [TypeScript](https://www.typescriptlang.org) ^6.0.3 - Tipado estático
-
-## Licencia
-
-MIT
-
-## Contacto
-
-- WhatsApp: [Enlace por configurar]
-- Telegram: [Enlace por configurar]
-- Canal: [@MipyUtil](https://t.me/MipyUtil)
+- [Astro](https://astro.build) 5.0 — Generador de sitios estáticos
+- TypeScript — Tipado en componentes
