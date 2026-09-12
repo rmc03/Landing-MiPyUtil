@@ -60,7 +60,7 @@ El copy existente tiene un tono directo y cercano, pero eso no ha sido confirmad
 ## Evidence on Hand
 
 **Real, debe preservarse tal cual:**
-- Precios: plan Básico 1.500 CUP/mes (1.200 primer mes), Negocio 2.000 CUP/mes (1.800 primer mes, recomendado), Pro 2.500 CUP/mes (2.000 primer mes); anual $20/$25/$30 USD respectivamente.
+- Precios: plan Básico 1.500 CUP/mes (1.200 primer mes), Negocio 2.000 CUP/mes (1.800 primer mes, recomendado), Pro 2.500 CUP/mes (2.000 primer mes); anual $15/$20/$30 USD respectivamente.
 - Límites por plan: productos 75/150/300, dependientes 3/5/8, administradores 2/3/4.
 - 14 días de prueba gratis en cualquier plan.
 - Contacto: WhatsApp +53 5377 0707 (wa.me/5353770707), Telegram @MipyUtil (t.me/MipyUtil).
