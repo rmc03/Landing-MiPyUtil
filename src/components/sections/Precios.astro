@@ -160,10 +160,12 @@ const WHATSAPP_NUMBER = '5353770707';
                 icon="whatsapp"
                 target="_blank"
                 fullWidth
+                stamp={plan.recommended}
                 class="plan-cta-btn"
                 data-plan-name={plan.name}
               >
                 Elegir plan
+                <span class="plan-cta-arrow" aria-hidden="true">→</span>
               </Button>
             )}
           </div>
@@ -270,9 +272,9 @@ const WHATSAPP_NUMBER = '5353770707';
     height: 100%;
   }
 
+  /* El estampado vive en el botón del plan recomendado, no en la tarjeta */
   .pricing-card.recommended {
     border-color: var(--accent);
-    box-shadow: var(--shadow-stamp);
   }
 
   .badge {
@@ -523,9 +525,43 @@ const WHATSAPP_NUMBER = '5353770707';
     flex-shrink: 0;
   }
 
+  /* En la columna flex de móvil, stretch deja que el botón ocupe todo el ancho */
   .card-action {
     margin-top: auto;
-    align-self: end;
+    align-self: stretch;
+  }
+
+  /* === Botones de plan: grandes y con cara de botón === */
+  .card-action :global(.plan-cta-btn) {
+    min-height: 56px;
+    padding: 14px 20px;
+    font-size: 1.0625rem;
+  }
+
+  /* Secundario entintado: placa hundida con borde y texto en acento.
+     El texto usa --accent-deep para mantener el contraste sobre el panel claro. */
+  .card-action :global(.plan-cta-btn.btn-secondary) {
+    background: var(--board-panel);
+    color: var(--accent-deep);
+    border: 2px solid var(--accent);
+  }
+
+  .card-action :global(.plan-cta-btn.btn-secondary:hover) {
+    background: var(--accent);
+    color: var(--accent-on);
+    border-color: var(--accent);
+  }
+
+  .card-action :global(.plan-cta-arrow) {
+    display: inline-block;
+    transition: transform var(--dur-routine) var(--ease-out-expo);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card-action :global(.plan-cta-btn:hover .plan-cta-arrow),
+    .card-action :global(.plan-cta-btn:focus-visible .plan-cta-arrow) {
+      transform: translateX(3px);
+    }
   }
 
   .card-features--empty {
@@ -575,6 +611,11 @@ const WHATSAPP_NUMBER = '5353770707';
       height: auto;
       margin-bottom: var(--space-xl);
     }
+
+    /* En el subgrid, end baja el botón al fondo de su fila */
+    .card-action {
+      align-self: end;
+    }
   }
 
   @media (min-width: 72rem) {
@@ -590,6 +631,12 @@ const WHATSAPP_NUMBER = '5353770707';
 
     .badge {
       left: var(--space-lg);
+    }
+
+    /* Tarjetas estrechas: menos relleno para que cada botón quepa en una línea */
+    .card-action :global(.plan-cta-btn) {
+      padding-inline: 12px;
+      font-size: var(--fs-body);
     }
   }
 </style>
