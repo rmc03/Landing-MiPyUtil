@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://mipyutil.example',
+  site: 'https://mipyutil.vercel.app',
 });
