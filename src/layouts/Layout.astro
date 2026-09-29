@@ -6,6 +6,11 @@ export interface Props {
 
 const { title, description } = Astro.props;
 
+// URLs absolutas: WhatsApp, Telegram y demás no resuelven rutas relativas
+// en las etiquetas Open Graph.
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og-image.png', Astro.site);
+
 import Analytics from '@vercel/analytics/astro';
 import Button from '../components/ui/Button.astro';
 import '../styles/global.css';
@@ -18,9 +23,32 @@ import '../styles/global.css';
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
 
-    <!-- Favicon -->
+    <!-- Favicon e ícono de pantalla de inicio -->
     <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#121210" />
+
+    <!-- Vista previa al compartir el enlace (WhatsApp, Telegram, Facebook, X).
+         og-image.png es 1200×630 con el ícono real de la app. Si se cambia,
+         WhatsApp cachea la vista previa: hay que compartir el enlace con un
+         parámetro nuevo (?v=2) o limpiarla desde el depurador de Facebook. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MiPyUtil" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Ícono de MiPyUtil: una M naranja con barras y una flecha ascendente sobre fondo oscuro" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
 
     <!-- Google Fonts: Anton (display, un solo uso por página) + Archivo (todo lo demás) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
