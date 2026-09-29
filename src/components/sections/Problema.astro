@@ -1,53 +1,145 @@
 ---
+type Kind = 'ok' | 'part' | 'no';
+interface Verdict {
+  text: string;
+  kind: Kind;
+}
 interface Row {
   label: string;
-  libreta: string;
-  excel: string;
+  libreta: Verdict;
+  excel: Verdict;
   app: string;
 }
 
+// Textos escritos como escenas del mostrador, no como nombres de función.
+// El símbolo acompaña a la palabra, nunca la sustituye: el veredicto se lee
+// aunque no se distinga el color.
 const rows: Row[] = [
-  { label: 'Funciona en apagón', libreta: 'Sí', excel: 'No', app: 'Sí' },
-  { label: 'Avisa cuando el inventario se acaba', libreta: 'No', excel: 'No', app: 'Automática' },
-  { label: 'Cuadre de caja', libreta: 'A mano', excel: 'A mano', app: 'Automático' },
-  { label: 'Un sistema para dueño y equipo', libreta: 'Cada uno la suya', excel: 'Uno a la vez', app: 'Multiusuario' },
-  { label: 'Ganancias vs. mes anterior', libreta: 'No', excel: 'A mano', app: 'Automático' }
+  {
+    label: 'Sigues vendiendo en el apagón',
+    libreta: { text: 'Sí', kind: 'ok' },
+    excel: { text: 'Mientras aguante la laptop', kind: 'part' },
+    app: 'Sí, en el teléfono y sin datos'
+  },
+  {
+    label: 'Te avisa antes de que se acabe un producto',
+    libreta: { text: 'No', kind: 'no' },
+    excel: { text: 'Solo si lo revisas', kind: 'part' },
+    app: 'Te avisa solo'
+  },
+  {
+    label: 'El cuadre del día sale ya calculado',
+    libreta: { text: 'Sumas a mano', kind: 'no' },
+    excel: { text: 'Fórmulas a mano', kind: 'no' },
+    app: 'Calculado; tú lo apruebas'
+  },
+  {
+    label: 'Cada dependiente con su turno, y tú lo ves todo',
+    libreta: { text: 'Pasa de mano en mano', kind: 'no' },
+    excel: { text: 'Un archivo, uno a la vez', kind: 'part' },
+    app: 'Cada uno con su app'
+  },
+  {
+    label: 'Sabes cuánto ganaste, no solo cuánto vendiste',
+    libreta: { text: 'Si sacas la cuenta', kind: 'no' },
+    excel: { text: 'Si armas la fórmula', kind: 'part' },
+    app: 'Al momento'
+  }
 ];
 
-const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o con MiPyUtil';
+const comparisonLabel = 'Comparación entre llevar el negocio en libreta, en Excel o con MiPyUtil';
 ---
 
 <section id="problema" class="problema dark-band">
   <div class="container">
-    <h2>El día a día de tu negocio no espera por el internet.</h2>
+    <h2>Sigue vendiendo en el apagón. Al cerrar, las cuentas ya están hechas.</h2>
 
-    <div class="plate-panel compare-plate">
+    {/* Símbolos de veredicto, dibujados una vez y reutilizados. Círculo lleno
+        = sí, medio círculo = a medias, círculo con cruz = no. */}
+    <svg width="0" height="0" class="compare-sprite" aria-hidden="true" focusable="false">
+      <symbol id="cmp-ok" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"></circle><polyline points="7 12.5 10.5 16 17 8.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></polyline></symbol>
+      <symbol id="cmp-part" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></symbol>
+      <symbol id="cmp-no" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"></circle><line x1="8" y1="8" x2="16" y2="16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></line><line x1="16" y1="8" x2="8" y2="16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></line></symbol>
+    </svg>
+
+    <div class="plate-panel compare-plate" id="compare-plate">
       <span class="screw screw--tl" aria-hidden="true"></span>
       <span class="screw screw--tr" aria-hidden="true"></span>
       <span class="screw screw--bl" aria-hidden="true"></span>
       <span class="screw screw--br" aria-hidden="true"></span>
 
-      {/* Móvil (<40rem): una capacidad por bloque, con los tres veredictos
-          nombrados dentro del propio bloque. La tabla de 4 columnas no cabe
-          por debajo de ~640px sin truncar valores como "Multiusuario". */}
+      {/* El estimado va primero: es la cifra que engancha y pertenece a la
+          fila del cuadre. Las dos barras están a escala (20 min → 2 min) y son
+          decorativas; las cifras son texto real. */}
+      <div class="estimate">
+        <div class="estimate__head">
+          <h3>Cuadrar la caja del día</h3>
+          <p class="estimate__tag">Estimado</p>
+        </div>
+
+        <ul class="estimate__rows">
+          <li class="est-row est-row--hand">
+            <span class="est-row__label">A mano</span>
+            <strong class="est-row__num">≈20 min</strong>
+            <span class="est-row__bar" aria-hidden="true"><i></i></span>
+          </li>
+          <li class="est-row est-row--app">
+            <span class="est-row__label">Con MiPyUtil</span>
+            <strong class="est-row__num">menos de 2 min</strong>
+            <span class="est-row__bar" aria-hidden="true"><i></i></span>
+          </li>
+        </ul>
+
+        <p class="estimate__caption">
+          Lo que puede tardar un cuadre a mano, comparado con aprobarlo ya calculado en MiPyUtil.
+        </p>
+      </div>
+
+      {/* Selector (solo móvil, y solo con JS): el visitante elige con qué lleva
+          hoy el negocio y ve su método contra MiPyUtil. Diez veredictos en vez
+          de quince. Sin JS se ven las tres respuestas apiladas. */}
+      <div class="picker" hidden>
+        <p class="picker__label" id="picker-label">¿Con qué llevas hoy el negocio?</p>
+        <div class="seg" role="group" aria-labelledby="picker-label">
+          <button type="button" class="seg__btn" data-method="libreta" aria-pressed="true">
+            <span class="seg__dot" aria-hidden="true"></span>Libreta
+          </button>
+          <button type="button" class="seg__btn" data-method="excel" aria-pressed="false">
+            <span class="seg__dot" aria-hidden="true"></span>Excel
+          </button>
+        </div>
+      </div>
+
+      {/* Móvil (<40rem): una capacidad por bloque, tu método al lado de
+          MiPyUtil. La tabla de 4 columnas no cabe por debajo de ~640px sin
+          truncar valores. */}
       <ul class="compare-stack" aria-label={comparisonLabel}>
         {rows.map(row => (
           <li class="compare-item">
             <p class="compare-item__capability">{row.label}</p>
-            <dl class="compare-item__verdicts">
-              <div class="compare-verdict">
-                <dt>Libreta</dt>
-                <dd>{row.libreta}</dd>
+            <div class="compare-pair">
+              <div class="cell cell--libreta">
+                <p class="cell__who">Tu libreta</p>
+                <p class="cell__val">
+                  <svg class={`cell__ico cell__ico--${row.libreta.kind}`} aria-hidden="true"><use href={`#cmp-${row.libreta.kind}`}></use></svg>
+                  {row.libreta.text}
+                </p>
               </div>
-              <div class="compare-verdict">
-                <dt>Excel</dt>
-                <dd>{row.excel}</dd>
+              <div class="cell cell--excel">
+                <p class="cell__who">Tu Excel</p>
+                <p class="cell__val">
+                  <svg class={`cell__ico cell__ico--${row.excel.kind}`} aria-hidden="true"><use href={`#cmp-${row.excel.kind}`}></use></svg>
+                  {row.excel.text}
+                </p>
               </div>
-              <div class="compare-verdict compare-verdict--winner">
-                <dt>MiPyUtil</dt>
-                <dd>{row.app}</dd>
+              <div class="cell cell--app">
+                <p class="cell__who">MiPyUtil</p>
+                <p class="cell__val">
+                  <svg class="cell__ico cell__ico--ok" aria-hidden="true"><use href="#cmp-ok"></use></svg>
+                  {row.app}
+                </p>
               </div>
-            </dl>
+            </div>
           </li>
         ))}
       </ul>
@@ -73,28 +165,19 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
           {rows.map(row => (
             <tr>
               <th scope="row">{row.label}</th>
-              <td class="compare-col-data">{row.libreta}</td>
-              <td class="compare-col-data">{row.excel}</td>
-              <td class="compare-col-winner">{row.app}</td>
+              <td class="compare-col-data">
+                <span class="tcell"><svg class={`cell__ico cell__ico--${row.libreta.kind}`} aria-hidden="true"><use href={`#cmp-${row.libreta.kind}`}></use></svg>{row.libreta.text}</span>
+              </td>
+              <td class="compare-col-data">
+                <span class="tcell"><svg class={`cell__ico cell__ico--${row.excel.kind}`} aria-hidden="true"><use href={`#cmp-${row.excel.kind}`}></use></svg>{row.excel.text}</span>
+              </td>
+              <td class="compare-col-winner">
+                <span class="tcell"><svg class="cell__ico cell__ico--ok" aria-hidden="true"><use href="#cmp-ok"></use></svg>{row.app}</span>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      <div class="compare-estimate">
-        <p class="compare-estimate__tag">Estimado</p>
-        <p class="compare-estimate__figures">
-          <span class="compare-estimate__num">≈20 min</span>
-          <svg class="compare-estimate__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-          <span class="compare-estimate__num compare-estimate__num--after">menos de 2 min</span>
-        </p>
-        <p class="compare-estimate__caption">
-          Lo que puede tardar un cuadre a mano, comparado con aprobarlo ya calculado en MiPyUtil.
-        </p>
-      </div>
     </div>
   </div>
 </section>
@@ -122,18 +205,245 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
     border: 0;
   }
 
+  .compare-sprite {
+    position: absolute;
+  }
+
   .compare-plate {
     background: var(--plate);
     padding: clamp(var(--space-md), 4vw, var(--space-lg));
   }
 
-  /* === MÓVIL: una capacidad por bloque ===
-     Fusionar "Libreta" y "Excel" perdería una distinción real (la libreta
-     funciona en el apagón, Excel no), así que los tres veredictos siguen
-     presentes; lo que cambia es la dirección de lectura: la capacidad manda
-     la línea y debajo van sus tres respuestas. Cada veredicto lleva su
-     fuente escrita al lado, no en una cabecera lejana que se pierde al
-     desplazarse. */
+  /* === SÍMBOLOS DE VEREDICTO ===
+     El acento marca el sí; el resto queda en gris. Cada símbolo va con su
+     palabra al lado, así que no se depende del color. */
+  .cell__ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .cell__ico--ok {
+    color: var(--accent);
+  }
+
+  .cell__ico--part,
+  .cell__ico--no {
+    color: var(--ink-muted);
+  }
+
+  /* === ESTIMADO: la tablilla de precio ===
+     Como en un tablón de bodega: el viejo (a mano) queda largo y apagado, el
+     nuevo corto y encendido. Las barras van a escala real (20 min contra 2)
+     para que la diferencia se vea antes de leerla. Sin nada anidado en
+     tarjetas: es un tramo de la propia placa, separado por líneas finas. */
+  .estimate {
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .estimate__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .estimate__head h3 {
+    min-width: 0;
+  }
+
+  /* La Regla de la Placa Honesta: la cifra ilustrativa se etiqueta como
+     estimada en la propia UI, en la misma línea que su título. */
+  .estimate__tag {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-caption);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .estimate__rows {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .est-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'label num'
+      'bar   bar';
+    align-items: baseline;
+    gap: var(--space-sm) var(--space-md);
+  }
+
+  .est-row__label {
+    grid-area: label;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .est-row__num {
+    grid-area: num;
+    font-size: clamp(1.5rem, 6vw, 1.875rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-muted);
+  }
+
+  .est-row__bar {
+    grid-area: bar;
+    display: block;
+    height: 10px;
+    border-radius: var(--radius-sm);
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .est-row__bar i {
+    display: block;
+    height: 100%;
+    width: var(--w, 100%);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ink-muted) 60%, var(--plate));
+    transform-origin: left center;
+  }
+
+  .est-row--hand .est-row__bar i {
+    --w: 100%;
+  }
+
+  /* 2 de 20 minutos = 10%. "Menos de 2" es un tope, no un valor exacto. */
+  .est-row--app .est-row__bar i {
+    --w: 10%;
+    background: var(--accent);
+  }
+
+  .est-row--app .est-row__label {
+    color: var(--accent-deep);
+  }
+
+  /* La cifra de MiPyUtil es la ancha y la protagonista: en móvil baja a su
+     propia línea, alineada a la izquierda, en vez de competir con la etiqueta. */
+  .est-row--app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'label'
+      'num'
+      'bar';
+  }
+
+  .est-row--app .est-row__num {
+    font-size: clamp(1.75rem, 8.4vw, 2.75rem);
+    text-align: left;
+    color: var(--ink);
+  }
+
+  /* Un solo momento con movimiento: las barras se llenan al entrar en pantalla,
+     la de MiPyUtil un instante después. Sin JS, o con movimiento reducido,
+     quedan dibujadas desde el principio. */
+  .estimate.is-armed .est-row__bar i {
+    transform: scaleX(0);
+  }
+
+  .estimate.is-armed.is-in .est-row__bar i {
+    transform: scaleX(1);
+    transition: transform 700ms var(--ease-out-expo);
+  }
+
+  .estimate.is-armed.is-in .est-row--app .est-row__bar i {
+    transition-delay: 250ms;
+  }
+
+  .estimate__caption {
+    margin-top: var(--space-lg);
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  /* === SELECTOR (móvil) === */
+  .picker {
+    padding: var(--space-lg) 0 var(--space-xs);
+  }
+
+  .picker[hidden] {
+    display: none;
+  }
+
+  .picker__label {
+    margin-bottom: var(--space-sm);
+    font-size: var(--fs-label);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .seg__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    min-height: 48px;
+    padding: 0 var(--space-md);
+    font: inherit;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--board-panel);
+    border: 1.5px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: border-color var(--dur-feedback) ease, background-color var(--dur-feedback) ease;
+  }
+
+  .seg__btn:hover {
+    border-color: var(--accent);
+  }
+
+  .seg__btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* El estado seleccionado se lee por borde, fondo y punto relleno, no solo por el color. */
+  .seg__btn[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--accent) 16%, var(--plate));
+    border-color: var(--accent);
+  }
+
+  .seg__dot {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid var(--ink-muted);
+  }
+
+  .seg__btn[aria-pressed='true'] .seg__dot {
+    border-color: var(--accent);
+    background: radial-gradient(circle, var(--accent) 0 45%, transparent 50%);
+  }
+
+  /* === MÓVIL: una capacidad por bloque === */
   .compare-stack {
     list-style: none;
   }
@@ -144,76 +454,89 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
   }
 
   .compare-item:first-child {
-    padding-top: 0;
+    padding-top: var(--space-md);
   }
 
   .compare-item:last-child {
     border-bottom: none;
+    padding-bottom: 0;
   }
 
   .compare-item__capability {
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-sm);
     font-size: var(--fs-title);
     font-weight: 700;
     line-height: var(--lh-title);
     color: var(--ink);
   }
 
-  /* Las tres fuentes se apilan en una sola columna: fuente a la izquierda,
-     veredicto a la derecha. Así los tres veredictos comparten borde derecho
-     y se comparan de arriba abajo, en vez de repartirse entre una rejilla de
-     dos columnas y una barra suelta con tres bordes izquierdos distintos. */
-  .compare-item__verdicts {
+  /* Tu método a la izquierda, MiPyUtil a la derecha. Sin JS (no hay
+     data-method) las tres respuestas se apilan. */
+  .compare-pair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .compare-plate[data-method] .compare-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compare-plate[data-method='libreta'] .cell--excel,
+  .compare-plate[data-method='excel'] .cell--libreta {
+    display: none;
+  }
+
+  .cell {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-  }
-
-  .compare-verdict {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-md);
-    min-width: 0;
-    padding: 7px 0;
-  }
-
-  .compare-verdict dt {
-    flex-shrink: 0;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--ink-muted);
-  }
-
-  .compare-verdict dd {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    line-height: 1.35;
-    color: var(--ink-muted);
-    text-align: right;
-    overflow-wrap: break-word;
-  }
-
-  /* Misma lógica que la columna ganadora de la tabla: lavado suave del
-     acento sobre la placa, nunca relleno sólido, para no meter un segundo
-     acento saturado. Sin borde de color: la diferencia la hacen el lavado,
-     el peso y el tamaño. El sangrado de 10px deja el lavado más ancho que
-     el texto sin romper la alineación de las tres filas. */
-  .compare-verdict--winner {
-    margin: 2px -10px 0;
-    padding: 8px 10px;
-    background: color-mix(in srgb, var(--accent) 16%, var(--plate));
+    gap: var(--space-xs);
+    padding: var(--space-sm) 10px;
     border-radius: var(--radius-sm);
   }
 
-  /* accent-deep, no accent: sobre este lavado el acento plano no alcanza
-     4.5:1 en el tema claro. */
-  .compare-verdict--winner dt {
+  .cell__who {
+    font-size: var(--fs-caption);
     font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .cell__val {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: var(--fs-small);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .cell__val .cell__ico {
+    margin-top: 1px;
+  }
+
+  .cell--libreta,
+  .cell--excel {
+    border: 1px solid var(--line);
+  }
+
+  /* Misma lógica que la columna ganadora de la tabla: lavado suave del
+     acento sobre la placa, nunca relleno sólido. accent-deep en la fuente y
+     --ink en el texto: el acento plano no alcanza 4.5:1 sobre este lavado
+     en el tema claro. */
+  .cell--app {
+    background: color-mix(in srgb, var(--accent) 16%, var(--plate));
+  }
+
+  .cell--app .cell__who {
     color: var(--accent-deep);
   }
 
-  .compare-verdict--winner dd {
-    font-size: 1rem;
+  .cell--app .cell__val {
     font-weight: 800;
     color: var(--ink);
   }
@@ -222,6 +545,7 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
   .compare-table {
     display: none;
     width: 100%;
+    margin-top: var(--space-lg);
     table-layout: fixed;
     border-collapse: collapse;
   }
@@ -231,16 +555,7 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
     text-align: left;
     padding: clamp(12px, 2.5vw, var(--space-md)) clamp(10px, 2vw, var(--space-md));
     font-size: clamp(0.875rem, 2vw, var(--fs-body));
-  }
-
-  /* Las tres columnas de datos (Libreta/Excel/MiPyUtil) centradas: son
-     valores cortos que se comparan de un vistazo, no prosa. La columna de
-     capacidades se queda a la izquierda porque es una etiqueta, no un dato. */
-  .compare-table th.compare-col-data,
-  .compare-table td.compare-col-data,
-  .compare-table th.compare-col-winner,
-  .compare-table td.compare-col-winner {
-    text-align: center;
+    vertical-align: top;
   }
 
   /* Encabezado en tono "placa remachada": una franja de board-panel, un
@@ -275,10 +590,18 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
     border-bottom: none;
   }
 
-  /* Columna ganadora: un lavado suave del acento sobre la placa (mismo
-     patrón que Offline Badge), nunca relleno sólido. El texto del cuerpo se
-     queda en --ink, no en --accent: --accent sobre este lavado no alcanza
-     4.5:1 en el tema claro. */
+  .tcell {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .tcell .cell__ico {
+    margin-top: 2px;
+  }
+
+  /* Columna ganadora: lavado suave del acento sobre la placa, nunca relleno
+     sólido. El texto del cuerpo se queda en --ink. */
   .compare-table tbody td.compare-col-winner {
     background: color-mix(in srgb, var(--accent) 16%, var(--plate));
     color: var(--ink);
@@ -287,70 +610,15 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
 
   /* La cabecera ganadora no lleva el mismo lavado: mezclado sobre
      board-panel (más oscuro que plate) el contraste de --accent-deep cae
-     por debajo de 4.5:1. La barra superior sólida ya marca la columna sin
-     necesitar ese relleno. */
+     por debajo de 4.5:1. La barra superior sólida ya marca la columna. */
   .compare-table thead th.compare-col-winner {
     color: var(--accent-deep);
     border-top: 2px solid var(--accent);
   }
 
-  /* Mismo ritmo vertical que el espacio entre filas de la tabla, para que
-     esta franja no se sienta más separada de la última fila que las filas
-     entre sí. */
-  .compare-estimate {
-    padding-top: clamp(12px, 2.5vw, var(--space-md));
-    border-top: 1px solid var(--line);
-  }
-
-  /* La Regla de la Placa Honesta un nivel más arriba: una cifra ilustrativa
-     se etiqueta como estimada en la propia UI, no solo en el copy de al lado. */
-  .compare-estimate__tag {
-    display: inline-block;
-    margin-bottom: var(--space-sm);
-    padding: 3px 8px;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-sm);
-    font-size: var(--fs-caption);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-  }
-
-  .compare-estimate__figures {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: clamp(var(--space-sm), 3vw, var(--space-lg));
-    flex-wrap: wrap;
-  }
-
-  .compare-estimate__num {
-    font-size: clamp(1.75rem, 5vw + 0.3rem, 2.5rem);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    color: var(--ink-muted);
-  }
-
-  .compare-estimate__num--after {
-    color: var(--ink);
-  }
-
-  .compare-estimate__arrow {
-    width: clamp(18px, 3vw, 28px);
-    height: clamp(18px, 3vw, 28px);
-    flex-shrink: 0;
-    color: var(--accent);
-  }
-
-  .compare-estimate__caption {
-    margin-top: var(--space-sm);
-    font-size: var(--fs-small);
-    color: var(--ink-muted);
-  }
-
   @media (min-width: 40rem) {
-    .compare-stack {
+    .compare-stack,
+    .picker {
       display: none;
     }
 
@@ -359,15 +627,80 @@ const comparisonLabel = 'Comparación entre llevar el negocio a mano, en Excel o
     }
 
     .compare-col-label {
-      width: 36%;
+      width: 32%;
     }
 
     .compare-col-data {
-      width: 21%;
+      width: 22%;
     }
 
     .compare-col-app {
-      width: 22%;
+      width: 24%;
+    }
+
+    /* El estimado en escritorio: etiqueta, barra a escala y cifra en una
+       sola línea por fila. */
+    .est-row,
+    .est-row--app {
+      grid-template-columns: 9rem minmax(0, 1fr) 22rem;
+      grid-template-areas: 'label bar num';
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .est-row__num,
+    .est-row--app .est-row__num {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .est-row__num {
+      font-size: 1.75rem;
+    }
+
+    .est-row--app .est-row__num {
+      font-size: 2.25rem;
     }
   }
 </style>
+
+<script>
+  // Selector Libreta / Excel (móvil): con JS se revela y el bloque muestra tu
+  // método frente a MiPyUtil. Sin JS quedan las tres respuestas apiladas.
+  const plate = document.getElementById('compare-plate');
+  const picker = plate?.querySelector<HTMLElement>('.picker');
+  const buttons = plate?.querySelectorAll<HTMLButtonElement>('.seg__btn');
+
+  if (plate && picker && buttons?.length) {
+    picker.hidden = false;
+    plate.dataset.method = 'libreta';
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const method = btn.dataset.method ?? 'libreta';
+        plate.dataset.method = method;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      });
+    });
+  }
+
+  // Las barras del estimado se llenan una vez al entrar en pantalla. Quedan
+  // dibujadas de entrada si no hay IntersectionObserver o si el usuario pidió
+  // menos movimiento.
+  const estimate = document.querySelector<HTMLElement>('.estimate');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (estimate && 'IntersectionObserver' in window && !reduceMotion) {
+    estimate.classList.add('is-armed');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          estimate.classList.add('is-in');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(estimate);
+  }
+</script>
