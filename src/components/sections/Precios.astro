@@ -23,7 +23,7 @@ const plans = [
     recommended: false,
     free: true,
     limits: [
-      { label: 'Productos', value: '30' },
+      { label: 'Productos', value: '40' },
       { label: 'Dependientes', value: '3' },
       { label: 'Administradores', value: '1' }
     ],
@@ -37,8 +37,8 @@ const plans = [
     recommended: false,
     free: false,
     limits: [
-      { label: 'Productos', value: '75' },
-      { label: 'Dependientes', value: '3' },
+      { label: 'Productos', value: '100' },
+      { label: 'Dependientes', value: '4' },
       { label: 'Administradores', value: '2' }
     ],
     features: []
@@ -51,8 +51,8 @@ const plans = [
     recommended: true,
     free: false,
     limits: [
-      { label: 'Productos', value: '150' },
-      { label: 'Dependientes', value: '5' },
+      { label: 'Productos', value: '200' },
+      { label: 'Dependientes', value: '6' },
       { label: 'Administradores', value: '3' }
     ],
     features: []
@@ -65,7 +65,7 @@ const plans = [
     recommended: false,
     free: false,
     limits: [
-      { label: 'Productos', value: '300' },
+      { label: 'Productos', value: '400' },
       { label: 'Dependientes', value: '8' },
       { label: 'Administradores', value: '4' }
     ],
@@ -135,8 +135,8 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
           </div>
 
           {plan.free ? (
-            <div class="card-price">
-              <div class="fila fila--intro">
+            <div class="card-price card-price--gratis">
+              <div class="fila fila--intro fila--gratis">
                 <span class="fila-etiqueta">Para siempre</span>
                 <div class="fila-valores">
                   <strong class="usd-monto">Gratis</strong>
@@ -498,8 +498,8 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     color: var(--accent);
   }
 
-  /* En celular y tablet el CUP va pegado al USD: la tarjeta es ancha y, empujado al borde,
-     el cambio se separaba del precio que explica. En escritorio se alinea a la derecha (ver abajo). */
+  /* El CUP va pegado al USD en todos los tamaños: empujado al borde de la tarjeta, el cambio
+     se separaba del precio que explica. */
   .fila-valores {
     display: flex;
     flex-wrap: wrap;
@@ -748,6 +748,24 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     .card-action {
       align-self: end;
     }
+
+    /* Plan Gratuito con tarjetas lado a lado: el bloque de precio comparte altura con el de los
+       planes de pago (dos filas y un chip), y "Gratis" solo dejaba un hueco en medio. El precio
+       pasa a ser una placa —etiqueta arriba, "Gratis" grande abajo— que ocupa ese espacio, con
+       el chip al mismo nivel que en las otras tarjetas. En una columna (celular) no hay filas
+       compartidas y se queda como estaba. */
+    .card-price--gratis .fila--gratis {
+      flex: 1;
+      justify-content: space-between;
+      padding: var(--space-md);
+      background: var(--board);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius-md);
+    }
+
+    .card-price--gratis .fila--intro .usd-monto {
+      font-size: clamp(2.5rem, 3.4vw, 3.25rem);
+    }
   }
 
   @media (min-width: 52rem) {
@@ -778,9 +796,9 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
       margin-bottom: 0;
     }
 
-    /* Cuatro columnas estrechas: los montos en CUP a la derecha forman una columna legible */
+    /* Cuatro columnas estrechas: el CUP sigue al USD con un espacio más corto para que
+       ambos quepan en una sola línea (si no caben, el CUP baja debajo del USD). */
     .fila-valores {
-      justify-content: space-between;
       gap: 2px var(--space-sm);
     }
 
