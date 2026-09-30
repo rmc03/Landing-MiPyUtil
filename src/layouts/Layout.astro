@@ -362,7 +362,10 @@ import '../styles/global.css';
         margin-top: 4px;
       }
 
-      @media (min-width: 48rem) {
+      /* El menú horizontal (logo + 5 enlaces + botón) necesita unos 930 px. Con el corte
+         anterior, en 48rem (768 px), se salía de la pantalla hasta 114 px en tablets en
+         vertical; entre 768 y 1023 px se sigue usando el menú desplegable. */
+      @media (min-width: 64rem) {
         .nav-toggle {
           display: none;
         }
