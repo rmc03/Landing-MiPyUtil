@@ -29,6 +29,15 @@ const ORIGENES_PERMITIDOS = new Set([
   'http://localhost:4321',
 ])
 
+// Vistas previas de Vercel del equipo de MiPyUtil, una por rama o por deploy:
+//   mipyutil-git-<rama>-ruslanmc03-4436s-projects.vercel.app
+//   mipyutil-<hash>-ruslanmc03-4436s-projects.vercel.app
+const PREVIEWS_VERCEL = /^https:\/\/mipyutil(-[a-z0-9]+)+-ruslanmc03-4436s-projects\.vercel\.app$/
+
+function origenPermitido(origen: string): boolean {
+  return ORIGENES_PERMITIDOS.has(origen) || PREVIEWS_VERCEL.test(origen)
+}
+
 // Varias visitas seguidas comparten una sola lectura a la base de datos.
 const MEMORIA_MS = 60_000
 // El navegador reutiliza la respuesta este tiempo sin volver a pedirla.
@@ -106,7 +115,7 @@ function cabeceras(origen: string | null, cacheable: boolean): Record<string, st
     // La respuesta cambia según el origen (CORS): que ninguna caché la mezcle.
     Vary: 'Origin',
   }
-  if (origen && ORIGENES_PERMITIDOS.has(origen)) {
+  if (origen && origenPermitido(origen)) {
     h['Access-Control-Allow-Origin'] = origen
     h['Access-Control-Allow-Methods'] = 'GET, HEAD, OPTIONS'
   }

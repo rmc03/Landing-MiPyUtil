@@ -90,7 +90,7 @@ Cómo se comporta la página:
 - Si la consulta falla, tarda más de 4 s o la tasa tiene más de `HORAS_TASA_VIEJA` horas (24, en `Precios.astro`), los montos en CUP desaparecen y se manda a WhatsApp.
 - La tasa se guarda 10 minutos en `localStorage`, así que no hay una consulta por cada visita.
 
-La URL se puede cambiar con la variable `PUBLIC_TASA_URL`. `supabase/functions/tasa-publica/index.ts` es una copia de la función desplegada: si la cambias, despliégala también en Supabase. Solo permite leerla desde `https://mipyutil.vercel.app` y `http://localhost:4321` (`ORIGENES_PERMITIDOS`); si el dominio cambia hay que añadirlo ahí y redesplegar.
+La URL se puede cambiar con la variable `PUBLIC_TASA_URL`. `supabase/functions/tasa-publica/index.ts` es una copia de la función desplegada: si la cambias, despliégala también en Supabase. Solo permite leerla desde `https://mipyutil.vercel.app`, `http://localhost:4321` y las vistas previas de Vercel del equipo (`ORIGENES_PERMITIDOS` y `PREVIEWS_VERCEL`); si el dominio o el equipo de Vercel cambian hay que actualizarlos ahí y redesplegar.
 
 ## Contacto real
 
