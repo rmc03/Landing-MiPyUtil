@@ -135,11 +135,19 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
           </div>
 
           {plan.free ? (
-            <div class="card-price card-price--gratis">
-              <div class="fila fila--intro fila--gratis">
+            <div class="card-price">
+              <div class="fila fila--intro">
                 <span class="fila-etiqueta">Para siempre</span>
                 <div class="fila-valores">
                   <strong class="usd-monto">Gratis</strong>
+                </div>
+              </div>
+              {/* Segunda fila de precio, como la de "Luego, cada mes" de los planes de pago: con las
+                  tarjetas lado a lado el divisor queda en la misma línea que en sus vecinas. */}
+              <div class="fila fila--mes-gratis">
+                <span class="fila-etiqueta">Cada mes</span>
+                <div class="fila-valores">
+                  <span class="usd"><strong class="usd-monto">$0</strong><span class="usd-unidad">USD</span></span>
                 </div>
               </div>
               <p class="pago-tag">Sin tarjeta ni transferencia</p>
@@ -597,6 +605,11 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     line-height: 1;
   }
 
+  /* Segunda fila del Gratuito: oculta hasta que hay tarjetas lado a lado (ver abajo) */
+  .fila--mes-gratis {
+    display: none;
+  }
+
   /* === Límites: filas etiqueta/valor === */
   .card-limits {
     display: flex;
@@ -750,21 +763,12 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     }
 
     /* Plan Gratuito con tarjetas lado a lado: el bloque de precio comparte altura con el de los
-       planes de pago (dos filas y un chip), y "Gratis" solo dejaba un hueco en medio. El precio
-       pasa a ser una placa —etiqueta arriba, "Gratis" grande abajo— que ocupa ese espacio, con
-       el chip al mismo nivel que en las otras tarjetas. En una columna (celular) no hay filas
-       compartidas y se queda como estaba. */
-    .card-price--gratis .fila--gratis {
-      flex: 1;
-      justify-content: space-between;
-      padding: var(--space-md);
-      background: var(--board);
-      border: 1px dashed var(--line-strong);
-      border-radius: var(--radius-md);
-    }
-
-    .card-price--gratis .fila--intro .usd-monto {
-      font-size: clamp(2.5rem, 3.4vw, 3.25rem);
+       planes de pago (dos filas y un chip) y una sola fila dejaba un hueco en medio. Se muestra la
+       segunda fila ("Cada mes · $0 USD") solo en vista mensual, que es cuando los planes de pago
+       tienen también dos filas; en la anual todos tienen una. En una columna (celular) no hay
+       filas compartidas y no se muestra. */
+    .precios-section[data-billing='monthly'] .fila--mes-gratis {
+      display: flex;
     }
   }
 
