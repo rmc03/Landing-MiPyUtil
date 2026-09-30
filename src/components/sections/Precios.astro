@@ -127,7 +127,8 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     </div>
 
     <div class="pricing-grid">
-      {plans.map((plan) => (
+      {plans.map((plan, i) => (
+        <>
         <article class:list={['pricing-card', { recommended: plan.recommended }]}>
           <div class="card-header">
             <h3 class="plan-name">{plan.name}</h3>
@@ -173,9 +174,14 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
               </div>
 
               <p class="pago-tag">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pago-icono" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                <span class="solo-mensual">USD o CUP al cambio</span>
-                <span class="solo-anual">Tarjeta Clásica (USD)</span>
+                <span class="pago-opcion solo-mensual">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pago-icono" aria-hidden="true"><path d="M4 8h15l-4-4"/><path d="M20 16H5l4 4"/></svg>
+                  Transferencia CUP al cambio
+                </span>
+                <span class="pago-opcion solo-anual">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pago-icono" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                  Tarjeta Clásica (USD)
+                </span>
               </p>
             </div>
           )}
@@ -231,6 +237,19 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
             )}
           </div>
         </article>
+        {/* En una columna queda justo después del plan Gratuito; en más columnas, como banda bajo las tarjetas */}
+        {i === 0 && (
+          <aside class="info-gratis" aria-labelledby="info-gratis-titulo">
+            <span class="info-icono" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </span>
+            <div>
+              <h3 class="info-titulo" id="info-gratis-titulo">Descarga la app y úsala gratis</h3>
+              <p>El plan Gratuito no vence nunca y puedes usarlo sin problemas todo el tiempo que quieras. Mejora de plan solo cuando lo desees.</p>
+            </div>
+          </aside>
+        )}
+        </>
       ))}
     </div>
 
@@ -543,6 +562,13 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     white-space: nowrap;
   }
 
+  /* La cifra en el color de texto principal (blanco en oscuro) para que el precio en CUP
+     resalte; "≈" y "CUP" quedan en tono apagado. */
+  .cup-num {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
   .precios-section[data-tasa-estado='cargando'] .cup-hoy {
     visibility: hidden;
   }
@@ -569,9 +595,52 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     color: var(--ink-muted);
   }
 
+  .pago-opcion {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
   .pago-icono {
     color: var(--accent);
     flex-shrink: 0;
+  }
+
+  /* === Mini sección: el plan Gratuito no vence === */
+  .info-gratis {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    align-items: start;
+    background: var(--board-panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: clamp(16px, 4vw, var(--space-lg));
+  }
+
+  .info-icono {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    background: var(--plate);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+  }
+
+  .info-titulo {
+    font-size: var(--fs-title);
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+
+  .info-gratis p {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+    max-width: 62ch;
   }
 
   /* Plan Gratuito: mismo ritmo que la fila "1.er mes" de los planes de pago */
@@ -730,6 +799,11 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     .card-action {
       align-self: end;
     }
+
+    /* Con varias columnas la mini sección pasa a banda bajo todas las tarjetas */
+    .info-gratis {
+      order: 1;
+    }
   }
 
   @media (min-width: 52rem) {
@@ -758,6 +832,11 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     .pricing-card {
       padding: var(--space-lg);
       margin-bottom: 0;
+    }
+
+    /* Sin margen bajo las tarjetas de esta fila, la banda necesita el suyo */
+    .info-gratis {
+      margin-top: var(--space-lg);
     }
 
     /* Cuatro columnas estrechas: los montos en CUP a la derecha forman una columna legible */
