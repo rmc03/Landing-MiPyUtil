@@ -493,12 +493,14 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     color: var(--accent);
   }
 
+  /* En celular y tablet el CUP va pegado al USD: la tarjeta es ancha y, empujado al borde,
+     el cambio se separaba del precio que explica. En escritorio se alinea a la derecha (ver abajo). */
   .fila-valores {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 2px var(--space-sm);
+    justify-content: flex-start;
+    gap: 2px var(--space-md);
     font-variant-numeric: tabular-nums;
   }
 
@@ -756,6 +758,12 @@ const mensajeMensual = (nombre: string, intro: string | null, precio: string | n
     .pricing-card {
       padding: var(--space-lg);
       margin-bottom: 0;
+    }
+
+    /* Cuatro columnas estrechas: los montos en CUP a la derecha forman una columna legible */
+    .fila-valores {
+      justify-content: space-between;
+      gap: 2px var(--space-sm);
     }
 
     .badge {
