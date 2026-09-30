@@ -86,7 +86,8 @@ GET https://sqnrvtwrvgxszkxuuyjb.supabase.co/functions/v1/tasa-publica
 Cómo se comporta la página:
 
 - El HTML ya trae los precios en USD. Al cargar, un script consulta la tasa y añade el equivalente en CUP bajo cada precio (`USD × tasa`, sin redondear).
-- La placa "Pagas en CUP" muestra la tasa y la hora de Cuba de la última actualización, y los botones de WhatsApp incluyen los precios y la tasa que vio el visitante.
+- Una línea junto al selector mensual/anual muestra la tasa y la hora de Cuba de la última actualización, y los botones de WhatsApp incluyen los precios y la tasa que vio el visitante.
+- Cada plan muestra dos filas de precio (1.er mes y luego cada mes) con el USD a la izquierda y el CUP a la derecha. Mensual y anual viven los dos en el HTML y el selector solo cambia `data-billing` en la sección.
 - Si la consulta falla, tarda más de 4 s o la tasa tiene más de `HORAS_TASA_VIEJA` horas (24, en `Precios.astro`), los montos en CUP desaparecen y se manda a WhatsApp.
 - La tasa se guarda 10 minutos en `localStorage`, así que no hay una consulta por cada visita.
 
