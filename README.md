@@ -47,6 +47,10 @@ src/
 public/
 ├── icon.png           # Favicon e ícono de la app
 └── mipyutil-mark.png  # Marca para el hero
+
+supabase/
+└── functions/
+    └── tasa-publica/  # Copia de la Edge Function desplegada (ver "Precios y tasa de cambio")
 ```
 
 Cada sección de la landing vive en su propio componente. Para editar el contenido, abre el componente correspondiente en `src/components/sections/`.
@@ -67,6 +71,26 @@ El sistema de diseño sigue la metáfora del "tablón curtido": superficies clar
 ```
 
 Los componentes respetan `prefers-color-scheme` y `prefers-reduced-motion`. La paleta cumple WCAG AA en ambos modos.
+
+## Precios y tasa de cambio
+
+Los planes mensuales cuestan en USD (`plans` en `src/components/sections/Precios.astro`) y se pueden pagar en CUP al cambio de elTOQUE. El plan anual sigue siendo en USD con Tarjeta Clásica.
+
+La tasa sale de la función pública `tasa-publica` del proyecto MiPyUtil en Supabase. Lee la última fila de `tasas_cambio`, que `tasa-cambio` (pg_cron, cada hora) llena desde elTOQUE, y devuelve solo el dólar y su antigüedad. La landing no llama a elTOQUE ni lleva su token.
+
+```
+GET https://sqnrvtwrvgxszkxuuyjb.supabase.co/functions/v1/tasa-publica
+→ { "usd": 755, "dia": "2026-09-30", "tomada_en": "2026-09-30T15:05:02.181+00:00", "edad_seg": 312 }
+```
+
+Cómo se comporta la página:
+
+- El HTML ya trae los precios en USD. Al cargar, un script consulta la tasa y añade el equivalente en CUP bajo cada precio (`USD × tasa`, sin redondear).
+- La placa "Pagas en CUP" muestra la tasa y la hora de Cuba de la última actualización, y los botones de WhatsApp incluyen los precios y la tasa que vio el visitante.
+- Si la consulta falla, tarda más de 4 s o la tasa tiene más de `HORAS_TASA_VIEJA` horas (24, en `Precios.astro`), los montos en CUP desaparecen y se manda a WhatsApp.
+- La tasa se guarda 10 minutos en `localStorage`, así que no hay una consulta por cada visita.
+
+La URL se puede cambiar con la variable `PUBLIC_TASA_URL`. `supabase/functions/tasa-publica/index.ts` es una copia de la función desplegada: si la cambias, despliégala también en Supabase. Solo permite leerla desde `https://mipyutil.vercel.app` y `http://localhost:4321` (`ORIGENES_PERMITIDOS`); si el dominio cambia hay que añadirlo ahí y redesplegar.
 
 ## Contacto real
 

@@ -2,6 +2,12 @@
 // src/components/sections/Precios.astro
 // Precios como filas de un tablón: límites en filas etiqueta/valor, el toggle
 // de facturación es un control de dos placas (nunca una píldora deslizante).
+//
+// Los planes mensuales cuestan en USD y se pueden pagar en CUP al cambio de
+// elTOQUE. La tasa la sirve la función pública `tasa-publica` de Supabase
+// (ver supabase/functions/tasa-publica). El HTML ya trae los precios en USD;
+// el script de abajo añade los montos en CUP cuando llega la tasa. Si la tasa
+// no llega o está vieja, esos montos desaparecen y se manda a WhatsApp.
 import Button from '../ui/Button.astro';
 
 const plans = [
@@ -21,8 +27,8 @@ const plans = [
   },
   {
     name: 'Básico',
-    monthlyPrice: '1.500',
-    monthlyIntro: '1.200',
+    monthlyPrice: '2',
+    monthlyIntro: '1',
     annualPrice: '15',
     recommended: false,
     free: false,
@@ -35,8 +41,8 @@ const plans = [
   },
   {
     name: 'Negocio',
-    monthlyPrice: '2.000',
-    monthlyIntro: '1.800',
+    monthlyPrice: '3',
+    monthlyIntro: '2',
     annualPrice: '20',
     recommended: true,
     free: false,
@@ -49,8 +55,8 @@ const plans = [
   },
   {
     name: 'Pro',
-    monthlyPrice: '2.500',
-    monthlyIntro: '2.000',
+    monthlyPrice: '4',
+    monthlyIntro: '3',
     annualPrice: '30',
     recommended: false,
     free: false,
@@ -64,9 +70,33 @@ const plans = [
 ];
 
 const WHATSAPP_NUMBER = '5353770707';
+
+// Función pública de Supabase (solo lectura): devuelve el dólar de elTOQUE y su antigüedad.
+const TASA_URL =
+  import.meta.env.PUBLIC_TASA_URL ?? 'https://sqnrvtwrvgxszkxuuyjb.supabase.co/functions/v1/tasa-publica';
+// Pasadas estas horas sin actualizarse, la landing oculta los montos en CUP.
+const HORAS_TASA_VIEJA = 24;
+
+const pasos = [
+  { titulo: 'Elige tu plan', texto: 'Se abre WhatsApp con el plan ya escrito.' },
+  { titulo: 'Te confirmamos el monto', texto: 'En CUP y con la tasa de hoy, antes de que transfieras.' },
+  { titulo: 'Transfieres y te activamos', texto: 'Pagas por Transfermóvil o EnZona y subimos tu plan.' }
+];
+
+const mensajeMensual = (nombre: string, intro: string | null, precio: string | null) =>
+  `Hola, me interesa el plan mensual ${nombre} de la app MiPyUtil. Vi $${intro} USD el primer mes y $${precio} USD al mes después.`;
 ---
 
-<section id="precios" class="precios-section">
+<section
+  id="precios"
+  class="precios-section"
+  data-billing="monthly"
+  data-tasa-estado="cargando"
+  data-tasa-url={TASA_URL}
+  data-tasa-max-horas={HORAS_TASA_VIEJA}
+  data-whatsapp={WHATSAPP_NUMBER}
+>
+  <noscript><style is:inline>.cup-hoy { display: none; } .tasa-cargando { display: none; }</style></noscript>
   <div class="container">
     <div class="section-header">
       <h2>Elige tu plan</h2>
@@ -79,6 +109,32 @@ const WHATSAPP_NUMBER = '5353770707';
         Anual
         <span class="save-chip">Grandes descuentos</span>
       </button>
+    </div>
+
+    <div class="cambio-banner cambio-only">
+      <div class="cambio-monedas" aria-hidden="true">
+        <span>USD</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15l-4-4"/><path d="M20 16H5l4 4"/></svg>
+        <span>CUP</span>
+      </div>
+      <div class="cambio-texto">
+        <h3 class="cambio-titulo">Pagas en CUP, al cambio del día</h3>
+        <p>Los planes cuestan en dólares y los puedes pagar en pesos cubanos al cambio de elTOQUE. Te confirmamos el monto por WhatsApp antes de que transfieras.</p>
+        <p class="tasa-linea" aria-live="polite">
+          <span class="tasa-cargando">Consultando la tasa de hoy…</span>
+          <span class="tasa-lista">Hoy: 1 USD = <strong class="tasa-valor"></strong> CUP · elTOQUE · actualizada <time class="tasa-hora"></time></span>
+          <span class="tasa-sin">No pudimos consultar la tasa ahora. Te la damos por WhatsApp.</span>
+        </p>
+      </div>
+      <Button
+        variant="secondary"
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola, quisiera pagar un plan de la app MiPyUtil en CUP. ¿Me confirman la tasa de hoy?')}`}
+        icon="whatsapp"
+        target="_blank"
+        class="cambio-cta"
+      >
+        Preguntar por WhatsApp
+      </Button>
     </div>
 
     <div class="pricing-grid">
@@ -99,21 +155,23 @@ const WHATSAPP_NUMBER = '5353770707';
             <div class="card-price" data-billing="monthly">
               <div class="intro-offer">
                 <span class="intro-prefix">1.<sup>er</sup> mes:</span>
-                <strong class="intro-amount">{plan.monthlyIntro}</strong>
-                <span class="intro-currency">CUP</span>
+                <strong class="intro-amount">${plan.monthlyIntro}</strong>
+                <span class="intro-currency">USD</span>
               </div>
+              <p class="cup-hoy cup-hoy--intro" data-usd={plan.monthlyIntro}>≈ <span class="cup-num"></span> CUP hoy</p>
               <div class="price-row">
                 <span class="price-prefix" data-monthly-text="luego " data-annual-text="">luego </span>
-                <span class="currency" data-monthly-currency="" data-annual-currency="$" aria-hidden="true"></span>
+                <span class="currency" data-monthly-currency="$" data-annual-currency="$" aria-hidden="true">$</span>
                 <span class="amount" data-monthly={plan.monthlyPrice} data-annual={plan.annualPrice}>
                   <span class="amount-register" data-value={plan.monthlyPrice}>{plan.monthlyPrice}</span>
                 </span>
-                <span class="currency-unit" data-monthly-text=" CUP" data-annual-text=" USD"> CUP</span>
+                <span class="currency-unit" data-monthly-text=" USD" data-annual-text=" USD"> USD</span>
                 <span class="period" data-monthly-text="/ mes" data-annual-text="/ año">/ mes</span>
               </div>
+              <p class="cup-hoy" data-usd={plan.monthlyPrice}>≈ <span class="cup-num"></span> CUP / mes hoy</p>
               <div class="payment-method-tag">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="payment-tag-icon" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                <span class="payment-tag-text" data-monthly-text="Transferencia bancaria (CUP)" data-annual-text="Tarjeta Clásica (USD)">Transferencia bancaria (CUP)</span>
+                <span class="payment-tag-text" data-monthly-text="USD o CUP al cambio" data-annual-text="Tarjeta Clásica (USD)">USD o CUP al cambio</span>
               </div>
               <span class="price-status" aria-live="polite"></span>
             </div>
@@ -156,12 +214,14 @@ const WHATSAPP_NUMBER = '5353770707';
             ) : (
               <Button
                 variant={plan.recommended ? 'primary' : 'secondary'}
-                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hola, me interesa el plan mensual ${plan.name} de la app MiPyUtil`)}`}
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(mensajeMensual(plan.name, plan.monthlyIntro, plan.monthlyPrice))}`}
                 icon="whatsapp"
                 target="_blank"
                 fullWidth
                 class="plan-cta-btn"
                 data-plan-name={plan.name}
+                data-plan-intro={plan.monthlyIntro}
+                data-plan-price={plan.monthlyPrice}
               >
                 Elegir plan
               </Button>
@@ -169,6 +229,21 @@ const WHATSAPP_NUMBER = '5353770707';
           </div>
         </div>
       ))}
+    </div>
+
+    <div class="pasos cambio-only">
+      <h3 class="pasos-titulo">Así pagas en moneda nacional</h3>
+      <ol class="pasos-lista">
+        {pasos.map((paso, i) => (
+          <li>
+            <span class="paso-n">{i + 1}</span>
+            <div>
+              <strong>{paso.titulo}</strong>
+              <p>{paso.texto}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   </div>
 </section>
@@ -349,7 +424,7 @@ const WHATSAPP_NUMBER = '5353770707';
   .price-row {
     display: flex;
     align-items: baseline;
-    gap: 2px;
+    gap: 2px 5px;
     flex-wrap: wrap;
   }
 
@@ -366,6 +441,8 @@ const WHATSAPP_NUMBER = '5353770707';
     font-size: clamp(1.5rem, 4vw, var(--fs-stat));
     font-weight: 700;
     color: var(--ink);
+    /* Pegado al monto: "$2", no "$ 2" */
+    margin-right: -4px;
   }
 
   .amount {
@@ -557,6 +634,188 @@ const WHATSAPP_NUMBER = '5353770707';
     color: var(--ink-muted);
   }
 
+  /* === Pago en moneda nacional ===
+     Solo aplica al plan mensual: el anual sigue siendo Tarjeta Clásica (USD),
+     por eso todo lo marcado .cambio-only se oculta en modo anual. */
+  .precios-section[data-billing='annual'] .cambio-only {
+    display: none;
+  }
+
+  .cambio-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    align-items: center;
+    background: var(--plate);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    padding: clamp(var(--space-md), 4vw, var(--space-lg));
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-xl));
+  }
+
+  .cambio-monedas {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    color: var(--ink-muted);
+  }
+
+  .cambio-monedas span {
+    background: var(--board);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    color: var(--ink);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .cambio-monedas span:last-child {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-on);
+  }
+
+  .cambio-titulo {
+    font-size: clamp(var(--fs-title), 2.5vw, 1.375rem);
+    font-weight: 800;
+    margin-bottom: var(--space-xs);
+  }
+
+  .cambio-texto p {
+    color: var(--ink-muted);
+    max-width: 62ch;
+  }
+
+  .tasa-linea {
+    margin-top: var(--space-sm);
+    min-height: 1.6em;
+    font-size: var(--fs-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tasa-linea strong {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  /* Un solo texto visible según el estado de la consulta de la tasa */
+  .tasa-cargando,
+  .tasa-lista,
+  .tasa-sin {
+    display: none;
+  }
+
+  .precios-section[data-tasa-estado='cargando'] .tasa-cargando,
+  .precios-section[data-tasa-estado='listo'] .tasa-lista,
+  .precios-section[data-tasa-estado='sin-tasa'] .tasa-sin {
+    display: inline;
+  }
+
+  /* Equivalente en CUP bajo cada precio. Mientras se consulta la tasa conserva
+     su espacio (sin saltos de layout); si la tasa no llega, desaparece. */
+  .cup-hoy {
+    margin: 0;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cup-hoy--intro {
+    color: var(--accent);
+  }
+
+  .precios-section[data-tasa-estado='cargando'] .cup-hoy {
+    visibility: hidden;
+  }
+
+  .precios-section[data-tasa-estado='sin-tasa'] .cup-hoy,
+  .card-price[data-billing='annual'] .cup-hoy {
+    display: none;
+  }
+
+  /* En mensual la etiqueta de pago es el mensaje: aceptas CUP al cambio */
+  .card-price[data-billing='monthly'] .payment-method-tag {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .card-price[data-billing='monthly'] .payment-tag-icon,
+  .card-price[data-billing='monthly'] .payment-tag-text {
+    color: var(--accent-on);
+  }
+
+  .card-price[data-billing='monthly'] .payment-tag-text {
+    font-weight: 700;
+  }
+
+  /* Los tres pasos: aquí el orden sí es información */
+  .pasos {
+    margin-top: clamp(var(--space-lg), 5vw, var(--space-2xl));
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .pasos-titulo {
+    font-size: clamp(var(--fs-title), 2.5vw, 1.375rem);
+    font-weight: 800;
+    margin-bottom: var(--space-md);
+  }
+
+  .pasos-lista {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .pasos-lista li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+    align-items: start;
+    background: var(--plate);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+  }
+
+  .paso-n {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--accent-on);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pasos-lista strong {
+    display: block;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+
+  .pasos-lista p {
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  @media (min-width: 52rem) {
+    .cambio-banner {
+      grid-template-columns: auto 1fr auto;
+      gap: var(--space-lg);
+    }
+
+    .pasos-lista {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
   /* 2 columnas en tablet; 4 solo cuando el contenedor está a su ancho máximo */
   @media (min-width: 40rem) {
     .pricing-grid {
@@ -595,12 +854,114 @@ const WHATSAPP_NUMBER = '5353770707';
 </style>
 
 <script>
+  interface Tasa {
+    usd: number;
+    tomadaEn: string;
+    edadSeg: number;
+    recibidoMs: number;
+  }
+
+  const CLAVE_CACHE = 'mipyutil:tasa-usd';
+  // Una tasa guardada en el navegador se reutiliza este tiempo sin volver a pedirla.
+  const VIGENCIA_CACHE_MS = 10 * 60 * 1000;
+  const ESPERA_MAX_MS = 4000;
+
+  // Monto con separador de miles "." y coma decimal, sin redondear: solo se
+  // limpia el error de coma flotante a centavos (2266.5 sale "2.266,5").
+  const formatoMonto = (n: number): string => {
+    const [entera, decimales] = (Math.round(n * 100) / 100).toFixed(2).split('.');
+    const miles = entera.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const dec = decimales.replace(/0+$/, '');
+    return dec ? `${miles},${dec}` : miles;
+  };
+
+  // Fecha y hora de Cuba a partir del instante que manda el servidor: no depende
+  // del reloj del teléfono, que en Cuba suele estar mal puesto.
+  const textoHora = (iso: string): string =>
+    new Intl.DateTimeFormat('es', {
+      timeZone: 'America/Havana',
+      day: 'numeric',
+      month: 'short',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).format(new Date(iso));
+
+  const validar = (x: any): Tasa | null => {
+    const usd = Number(x?.usd);
+    const edadSeg = Number(x?.edadSeg);
+    const recibidoMs = Number(x?.recibidoMs);
+    if (!Number.isFinite(usd) || usd <= 0) return null;
+    if (!Number.isFinite(edadSeg) || edadSeg < 0 || !Number.isFinite(recibidoMs)) return null;
+    if (typeof x?.tomadaEn !== 'string' || Number.isNaN(Date.parse(x.tomadaEn))) return null;
+    return { usd, tomadaEn: x.tomadaEn, edadSeg, recibidoMs };
+  };
+
+  const leerCache = (): Tasa | null => {
+    try {
+      const crudo = localStorage.getItem(CLAVE_CACHE);
+      return crudo ? validar(JSON.parse(crudo)) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Antigüedad de la tasa: la que calculó el servidor al responder, más lo que
+  // pasó desde entonces en este navegador (diferencia de relojes propios, válida
+  // aunque la fecha del teléfono esté mal).
+  const edadActualSeg = (t: Tasa): number => t.edadSeg + Math.max(0, (Date.now() - t.recibidoMs) / 1000);
+
+  const pedirTasa = async (url: string): Promise<Tasa | null> => {
+    const controlador = new AbortController();
+    const temporizador = setTimeout(() => controlador.abort(), ESPERA_MAX_MS);
+    try {
+      const res = await fetch(url, { signal: controlador.signal });
+      if (!res.ok) return null;
+      const cuerpo = await res.json();
+      const tasa = validar({
+        usd: cuerpo?.usd,
+        tomadaEn: cuerpo?.tomada_en,
+        edadSeg: cuerpo?.edad_seg,
+        recibidoMs: Date.now()
+      });
+      if (tasa) {
+        try {
+          localStorage.setItem(CLAVE_CACHE, JSON.stringify(tasa));
+        } catch {
+          /* sin almacenamiento: se pide de nuevo la próxima vez */
+        }
+      }
+      return tasa;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(temporizador);
+    }
+  };
+
+  // Tasa fresca de la caché local si la hay; si no, la pide. Si la consulta falla
+  // devuelve la última guardada (aunque sea vieja) para que quien decide sea la
+  // regla de antigüedad máxima, no la red.
+  const obtenerTasa = async (url: string): Promise<Tasa | null> => {
+    const guardada = leerCache();
+    if (guardada) {
+      const transcurrido = Date.now() - guardada.recibidoMs;
+      if (transcurrido >= 0 && transcurrido < VIGENCIA_CACHE_MS) return guardada;
+    }
+    return (await pedirTasa(url)) ?? guardada;
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const TRANSITION_DURATION = 250;
 
+    const seccion = document.querySelector<HTMLElement>('#precios');
     const group = document.querySelector('.billing-toggle');
-    if (!group) return;
+    if (!seccion || !group) return;
+
+    const whatsapp = seccion.dataset.whatsapp ?? '';
+    const tasaUrl = seccion.dataset.tasaUrl ?? '';
+    const maxEdadSeg = Number(seccion.dataset.tasaMaxHoras ?? 24) * 3600;
 
     const options = Array.from(group.querySelectorAll<HTMLElement>('.billing-option'));
     const registers = Array.from(document.querySelectorAll<HTMLElement>('.amount-register'));
@@ -612,8 +973,65 @@ const WHATSAPP_NUMBER = '5353770707';
     const cardPrices = Array.from(document.querySelectorAll<HTMLElement>('.card-price'));
     const statuses = Array.from(document.querySelectorAll<HTMLElement>('.price-status'));
     const planButtons = Array.from(document.querySelectorAll<HTMLAnchorElement>('.plan-cta-btn'));
+    const cupLines = Array.from(document.querySelectorAll<HTMLElement>('.cup-hoy'));
+    const valorTasa = seccion.querySelector<HTMLElement>('.tasa-valor');
+    const horaTasa = seccion.querySelector<HTMLTimeElement>('.tasa-hora');
 
+    // Solo hay tasa cuando es reciente; si no, la página queda en USD y WhatsApp.
+    let tasa: Tasa | null = null;
     let isTransitioning = false;
+
+    const mensajeWhatsApp = (btn: HTMLAnchorElement): string => {
+      const nombre = btn.dataset.planName ?? '';
+      if (seccion.dataset.billing === 'annual') {
+        return `Hola, me interesa el plan anual ${nombre} de la app MiPyUtil`;
+      }
+      let mensaje = `Hola, me interesa el plan mensual ${nombre} de la app MiPyUtil. Vi $${btn.dataset.planIntro} USD el primer mes y $${btn.dataset.planPrice} USD al mes después.`;
+      if (tasa) {
+        mensaje += ` Tasa que vi: 1 USD = ${formatoMonto(tasa.usd)} CUP (elTOQUE, ${textoHora(tasa.tomadaEn)}).`;
+      }
+      return mensaje;
+    };
+
+    const actualizarEnlaces = () => {
+      planButtons.forEach((btn) => {
+        if (btn.dataset.planName) {
+          btn.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensajeWhatsApp(btn))}`;
+        }
+      });
+    };
+
+    const aplicarTasa = (nueva: Tasa | null) => {
+      const vigente = nueva !== null && edadActualSeg(nueva) <= maxEdadSeg;
+      tasa = vigente ? nueva : null;
+      seccion.dataset.tasaEstado = tasa ? 'listo' : 'sin-tasa';
+
+      if (tasa) {
+        const { usd, tomadaEn } = tasa;
+        if (valorTasa) valorTasa.textContent = formatoMonto(usd);
+        if (horaTasa) {
+          horaTasa.textContent = textoHora(tomadaEn);
+          horaTasa.dateTime = tomadaEn;
+        }
+        cupLines.forEach((linea) => {
+          const num = linea.querySelector<HTMLElement>('.cup-num');
+          if (num) num.textContent = formatoMonto(Number(linea.dataset.usd) * usd);
+        });
+      }
+      actualizarEnlaces();
+    };
+
+    const consultarTasa = async () => {
+      if (!tasaUrl) return aplicarTasa(null);
+      aplicarTasa(await obtenerTasa(tasaUrl));
+    };
+
+    consultarTasa();
+
+    // Pestaña abierta por horas: al volver a ella se renueva la tasa si ya venció la caché.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') consultarTasa();
+    });
 
     const applyBilling = async (mode: string) => {
       if (isTransitioning) return;
@@ -676,6 +1094,7 @@ const WHATSAPP_NUMBER = '5353770707';
         swap();
       }
 
+      seccion.dataset.billing = mode;
       cardPrices.forEach((el) => {
         el.dataset.billing = mode;
       });
@@ -686,19 +1105,10 @@ const WHATSAPP_NUMBER = '5353770707';
         const period = card?.querySelector<HTMLElement>('.period');
         const price = isAnnual ? (amount?.dataset.annual || '') : (amount?.dataset.monthly || '');
         const suffix = isAnnual ? (period?.dataset.annualText || '') : (period?.dataset.monthlyText || '');
-        const curr = isAnnual ? '$' : '';
-        const unit = isAnnual ? 'USD' : 'CUP';
-        status.textContent = `${curr}${price} ${unit} ${suffix}`.trim();
+        status.textContent = `$${price} USD ${suffix}`.trim();
       });
 
-      const billingText = isAnnual ? 'anual' : 'mensual';
-      planButtons.forEach((btn) => {
-        const planName = btn.dataset.planName;
-        if (planName) {
-          const msg = `Hola, me interesa el plan ${billingText} ${planName} de la app MiPyUtil`;
-          btn.href = `https://wa.me/5353770707?text=${encodeURIComponent(msg)}`;
-        }
-      });
+      actualizarEnlaces();
 
       await new Promise((resolve) => setTimeout(resolve, TRANSITION_DURATION));
       isTransitioning = false;
