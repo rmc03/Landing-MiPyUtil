@@ -1,0 +1,303 @@
+---
+interface Product {
+  name: string;
+  category: string;
+  stock: number;
+  price: string;
+  low?: boolean;
+}
+
+// Datos de ejemplo, en CUP; los mismos precios de las ventas del teléfono (Aceite y Café en stock bajo).
+const products: Product[] = [
+  { name: 'Aceite 1 L', category: 'Víveres', stock: 2, price: '$1,800', low: true },
+  { name: 'Café 250 g', category: 'Víveres', stock: 3, price: '$1,350', low: true },
+  { name: 'Arroz 1 kg', category: 'Víveres', stock: 60, price: '$780' },
+  { name: 'Spaghetti 500 g', category: 'Víveres', stock: 36, price: '$520' },
+  { name: 'Malta 330 ml', category: 'Bebidas', stock: 48, price: '$350' },
+  { name: 'Refresco 2 L', category: 'Bebidas', stock: 22, price: '$620' },
+  { name: 'Jabón de baño', category: 'Aseo', stock: 30, price: '$280' },
+  { name: 'Detergente 1 kg', category: 'Aseo', stock: 14, price: '$900' }
+];
+
+const categories = ['Todo', ...Array.from(new Set(products.map((p) => p.category)))];
+---
+
+<section id="inventario" class="inventario veta veta--c">
+  <div class="container">
+    <div class="layout">
+      <div class="copy">
+        <h2>Saber qué tienes, antes de que te pregunte un cliente.</h2>
+        <ul class="feature-list">
+          <li>Productos con foto, categoría y precio.</li>
+          <li><strong>Alertas de inventario bajo:</strong> el sistema te avisa antes de que se agote.</li>
+          <li>Búsqueda rápida y exportación del inventario a archivo.</li>
+          <li>Cada venta y cada entrada quedan en el <strong>historial de movimientos</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="plate-panel board" data-inventory>
+        <span class="screw screw--tl" aria-hidden="true"></span>
+        <span class="screw screw--tr" aria-hidden="true"></span>
+        <span class="screw screw--bl" aria-hidden="true"></span>
+        <span class="screw screw--br" aria-hidden="true"></span>
+
+        <p class="board-title">Inventario de ejemplo. Prueba la búsqueda.</p>
+
+        <div class="tools">
+          <label class="sr-only" for="inventario-buscar">Buscar producto</label>
+          <input id="inventario-buscar" class="search" type="search" placeholder="Buscar producto..." autocomplete="off" enterkeyhint="search" />
+          <div class="chips" role="group" aria-label="Categoría">
+            {categories.map((category, i) => (
+              <button type="button" class="chip" data-category={i === 0 ? '' : category} aria-pressed={i === 0 ? 'true' : 'false'}>
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="stock-wrap">
+        <dl class="plate-list stock">
+          {products.map((product) => (
+            <div class:list={['plate', 'item', { 'plate--alert': product.low }]} data-name={product.name} data-category={product.category}>
+              <dt>
+                <span class="item-name">{product.name}</span>
+                <span class="item-meta">{product.low ? 'Stock bajo' : product.category}, {product.price} CUP</span>
+              </dt>
+              <dd>{product.stock}<span class="unit"> en stock</span></dd>
+            </div>
+          ))}
+        </dl>
+
+        <p class="empty" hidden>Ningún producto coincide con tu búsqueda.</p>
+        </div>
+        <p class="sr-only" role="status" data-status></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Filtro de la demostración: el texto y la categoría se combinan.
+  const normalize = (text: string) =>
+    text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+
+  document.querySelectorAll<HTMLElement>('[data-inventory]').forEach((board) => {
+    const input = board.querySelector<HTMLInputElement>('.search');
+    const chips = Array.from(board.querySelectorAll<HTMLButtonElement>('.chip'));
+    const items = Array.from(board.querySelectorAll<HTMLElement>('.item'));
+    const empty = board.querySelector<HTMLElement>('.empty');
+    const status = board.querySelector<HTMLElement>('[data-status]');
+    let category = '';
+
+    const apply = () => {
+      const query = normalize(input?.value ?? '');
+      let shown = 0;
+      items.forEach((item) => {
+        const matches =
+          (!category || item.dataset.category === category) &&
+          (!query || normalize(item.dataset.name ?? '').includes(query));
+        item.hidden = !matches;
+        if (matches) shown += 1;
+      });
+      if (empty) empty.hidden = shown > 0;
+      if (status) status.textContent = shown === 1 ? '1 producto' : `${shown} productos`;
+    };
+
+    input?.addEventListener('input', apply);
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        category = chip.dataset.category ?? '';
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        apply();
+      });
+    });
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
+    align-items: start;
+  }
+
+  .copy h2 {
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
+  }
+
+  /* Panel hundido (board-panel) con placas encima (plate): dos niveles, como
+     pide el sistema, en vez de recuadros del mismo color dentro de otro. */
+  .board {
+    display: grid;
+    gap: var(--space-md);
+    padding: clamp(var(--space-lg), 5vw, var(--space-xl)) clamp(var(--space-md), 4vw, var(--space-lg));
+    background: var(--board-panel);
+  }
+
+  .board-title {
+    padding-inline: var(--space-sm);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .tools {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .search {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: var(--board);
+    color: var(--ink);
+    font: inherit;
+    font-size: var(--fs-body);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .search::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  .search:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .chip {
+    min-height: 44px;
+    padding: 6px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out, transform 120ms var(--ease-out-expo);
+  }
+
+  .chip[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .chip[aria-pressed='false']:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+
+  .chip:active {
+    transform: scale(0.97);
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Alto mínimo = las 8 placas visibles: al filtrar, el tablero no se encoge y
+     el resto de la página no salta. */
+  .stock-wrap {
+    position: relative;
+    min-height: 36rem;
+  }
+
+  .stock {
+    gap: 6px;
+  }
+
+  .item {
+    align-items: center;
+    padding: 10px var(--space-md);
+  }
+
+  .item[hidden] {
+    display: none;
+  }
+
+  .item :global(dt) {
+    display: grid;
+    gap: 1px;
+  }
+
+  .item-name {
+    font-size: var(--fs-body);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .item-meta {
+    font-size: var(--fs-caption);
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  .item :global(dd) {
+    font-size: var(--fs-title);
+    white-space: nowrap;
+  }
+
+  .unit {
+    font-size: var(--fs-caption);
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  /* La placa de alerta es la única que invierte colores (DESIGN.md): su texto
+     y su meta heredan el color sobre acento, no el apagado. */
+  .item.plate--alert .item-name,
+  .item.plate--alert .item-meta,
+  .item.plate--alert .unit {
+    color: var(--accent-on);
+  }
+
+  .empty {
+    position: absolute;
+    inset: 0 0 auto 0;
+    padding: var(--space-lg) var(--space-md);
+    text-align: center;
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  .empty[hidden] {
+    display: none;
+  }
+
+  /* Escritorio: el tablero va a la izquierda (el resto de las secciones de
+     función ponen el objeto a la derecha) y el texto se queda a la vista
+     mientras se recorre la lista. */
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      column-gap: var(--space-3xl);
+    }
+
+    .board {
+      order: -1;
+    }
+
+    .copy {
+      position: sticky;
+      top: 104px;
+    }
+  }
+</style>

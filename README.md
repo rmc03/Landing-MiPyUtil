@@ -35,7 +35,7 @@ npm run preview
 src/
 ├── components/
 │   ├── sections/      # Secciones de la landing (Hero, Precios, FAQ...)
-│   └── ui/            # Componentes reutilizables (Button, CheckList...)
+│   └── ui/            # Componentes reutilizables (Button, AppScreen...)
 ├── layouts/
 │   └── Layout.astro   # Layout base con meta tags y footer
 ├── pages/

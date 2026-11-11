@@ -2,95 +2,44 @@
 /**
  * THESIS: reemplaza el "SaaS oscuro genérico" heredado (violeta, negro, glow) con
  * el objeto que el dueño ya usa a diario: el tablón de precios curtido por el sol.
- * OWN-WORLD: tablón claro (#E7DFC9), panel #DAD0B4, placas #F2ECDC, tinta #262019,
- * acento óxido #B4472A. Anton solo en el h1 de cada página; Archivo en todo lo
- * demás. Radios casi rectos, sombra estampada única en el CTA principal y el plan
- * recomendado. Segundo estado activable, el apagón (#121210, ámbar #E8A33D): mismo
- * sistema, mismos componentes, solo cambia qué tan iluminado está cada elemento.
+ * OWN-WORLD: tablón (#121210 en apagón, #E7DFC9 de día), panel, placas, tinta
+ * cálida, acento ámbar/óxido. Anton solo en el h1; Archivo en todo lo demás.
+ * Radios casi rectos, sombra estampada única en el CTA principal y el plan
+ * recomendado. Cada cifra de negocio es una placa dl real.
  * STORY: el dueño reconoce el tablón que ya usa, ve que se actualiza solo, y
  * entiende que su equipo tiene su propio panel de turno.
- * FIRST VIEWPORT: eyebrow, titular, mockup del teléfono (tour de producto)
- * tejido antes del cuerpo en móvil, luego CTA de descarga.
+ * FIRST VIEWPORT: titular, párrafo, descarga, y dos teléfonos con dos roles
+ * (la app del dueño y la del equipo), sin internet.
  * FORM: dirección 6 de 7 por resonancia (pizarra de precios de bodega), seed
  * 4ef913d4, scope direction, mode persuade, candidate-count 7, assigned index 6.
+ * EVOLUCIÓN: cada sección con su propia estructura y su propia demostración
+ * (teléfono con cobro tocable, tablero de inventario con búsqueda, recibo de
+ * ganancia), en lugar de repetir la misma plantilla texto + teléfono.
  */
 
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/sections/Hero.astro';
-import TrustStrip from '../components/sections/TrustStrip.astro';
 import Problema from '../components/sections/Problema.astro';
 import ComoFunciona from '../components/sections/ComoFunciona.astro';
-import FeatureSection from '../components/sections/FeatureSection.astro';
-import GananciasLedger from '../components/sections/GananciasLedger.astro';
+import Ventas from '../components/sections/Ventas.astro';
+import Inventario from '../components/sections/Inventario.astro';
+import Ganancias from '../components/sections/Ganancias.astro';
 import Precios from '../components/sections/Precios.astro';
 import Descarga from '../components/sections/Descarga.astro';
 import FAQ from '../components/sections/FAQ.astro';
-import PhoneMockup from '../components/PhoneMockup.astro';
 ---
 
 <Layout
-  title="MiPyUtil"
+  title="MiPyUtil: inventario, ventas y turnos sin internet"
   description="Inventario, ventas y turnos. Todo sin internet."
 >
   <Hero />
-  <TrustStrip />
   <Problema />
   <ComoFunciona />
-
-  <!-- Ventas -->
-  <FeatureSection
-    id="ventas"
-    title="Cobra en efectivo… y también por transferencia."
-    class="ventas"
-    band
-  >
-    <Fragment slot="visual">
-      <PhoneMockup screenshot="03-confirmar-pago.png" alt="Pantalla de confirmación de pago con modo de cobro y QR" />
-    </Fragment>
-    <ul class="feature-list">
-      <li>Modo <strong>Efectivo</strong>, <strong>Transferencia</strong> o <strong>Mixto</strong> con cálculo de cambio al vuelo.</li>
-      <li>Muestra tu <strong>QR de pago</strong> en pantalla completa: el cliente escanea desde su app bancaria y paga.</li>
-      <li>Gestiona hasta <strong>5 QRs propios</strong> y comparte los del negocio con tu equipo.</li>
-    </ul>
-  </FeatureSection>
-
-  <!-- Inventario -->
-  <FeatureSection
-    id="inventario"
-    title="Saber qué tienes, antes de que te pregunte un cliente."
-    class="inventario"
-    reverse
-  >
-    <Fragment slot="visual">
-      <PhoneMockup screenshot="04-inventario.png" alt="Pantalla de inventario con alertas de existencias bajas" />
-    </Fragment>
-    <ul class="feature-list">
-      <li>Productos con foto, categoría y precio.</li>
-      <li><strong>Alertas de inventario bajo:</strong> el sistema te avisa antes de que se agote.</li>
-      <li>Búsqueda rápida y exportación del inventario a archivo.</li>
-      <li>Cada venta y cada entrada quedan en el <strong>historial de movimientos</strong>.</li>
-    </ul>
-  </FeatureSection>
-
-  <!-- Ganancias -->
-  <FeatureSection
-    id="ganancias"
-    title="Cuánto ganaste de verdad, no solo cuánto vendiste."
-    class="ganancias"
-    band
-  >
-    <Fragment slot="visual">
-      <PhoneMockup screenshot="07-ganancias.png" alt="Pantalla de ganancias con el desglose de ventas, costos y pagos al equipo" />
-    </Fragment>
-    <p>
-      Cada venta descuenta el costo del producto y el pago al equipo automáticamente.
-      Lo que queda es tu ganancia neta, en tiempo real.
-    </p>
-    <GananciasLedger />
-  </FeatureSection>
-
+  <Ventas />
+  <Inventario />
+  <Ganancias />
   <Precios />
-
   <Descarga />
   <FAQ />
 </Layout>

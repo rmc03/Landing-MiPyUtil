@@ -1,3 +1,25 @@
+/* === FUENTES DE RESPALDO ===
+   Arial reescalada a las métricas de Anton y de Archivo (calculadas con
+   @capsizecss/metrics). Mientras la fuente real carga, el texto ocupa casi el
+   mismo espacio: sin salto de layout. */
+@font-face {
+  font-family: 'Anton Fallback';
+  src: local('Arial'), local('Helvetica');
+  size-adjust: 90.69%;
+  ascent-override: 129.7%;
+  descent-override: 36.29%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Archivo Fallback';
+  src: local('Arial'), local('Helvetica');
+  size-adjust: 98.7%;
+  ascent-override: 88.96%;
+  descent-override: 21.28%;
+  line-gap-override: 0%;
+}
+
 /* === TOKENS ===
    El Tablón Curtido: claro por defecto (tablón pintado, curtido por el sol),
    oscuro activado a mano (el mismo tablón durante un apagón). Ver DESIGN.md. */
@@ -17,10 +39,13 @@
   --shadow-rgb: 38, 32, 25;
   --stamp-color: var(--ink);
   --screw: #8B8578;
+  --bezel: var(--ink);
+  color-scheme: light;
 
-  /* Tipografía */
-  --font-display: 'Anton', system-ui, sans-serif;
-  --font-body: 'Archivo', system-ui, -apple-system, sans-serif;
+  /* Tipografía. Los respaldos (abajo) imitan las métricas de cada fuente para
+     que el cambio de fuente no mueva el layout. */
+  --font-display: 'Anton', 'Anton Fallback', system-ui, sans-serif;
+  --font-body: 'Archivo Variable', 'Archivo Fallback', system-ui, -apple-system, sans-serif;
 
   --fs-display: clamp(2.25rem, 8vw + 0.5rem, 4.5rem);
   --fs-headline: clamp(1.5rem, 4vw + 0.4rem, 2.25rem);
@@ -85,6 +110,10 @@
   --shadow-rgb: 0, 0, 0;
   --stamp-color: var(--ink);
   --screw: #4A4030;
+  /* Bisel del teléfono: gris cálido real, no el color de tinta (que en apagón
+     es crema y dejaría de leerse como un aparato). */
+  --bezel: #3A352C;
+  color-scheme: dark;
 }
 
 /* === RESET & BASE === */
@@ -168,7 +197,7 @@ h3 {
 }
 
 p {
-  max-width: 70ch;
+  max-width: 64ch;
   overflow-wrap: break-word;
   word-wrap: break-word;
   text-wrap: pretty;
@@ -177,11 +206,43 @@ p {
 a {
   color: var(--accent);
   text-decoration: none;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
   transition: color var(--dur-routine) ease;
 }
 
-a:hover {
-  color: var(--accent-deep);
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    color: var(--accent-deep);
+  }
+}
+
+/* === SUPERFICIES DEL NAVEGADOR ===
+   Lo que no dibujamos igual lleva el diseño: selección, cursor de texto,
+   barra de desplazamiento y toque en móvil salen de la paleta, no del
+   navegador. */
+:root {
+  accent-color: var(--accent);
+  caret-color: var(--accent);
+  scrollbar-color: var(--line-strong) var(--board);
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-on);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 a:focus-visible {
@@ -214,6 +275,80 @@ section {
   section {
     padding: var(--space-section-lg) 0;
   }
+}
+
+/* === VETA DEL TABLÓN ===
+   Madera pintada: líneas de veta enmascaradas con --ink, así se re-tiñen solas
+   entre temas. Tres tablas distintas del mismo tablón (no un patrón genérico),
+   cada una con su curva y su tamaño de mosaico. Solo en las zonas que la
+   piden; Precios, Descarga y FAQ quedan lisas a propósito. */
+@supports (mask-image: none) or (-webkit-mask-image: none) {
+  .veta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: var(--ink);
+    opacity: var(--veta-opacity);
+    -webkit-mask-image: var(--veta-mask);
+    mask-image: var(--veta-mask);
+    -webkit-mask-size: var(--veta-size);
+    mask-size: var(--veta-size);
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+}
+
+.veta {
+  position: relative;
+}
+
+.veta > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.veta--a {
+  --veta-opacity: 0.09;
+  --veta-size: 320px 180px;
+  --veta-mask: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Cpath d="M0 22 Q40 14 80 24 T160 18 T240 26 T320 20" stroke="white" stroke-width="1.4" fill="none" opacity="0.55"/%3E%3Cpath d="M0 62 Q55 70 110 60 T220 66 T320 58" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 106 Q48 98 96 108 T192 102 T320 110" stroke="white" stroke-width="1.7" fill="none" opacity="0.5"/%3E%3Cpath d="M0 148 Q60 156 120 146 T240 152 T320 144" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+}
+
+.veta--b {
+  --veta-opacity: 0.08;
+  --veta-size: 300px 200px;
+  --veta-mask: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Cpath d="M0 30 Q45 20 90 32 T180 26 T300 34" stroke="white" stroke-width="1.3" fill="none" opacity="0.5"/%3E%3Cpath d="M0 78 Q50 88 100 76 T200 84 T300 74" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 130 Q42 122 84 132 T168 126 T300 134" stroke="white" stroke-width="1.6" fill="none" opacity="0.5"/%3E%3Cpath d="M0 172 Q55 180 110 170 T220 178 T300 168" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
+}
+
+.veta--c {
+  --veta-opacity: 0.07;
+  --veta-size: 340px 220px;
+  --veta-mask: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="340" height="220"%3E%3Cpath d="M0 40 Q60 30 120 42 T240 36 T340 44" stroke="white" stroke-width="1.2" fill="none" opacity="0.45"/%3E%3Cpath d="M0 100 Q65 110 130 98 T260 106 T340 96" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3Cpath d="M0 160 Q58 152 116 162 T232 156 T340 164" stroke="white" stroke-width="1.5" fill="none" opacity="0.45"/%3E%3C/svg%3E');
+}
+
+/* === LISTA DE FUNCIÓN === */
+.feature-list {
+  list-style: none;
+}
+
+.feature-list li {
+  position: relative;
+  padding-inline-start: 1.4em;
+  margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
+  font-size: clamp(0.9375rem, 2.5vw, 1rem);
+  line-height: 1.6;
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: var(--radius-sm);
 }
 
 /* === BANDA DE PANEL ===
@@ -297,6 +432,10 @@ section {
   font-size: var(--fs-body);
   font-weight: 700;
   font-variant-numeric: normal;
+}
+
+.plate[hidden] {
+  display: none;
 }
 
 .plate--alert {

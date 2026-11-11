@@ -1,0 +1,214 @@
+---
+// Datos de ejemplo, en CUP; los mismos de "Este mes" en el Resumen del teléfono:
+// 86,420 - 52,639.50 - 9,500 = 24,280.50.
+const rows = [
+  { label: 'Ventas totales', value: '$86,420', op: '', neg: false },
+  { label: 'Costo de productos', value: '$52,639.50', op: '−', neg: true },
+  { label: 'Pagos al equipo', value: '$9,500', op: '−', neg: true }
+];
+---
+
+<section id="ganancias" class="ganancias dark-band veta veta--c">
+  <div class="container">
+    <div class="copy">
+      <h2>Cuánto ganaste de verdad, no solo cuánto vendiste.</h2>
+      <p class="lead">
+        Cada venta descuenta el costo del producto y el pago al equipo automáticamente.
+        Lo que queda es tu ganancia neta, en tiempo real.
+      </p>
+      <p class="more">
+        Compara hoy, la semana y el mes contra el período anterior, y te muestra
+        cuáles son los productos más vendidos.
+      </p>
+    </div>
+
+    <div class="plate-panel receipt">
+      <span class="screw screw--tl" aria-hidden="true"></span>
+      <span class="screw screw--tr" aria-hidden="true"></span>
+      <span class="screw screw--bl" aria-hidden="true"></span>
+      <span class="screw screw--br" aria-hidden="true"></span>
+
+      <p class="receipt-title">Un mes de ejemplo, en CUP</p>
+      <dl class="ledger" aria-label="Ejemplo de cálculo de ganancia neta en MiPyUtil">
+        {rows.map((row) => (
+          <div class="ledger-row" data-op={row.op || undefined} data-neg={row.neg || undefined}>
+            <dt>{row.label}</dt>
+            <dd>{row.value}</dd>
+          </div>
+        ))}
+        <div class="ledger-row ledger-total" data-op="=">
+          <dt>Te quedan</dt>
+          <dd>$24,280.50</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .copy {
+    max-width: 44rem;
+    margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
+  }
+
+  .copy h2 {
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
+  }
+
+  .lead {
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
+    line-height: var(--lh-lead);
+  }
+
+  .more {
+    margin-top: var(--space-md);
+    color: var(--ink-muted);
+  }
+
+  /* Recibo: en móvil cada línea lleva su guía punteada hasta la cifra, como en
+     la libreta de cuentas; desde 48rem se lee como una ecuación de izquierda a
+     derecha. Es contenido real (dl), no una captura. */
+  .receipt {
+    padding: clamp(var(--space-xl), 6vw, var(--space-2xl)) clamp(var(--space-lg), 5vw, var(--space-2xl));
+    background: var(--plate);
+  }
+
+  .receipt-title {
+    margin-bottom: var(--space-md);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .ledger-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding: 10px 0;
+  }
+
+  .ledger-row dt {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    gap: var(--space-sm);
+    min-width: 0;
+    font-size: clamp(var(--fs-body), 3vw, var(--fs-title));
+    color: var(--ink-muted);
+  }
+
+  .ledger-row dt::after {
+    content: '';
+    flex: 1;
+    min-width: 16px;
+    border-bottom: 2px dotted var(--line-strong);
+    transform: translateY(-0.25em);
+  }
+
+  .ledger-row dd {
+    font-size: clamp(1.125rem, 3.5vw, 1.375rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* En la lista (móvil) el signo va pegado a la cifra; en la ecuación lo da el
+     operador entre columnas. */
+  .ledger-row[data-neg] dd::before {
+    content: '−';
+    margin-right: 0.05em;
+  }
+
+  .ledger-total {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 2px solid var(--line-strong);
+  }
+
+  .ledger-total dt {
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  .ledger-total dt::after {
+    display: none;
+  }
+
+  .ledger-total dd {
+    font-size: clamp(2.25rem, 9vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--success);
+  }
+
+  /* La ecuación necesita ancho: cada cifra ocupa lo que mide (columnas auto) y
+     el espacio sobrante se reparte entre columnas. Por debajo de 64rem se
+     queda la lista con guías, que cabe sin apretar. */
+  @media (min-width: 64rem) {
+    .ledger {
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      justify-content: space-between;
+      align-items: end;
+    }
+
+    .ledger-row[data-neg] dd::before {
+      content: none;
+    }
+
+    .ledger-row {
+      position: relative;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-xs);
+      padding: 0 var(--space-xl);
+    }
+
+    .ledger-row:first-child {
+      padding-left: 0;
+    }
+
+    .ledger-row dt {
+      flex: none;
+      font-size: var(--fs-small);
+    }
+
+    .ledger-row dt::after {
+      display: none;
+    }
+
+    .ledger-row dd {
+      font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    /* Operador entre cifras: va en el hueco de la columna, alineado con la cifra. */
+    .ledger-row[data-op]::before {
+      content: attr(data-op);
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: translateX(-50%);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--ink-muted);
+    }
+
+    .ledger-total {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .ledger-total dt {
+      font-size: var(--fs-body);
+    }
+
+    .ledger-total dd {
+      font-size: clamp(2rem, 4vw, 3.25rem);
+    }
+  }
+</style>

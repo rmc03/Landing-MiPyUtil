@@ -1,4 +1,6 @@
 ---
+import Button from '../ui/Button.astro';
+
 interface FAQItem {
   question: string;
   answer: string;
@@ -33,8 +35,20 @@ const faqs: FAQItem[] = [
 ---
 
 <section id="faq" class="faq">
-  <div class="container">
-    <h2>Preguntas frecuentes</h2>
+  <div class="container faq-grid">
+    <div class="faq-head">
+      <h2>Preguntas frecuentes</h2>
+      <p class="faq-help">¿No encuentras tu duda? Escríbenos: respondemos en menos de 1 hora en horario de trabajo.</p>
+      <Button
+        variant="secondary"
+        type="link"
+        href="https://wa.me/5353770707?text=Hola,%20tengo%20una%20duda%20sobre%20MiPyUtil"
+        icon="whatsapp"
+        target="_blank"
+      >
+        Escríbenos por WhatsApp
+      </Button>
+    </div>
 
     <div class="faq-list">
       {faqs.map((faq, i) => (
@@ -59,7 +73,9 @@ const faqs: FAQItem[] = [
             aria-labelledby={`faq-question-${i}`}
             inert
           >
-            <p set:html={faq.answer} />
+            <div class="faq-panel-inner">
+              <p set:html={faq.answer} />
+            </div>
           </div>
         </div>
       ))}
@@ -91,20 +107,24 @@ const faqs: FAQItem[] = [
     padding: clamp(var(--space-2xl), 8vw, var(--space-3xl)) 0;
   }
 
-  .faq .container {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 24px);
+  .faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(var(--space-lg), 5vw, var(--space-xl));
   }
 
-  .faq h2 {
-    margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
-    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+  .faq-head h2 {
+    margin-bottom: var(--space-sm);
+  }
+
+  .faq-help {
+    max-width: 36ch;
+    margin-bottom: var(--space-md);
+    color: var(--ink-muted);
   }
 
   .faq-list {
-    max-width: 800px;
-    margin: 0 auto;
+    min-width: 0;
   }
 
   .faq-item {
@@ -147,15 +167,21 @@ const faqs: FAQItem[] = [
     height: 20px;
     flex-shrink: 0;
     color: var(--accent);
-    transition: transform var(--dur-routine) var(--ease-out-expo);
+    transition: transform 200ms var(--ease-out-expo);
   }
 
   .faq-item.open .faq-icon {
     transform: rotate(45deg);
   }
 
-  button.faq-question:hover {
-    color: var(--accent);
+  @media (hover: hover) and (pointer: fine) {
+    button.faq-question:hover {
+      color: var(--accent);
+    }
+  }
+
+  button.faq-question:active {
+    background: rgba(var(--shadow-rgb), 0.06);
   }
 
   button.faq-question:focus-visible {
@@ -173,16 +199,22 @@ const faqs: FAQItem[] = [
   .faq-panel {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows var(--dur-overlay) var(--ease-out-expo);
+    transition: grid-template-rows 250ms var(--ease-out-expo);
   }
 
   .faq-item.open .faq-panel {
     grid-template-rows: 1fr;
   }
 
-  .faq-panel p {
+  /* El recorte va en el contenedor, no en el párrafo: con el relleno dentro
+     del párrafo, el panel "cerrado" seguía midiendo 40 px y cada pregunta
+     tenía aire muerto debajo. */
+  .faq-panel-inner {
     overflow: hidden;
     min-height: 0;
+  }
+
+  .faq-panel p {
     max-width: none;
     padding: clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-sm), 3vw, var(--space-md)) clamp(var(--space-md), 4vw, var(--space-lg)) clamp(var(--space-sm), 3vw, var(--space-md));
     color: var(--ink-muted);
@@ -190,7 +222,7 @@ const faqs: FAQItem[] = [
     line-height: 1.7;
     opacity: 0;
     transform: translateY(-4px);
-    transition: opacity var(--dur-routine) ease, transform var(--dur-routine) var(--ease-out-expo);
+    transition: opacity 200ms ease-out, transform 250ms var(--ease-out-expo);
   }
 
   .faq-item.open .faq-panel p {
@@ -215,6 +247,21 @@ const faqs: FAQItem[] = [
   @media (min-width: 48rem) {
     button.faq-question {
       min-height: 64px;
+    }
+  }
+
+  /* Escritorio: el encabezado y la vía de contacto se quedan a la vista
+     mientras se lee la lista. */
+  @media (min-width: 64rem) {
+    .faq-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      column-gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    .faq-head {
+      position: sticky;
+      top: 96px;
     }
   }
 </style>

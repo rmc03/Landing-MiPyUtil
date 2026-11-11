@@ -1,0 +1,1315 @@
+---
+/**
+ * AppScreen: pantallas de MiPyUtil dibujadas en HTML con datos de ejemplo.
+ *
+ * Resumen y Mi turno replican capturas reales de la app (título en Anton,
+ * tarjetas con tornillos, filas con guías punteadas, barra inferior). Las
+ * demás (Cuadres, Confirmar pago) usan el mismo lenguaje, pero su interior
+ * está pendiente de capturas reales.
+ *
+ * Dataset de ejemplo, en CUP y coherente entre pantallas (ficticio):
+ *   Este mes: vendiste $86,420 = efectivo 68,150 + transferencia 17,170 + pendiente 1,100.
+ *   La cuenta: 86,420 - costo 52,639.50 - equipo 9,500 = te quedan $24,280.50.
+ *   Turno de hoy (11:50): $13,860 = transferencia 4,230 + efectivo 9,630, 7 ventas, 21 unidades.
+ *   Cuadre al cierre: $21,740 = efectivo 15,210 + transferencia 6,530.
+ *   Venta en caja: Aceite 1,800 + Arroz 780 + Café 1,350 = $3,930.
+ *
+ * Escala: todo se mide en "dp" (--u = 1/412 del ancho de la pantalla) con
+ * container query units, así la misma pantalla se ve nítida a 150 px o a 320 px.
+ *
+ * Accesibilidad: las pantallas son decorativas (el marco les pone role="img" y
+ * el alt). La de cobro es la única interactiva y por eso no va oculta.
+ */
+import type { Screen } from '../../lib/screens';
+
+interface Props {
+  screen: Screen;
+  /** Hora de la barra de estado, distinta por pantalla para que no parezcan clones. */
+  time?: string;
+  /** Mi turno: `inicio` = turno recién abierto, sin ventas. */
+  state?: 'activo' | 'inicio';
+  interactive?: boolean;
+}
+
+const { screen, time = '9:41', state = 'activo', interactive = false } = Astro.props;
+
+const icons: Record<string, string> = {
+  signal: '<path d="M2 20h.01M7 20v-4M12 20v-8M17 20V8M22 20V4"/>',
+  battery: '<rect x="2" y="7" width="17" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/>',
+  menu: '<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>',
+  back: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  handCoins: '<path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/>',
+  chevUp: '<path d="m18 15-6-6-6 6"/>',
+  chevDown: '<path d="m6 9 6 6 6-6"/>',
+  chevRight: '<path d="m9 18 6-6-6-6"/>',
+  trend: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  chart: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/>',
+  cart: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+  box: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  repeat: '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  clipboard: '<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  calendar: '<rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="15" x2="12" y2="15"/>',
+  book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  banknote: '<rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>'
+};
+
+const svg = (name: string, width = 2) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
+
+// QR de ejemplo: tres marcadores de esquina y módulos deterministas. No codifica nada.
+const N = 21;
+const finderDark = (r: number, c: number) =>
+  r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+let seed = 20261025;
+let qrPath = '';
+for (let r = 0; r < N; r++) {
+  for (let c = 0; c < N; c++) {
+    const corner =
+      r < 8 && c < 8 ? [r, c] : r < 8 && c >= N - 8 ? [r, c - (N - 7)] : r >= N - 8 && c < 8 ? [r - (N - 7), c] : null;
+    seed = (Math.imul(seed, 1103515245) + 12345) & 0x7fffffff;
+    let dark: boolean;
+    if (corner) {
+      const [fr, fc] = corner;
+      dark = fr >= 0 && fr <= 6 && fc >= 0 && fc <= 6 && finderDark(fr, fc);
+    } else {
+      dark = ((seed >> 16) & 1) === 1;
+    }
+    if (dark) qrPath += `M${c} ${r}h1v1h-1z`;
+  }
+}
+
+// Barra del dueño (5 pestañas) y del dependiente (3), como en la app.
+const ownerTabs = [
+  { key: 'resumen', label: 'Resumen', icon: 'chart' },
+  { key: 'vender', label: 'Vender', icon: 'cart' },
+  { key: 'inventario', label: 'Inventario', icon: 'box' },
+  { key: 'movimientos', label: 'Movimientos', icon: 'repeat' },
+  { key: 'cuadres', label: 'Cuadres', icon: 'clipboard' }
+];
+const teamTabs = [
+  { key: 'mi-turno', label: 'Mi turno', icon: 'calendar' },
+  { key: 'existencias', label: 'Existencias', icon: 'box' },
+  { key: 'avisos', label: 'Avisos', icon: 'bell' }
+];
+
+const sales = [
+  { icon: 'repeat', tone: 'transfer', time: '11:42 AM', units: '3 unidades', main: 'Aceite 1 L', more: '+2 más', amount: '$2,430' },
+  { icon: 'banknote', tone: 'cash', time: '11:20 AM', units: '2 unidades', main: 'Arroz 1 kg', more: '+1 más', amount: '$1,430' },
+  { icon: 'banknote', tone: 'cash', time: '10:58 AM', units: '4 unidades', main: 'Café 250 g', more: '+2 más', amount: '$3,380' },
+  { icon: 'banknote', tone: 'cash', time: '10:31 AM', units: '2 unidades', main: 'Malta 330 ml', more: '+1 más', amount: '$970' }
+];
+
+const closes = [
+  { initial: 'Y', name: 'Yadira (dependiente)', sub: 'Ayer, 8:05 PM' },
+  { initial: 'O', name: 'Osmany (dependiente)', sub: 'Ayer, 7:40 PM' },
+  { initial: 'L', name: 'Lázaro (dependiente)', sub: 'Dom, 8:12 PM' },
+  { initial: 'D', name: 'Dayana (dependiente)', sub: 'Sáb, 8:20 PM' }
+];
+
+const owner = screen === 'resumen' || screen === 'cuadres';
+const team = screen === 'mi-turno';
+---
+
+<div class="app" data-screen={screen} data-mode="transferencia" aria-hidden={interactive ? undefined : 'true'}>
+  <div class="a-status">
+    <span>{time}</span>
+    <span class="a-status-icons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" set:html={icons.signal} />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons.battery} />
+    </span>
+  </div>
+
+  {screen === 'resumen' && (
+    <>
+      <div class="a-appbar">
+        <span class="a-ico" set:html={svg('menu')} />
+        <p class="a-title">Resumen</p>
+        <span class="a-appbar-end">
+          <span class="a-ico" set:html={svg('handCoins')} />
+          <i class="a-sync"></i>
+        </span>
+      </div>
+
+      <div class="a-locs">
+        <span class="on">Todo el negocio</span>
+        <span><em class="a-code">AL</em>Almacén</span>
+        <span><em class="a-code a-code--ok">TDA</em>Tienda</span>
+      </div>
+
+      <div class="a-period">
+        <span>Hoy</span><span>Esta semana</span><span class="on">Este mes</span>
+      </div>
+
+      <div class="a-card a-tablon a-sum">
+        <div class="a-sum-top">
+          <span class="a-label">Vendiste este mes</span>
+          <span class="a-muted">74 ventas</span>
+        </div>
+        <p class="a-big">$86,420<small>CUP</small></p>
+        <p class="a-trend"><span class="a-ico" set:html={svg('trend', 2.4)} /><b>18%</b> más que el mes pasado</p>
+
+        <div class="a-sec">
+          <span class="a-label">Cómo entró</span><i class="a-hair"></i>
+          <i class="a-sq" set:html={svg('chevUp', 2.4)} />
+        </div>
+        <div class="a-lrow"><span>Efectivo</span><i class="a-dots"></i><b>$68,150</b></div>
+        <div class="a-lrow"><span>Transferencia</span><i class="a-dots"></i><b>$17,170</b></div>
+        <div class="a-lrow"><span>Pendiente</span><i class="a-dots"></i><b>$1,100</b></div>
+
+        <div class="a-sec">
+          <span class="a-label">La cuenta</span><i class="a-hair"></i>
+          <i class="a-sq" set:html={svg('chevDown', 2.4)} />
+        </div>
+        <div class="a-rule2"></div>
+        <div class="a-lrow a-lrow--net"><span>= Te quedan</span><i class="a-dots"></i><b>$24,280.50</b></div>
+
+        <div class="a-sec">
+          <span class="a-label">La caja</span><i class="a-hair"></i>
+          <b class="a-caja">En la caja $41,900</b>
+          <i class="a-sq" set:html={svg('chevDown', 2.4)} />
+        </div>
+      </div>
+
+      <div class="a-sec a-sec--page">
+        <span class="a-label">Avisos del tablón</span><i class="a-hair"></i>
+        <b class="a-count">2</b>
+      </div>
+      <div class="a-card a-aviso">
+        <span class="a-ico a-ico--hot" set:html={svg('book', 1.8)} />
+        <span class="a-aviso-text"><b>Te deben $7,800 CUP</b><small>9 clientes</small></span>
+        <span class="a-ico a-ico--mute" set:html={svg('chevRight', 2.2)} />
+      </div>
+      <div class="a-card a-aviso">
+        <span class="a-ico a-ico--hot" set:html={svg('alert', 1.8)} />
+        <span class="a-aviso-text"><b>Stock bajo</b><small>Aceite 1 L y Café 250 g</small></span>
+        <span class="a-ico a-ico--mute" set:html={svg('chevRight', 2.2)} />
+      </div>
+    </>
+  )}
+
+  {screen === 'mi-turno' && (
+    <>
+      <div class="a-appbar a-appbar--tall">
+        <span class="a-ico" set:html={svg('menu')} />
+        <div class="a-appbar-title">
+          <p class="a-title">Mi turno</p>
+          <span class="a-where"><em class="a-code a-code--ok">TDA</em>Tienda</span>
+        </div>
+        <span class="a-close-shift"><span class="a-ico" set:html={svg('target', 2)} />Cerrar turno</span>
+      </div>
+
+      <div class="a-card a-tablon a-shift">
+        <div class="a-shift-top">
+          <p class="a-muted">
+            Turno · desde 08:00 AM<br />
+            {state === 'inicio' ? '0 ventas · 0 unidades' : '7 ventas · 21 unidades'}
+          </p>
+          <span class="a-btn-out"><span class="a-ico" set:html={svg('plus', 2.4)} />Anotar gasto</span>
+        </div>
+        <p class="a-label2">El dinero del turno</p>
+        <p class="a-money">{state === 'inicio' ? '$0 CUP' : '$13,860 CUP'}</p>
+        <div class="a-hr"></div>
+        <div class="a-lrow a-lrow--lg"><span>Transferencia</span><i class="a-dots"></i><b>{state === 'inicio' ? '$0 CUP' : '$4,230 CUP'}</b></div>
+        <div class="a-lrow a-lrow--lg"><span>Efectivo</span><i class="a-dots"></i><b>{state === 'inicio' ? '$0 CUP' : '$9,630 CUP'}</b></div>
+        <div class="a-hr"></div>
+        <div class="a-synced"><i class="a-sync"></i><span>Sincronizado</span><span class="a-ico a-ico--mute" set:html={svg('chevRight', 2.2)} /></div>
+      </div>
+
+      <div class="a-sec a-sec--page">
+        <span class="a-label">Ventas</span><i class="a-hair"></i>
+        <u class="a-link">Ver todas</u>
+      </div>
+
+      {state === 'inicio' ? (
+        <div class="a-empty">
+          <span class="a-ico" set:html={svg('cart', 1.8)} />
+          <p>Aún no hay ventas en este turno.</p>
+        </div>
+      ) : (
+        <div class="a-sales">
+          {sales.map((s) => (
+            <div class="a-card a-sale">
+              <span class={`a-pay a-pay--${s.tone}`} set:html={svg(s.icon, 2)} />
+              <span class="a-sale-body">
+                <span class="a-sale-row"><span class="a-muted">{s.time}</span><b>{s.amount} CUP</b></span>
+                <span class="a-muted">{s.units}</span>
+                <span class="a-sale-row"><b class="a-sale-main">{s.main}</b><span class="a-muted">{s.more}</span></span>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <span class="a-fab"><span class="a-ico" set:html={svg('plus', 2.6)} />Nueva venta</span>
+    </>
+  )}
+
+  {screen === 'cuadres' && (
+    <>
+      <div class="a-appbar">
+        <span class="a-ico" set:html={svg('menu')} />
+        <p class="a-title">Cuadres</p>
+      </div>
+
+      <div class="a-card a-tablon a-close">
+        <div class="a-close-head">
+          <span class="a-avatar">M</span>
+          <span class="a-prod-text"><b>María (dependiente)</b><small>Turno de hoy, 8:05 PM</small></span>
+          <span class="a-badge">Pendiente</span>
+        </div>
+        <div class="a-lrow a-lrow--lg a-lrow--total"><span>Total del cuadre</span><i class="a-dots"></i><b>$21,740 CUP</b></div>
+        <div class="a-lrow"><span><i class="a-dot a-dot--ink"></i>Efectivo</span><i class="a-dots"></i><b>$15,210</b></div>
+        <div class="a-lrow"><span><i class="a-dot a-dot--hot"></i>Transferencia</span><i class="a-dots"></i><b>$6,530</b></div>
+        <div class="a-split"><i style="width:70%"></i><i style="width:30%"></i></div>
+        <div class="a-actions">
+          <span class="a-cta">Aprobar</span>
+          <span class="a-cta a-cta--ghost">Rechazar</span>
+        </div>
+      </div>
+
+      {closes.map((c) => (
+        <div class="a-card a-prod">
+          <span class="a-avatar a-avatar--quiet">{c.initial}</span>
+          <span class="a-prod-text"><b>{c.name}</b><small>{c.sub}</small></span>
+          <span class="a-badge a-badge--ok">Aprobado</span>
+        </div>
+      ))}
+    </>
+  )}
+
+  {screen === 'confirmar-pago' && (
+    <>
+      <div class="a-appbar">
+        <span class="a-ico" set:html={svg('back')} />
+        <p class="a-title">Confirmar pago</p>
+      </div>
+
+      <div class="a-total">
+        <span class="a-total-label">Total a cobrar</span>
+        <strong class="a-total-num">$3,930<small>CUP</small></strong>
+      </div>
+      <div class="a-modes" role={interactive ? 'group' : undefined} aria-label={interactive ? 'Modo de cobro' : undefined}>
+        {['efectivo', 'transferencia', 'mixto'].map((m) => (
+          <button type="button" class="a-mode" data-mode={m} aria-pressed={m === 'transferencia' ? 'true' : 'false'} tabindex={interactive ? undefined : -1}>
+            {m === 'efectivo' ? 'Efectivo' : m === 'transferencia' ? 'Transferencia' : 'Mixto'}
+          </button>
+        ))}
+      </div>
+
+      <div class="a-pane a-pane--efectivo">
+        <div class="a-card a-tablon a-pay-card">
+          <div class="a-lrow a-lrow--lg"><span>Total</span><i class="a-dots"></i><b>$3,930</b></div>
+          <div class="a-lrow a-lrow--lg"><span>Recibido</span><i class="a-dots"></i><b>$4,500</b></div>
+          <div class="a-rule2"></div>
+          <div class="a-lrow a-lrow--net a-lrow--lg"><span>= Cambio</span><i class="a-dots"></i><b>$570</b></div>
+        </div>
+      </div>
+
+      <div class="a-pane a-pane--transferencia">
+        <span class="a-cta">Mostrar QR</span>
+        <div class="a-card a-tablon a-qr">
+          <b>Escanear para pagar</b>
+          <svg class="a-qr-svg" viewBox="-1 -1 23 23" shape-rendering="crispEdges"><path d={qrPath} fill="currentColor" /></svg>
+          <small>Escanea desde tu app bancaria y paga</small>
+        </div>
+      </div>
+
+      <div class="a-pane a-pane--mixto">
+        <div class="a-card a-tablon a-pay-card">
+          <div class="a-lrow a-lrow--lg"><span>Efectivo</span><i class="a-dots"></i><b>$2,000</b></div>
+          <div class="a-lrow a-lrow--lg"><span>Transferencia</span><i class="a-dots"></i><b>$1,930</b></div>
+          <div class="a-rule2"></div>
+          <div class="a-lrow a-lrow--net a-lrow--lg"><span>= Total cobrado</span><i class="a-dots"></i><b>$3,930</b></div>
+        </div>
+        <span class="a-cta">Mostrar QR por $1,930</span>
+      </div>
+
+      <div class="a-bar"><span class="a-cta a-cta--ghost">Confirmar cobro</span></div>
+    </>
+  )}
+
+  {owner && (
+    <div class="a-nav">
+      {ownerTabs.map((tab) => (
+        <span class:list={{ on: tab.key === screen }}>
+          <i class="a-nav-ic">
+            <span set:html={svg(tab.icon, 2)} />
+            {tab.key === 'cuadres' && screen !== 'cuadres' && <u class="a-nav-dot"></u>}
+          </i>
+          {tab.label}
+        </span>
+      ))}
+    </div>
+  )}
+
+  {team && (
+    <div class="a-nav a-nav--team">
+      {teamTabs.map((tab) => (
+        <span class:list={{ on: tab.key === 'mi-turno' }}>
+          <i class="a-nav-ic"><span set:html={svg(tab.icon, 2)} /></i>
+          {tab.label}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  // Demostración del cobro: tocar un modo cambia el panel, igual que en la app.
+  document.querySelectorAll<HTMLElement>('.app[data-screen="confirmar-pago"]').forEach((app) => {
+    const modes = Array.from(app.querySelectorAll<HTMLButtonElement>('.a-mode'));
+    modes.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        app.dataset.mode = btn.dataset.mode ?? 'transferencia';
+        modes.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      });
+    });
+  });
+</script>
+
+<style>
+  .app {
+    /* 1 dp. Respaldo fijo para navegadores sin unidades de contenedor
+       (Chrome < 105): sin él, todo calc(N * var(--u)) quedaría inválido y las
+       pantallas se verían rotas. 0.65px es el valor de un teléfono de ~270 px. */
+    --u: 0.65px;
+    /* Colores propios de la app (iconos de pago, estado): no son de la página. */
+    --m-ok: #6fbf7e;
+    --m-transfer: #b7a2f0;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: calc(12 * var(--u));
+    padding: 0 calc(16 * var(--u));
+    overflow: hidden;
+    background: var(--board);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: calc(15 * var(--u));
+    line-height: 1.25;
+    text-align: left;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  @supports (width: 1cqw) {
+    .app {
+      --u: calc(100cqw / 412);
+    }
+  }
+
+  .app :global(svg) {
+    flex-shrink: 0;
+  }
+
+  .app p {
+    max-width: none;
+  }
+
+  .app small {
+    font-size: calc(13 * var(--u));
+    color: var(--ink-muted);
+  }
+
+  .a-muted {
+    color: var(--ink-muted);
+  }
+
+  /* === Barra de estado === */
+  .a-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: none;
+    height: calc(28 * var(--u));
+    padding: calc(4 * var(--u)) calc(4 * var(--u)) 0;
+    font-size: calc(12.5 * var(--u));
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .a-status-icons {
+    display: inline-flex;
+    gap: calc(5 * var(--u));
+    align-items: center;
+  }
+
+  .a-status-icons svg {
+    width: calc(14 * var(--u));
+    height: calc(14 * var(--u));
+  }
+
+  /* === Barra superior: menú, título en Anton, acciones === */
+  .a-appbar {
+    display: flex;
+    align-items: center;
+    gap: calc(18 * var(--u));
+    flex: none;
+    min-height: calc(40 * var(--u));
+  }
+
+  .a-appbar--tall {
+    align-items: flex-start;
+  }
+
+  .a-appbar-title {
+    flex: 1;
+    display: grid;
+    gap: calc(4 * var(--u));
+  }
+
+  .a-appbar-end {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: calc(14 * var(--u));
+  }
+
+  .a-title {
+    font-family: var(--font-display);
+    font-size: calc(30 * var(--u));
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+
+  .a-ico {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: calc(24 * var(--u));
+    height: calc(24 * var(--u));
+  }
+
+  .a-ico :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .a-ico--hot { color: var(--accent); width: calc(28 * var(--u)); height: calc(28 * var(--u)); }
+  .a-ico--mute { color: var(--ink-muted); width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
+
+  .a-sync {
+    display: inline-block;
+    flex: none;
+    width: calc(11 * var(--u));
+    height: calc(11 * var(--u));
+    border-radius: 50%;
+    background: var(--m-ok);
+  }
+
+  .a-code {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    min-width: calc(24 * var(--u));
+    height: calc(19 * var(--u));
+    margin-right: calc(7 * var(--u));
+    padding: 0 calc(5 * var(--u));
+    border: 1.5px solid var(--ink);
+    border-radius: calc(3 * var(--u));
+    font-size: calc(11 * var(--u));
+    font-style: normal;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .a-code--ok {
+    border-color: var(--m-ok);
+    color: var(--m-ok);
+  }
+
+  /* === Tarjeta del tablón: tornillos en las cuatro esquinas === */
+  .a-card {
+    background: var(--plate);
+    border: 1px solid var(--line);
+    border-radius: calc(4 * var(--u));
+    padding: calc(14 * var(--u));
+  }
+
+  .a-tablon {
+    --sc: calc(2.6 * var(--u));
+    --off: calc(10 * var(--u));
+    padding: calc(20 * var(--u));
+    background:
+      radial-gradient(circle at var(--off) var(--off), var(--screw) var(--sc), transparent calc(var(--sc) + 0.5px)),
+      radial-gradient(circle at calc(100% - var(--off)) var(--off), var(--screw) var(--sc), transparent calc(var(--sc) + 0.5px)),
+      radial-gradient(circle at var(--off) calc(100% - var(--off)), var(--screw) var(--sc), transparent calc(var(--sc) + 0.5px)),
+      radial-gradient(circle at calc(100% - var(--off)) calc(100% - var(--off)), var(--screw) var(--sc), transparent calc(var(--sc) + 0.5px)),
+      var(--plate);
+  }
+
+  /* === Etiquetas y encabezados con filete === */
+  .a-label {
+    font-size: calc(12 * var(--u));
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  .a-label2 {
+    font-size: calc(14 * var(--u));
+    color: var(--ink-muted);
+  }
+
+  .a-sec {
+    display: flex;
+    align-items: center;
+    gap: calc(10 * var(--u));
+    margin-top: calc(14 * var(--u));
+  }
+
+  .a-sec--page {
+    flex: none;
+    margin-top: calc(8 * var(--u));
+  }
+
+  .a-hair {
+    flex: 1;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .a-sq {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: calc(30 * var(--u));
+    height: calc(30 * var(--u));
+    border: 1px solid var(--line-strong);
+    border-radius: calc(3 * var(--u));
+    color: var(--ink);
+  }
+
+  .a-sq :global(svg) {
+    width: calc(15 * var(--u));
+    height: calc(15 * var(--u));
+  }
+
+  .a-count {
+    display: grid;
+    place-items: center;
+    min-width: calc(22 * var(--u));
+    height: calc(22 * var(--u));
+    border-radius: calc(3 * var(--u));
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: calc(12 * var(--u));
+    font-weight: 800;
+  }
+
+  .a-link {
+    font-size: calc(14 * var(--u));
+    font-weight: 700;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.25em;
+  }
+
+  /* === Fila con guía punteada hasta la cifra === */
+  .a-lrow {
+    display: flex;
+    align-items: baseline;
+    gap: calc(8 * var(--u));
+    margin-top: calc(10 * var(--u));
+    font-size: calc(16 * var(--u));
+  }
+
+  .a-lrow > span {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(7 * var(--u));
+    color: var(--ink);
+  }
+
+  .a-dots {
+    flex: 1;
+    min-width: calc(12 * var(--u));
+    border-bottom: max(1px, calc(1.6 * var(--u))) dotted var(--line-strong);
+    transform: translateY(-0.2em);
+  }
+
+  .a-lrow b {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .a-lrow--lg {
+    font-size: calc(17 * var(--u));
+  }
+
+  .a-lrow--net b {
+    color: var(--success);
+  }
+
+  .a-lrow--net > span {
+    font-weight: 700;
+  }
+
+  .a-lrow--total > span {
+    font-weight: 800;
+  }
+
+  .a-rule2 {
+    margin-top: calc(14 * var(--u));
+    height: calc(7 * var(--u));
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .a-hr {
+    height: 1px;
+    margin: calc(12 * var(--u)) 0 0;
+    background: var(--line);
+  }
+
+  /* === Resumen === */
+  .a-locs {
+    display: flex;
+    align-items: stretch;
+    gap: calc(20 * var(--u));
+    flex: none;
+    margin: 0 calc(-16 * var(--u));
+    padding: 0 calc(16 * var(--u));
+    border-bottom: 1px solid var(--line);
+    font-size: calc(16 * var(--u));
+    font-weight: 600;
+    color: var(--ink-muted);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .a-locs span {
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: calc(10 * var(--u));
+    border-bottom: calc(3 * var(--u)) solid transparent;
+  }
+
+  .a-locs .on {
+    border-bottom-color: var(--accent);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .a-period {
+    display: flex;
+    flex: none;
+    gap: calc(2 * var(--u));
+    padding: calc(4 * var(--u));
+    border: 1px solid var(--line);
+    border-radius: calc(4 * var(--u));
+    background: var(--plate);
+  }
+
+  .a-period span {
+    flex: 1;
+    padding: calc(11 * var(--u)) 0;
+    border-radius: calc(3 * var(--u));
+    text-align: center;
+    font-size: calc(15.5 * var(--u));
+    font-weight: 600;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  .a-period .on {
+    background: var(--accent);
+    color: var(--accent-on);
+    font-weight: 800;
+  }
+
+  .a-sum {
+    flex: none;
+  }
+
+  .a-sum-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: calc(14 * var(--u));
+  }
+
+  .a-big {
+    margin-top: calc(6 * var(--u));
+    font-size: calc(48 * var(--u));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .a-big small,
+  .a-total-num small {
+    margin-left: calc(7 * var(--u));
+    font-size: calc(16 * var(--u));
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink-muted);
+  }
+
+  .a-trend {
+    display: flex;
+    align-items: center;
+    gap: calc(7 * var(--u));
+    margin-top: calc(6 * var(--u));
+    font-size: calc(15.5 * var(--u));
+    color: var(--ink-muted);
+  }
+
+  .a-trend b {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .a-trend .a-ico {
+    width: calc(19 * var(--u));
+    height: calc(19 * var(--u));
+    color: var(--ink);
+  }
+
+  .a-caja {
+    font-size: calc(14.5 * var(--u));
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .a-aviso {
+    display: grid;
+    grid-template-columns: calc(28 * var(--u)) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(14 * var(--u));
+    flex: none;
+    padding: calc(14 * var(--u)) calc(16 * var(--u));
+  }
+
+  .a-aviso-text {
+    display: grid;
+    gap: calc(2 * var(--u));
+  }
+
+  .a-aviso-text b {
+    font-size: calc(18 * var(--u));
+    font-weight: 700;
+  }
+
+  .a-aviso-text small {
+    font-size: calc(15 * var(--u));
+  }
+
+  /* === Barra inferior === */
+  .a-nav {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    justify-content: space-around;
+    padding: calc(8 * var(--u)) calc(4 * var(--u)) 0;
+    height: calc(76 * var(--u));
+    background: var(--plate);
+    border-top: 1px solid var(--line);
+  }
+
+  .a-nav > span {
+    flex: 1;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: calc(3 * var(--u));
+    font-size: calc(11.5 * var(--u));
+    font-weight: 500;
+    color: var(--ink-muted);
+  }
+
+  .a-nav > .on {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .a-nav-ic {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: calc(38 * var(--u));
+    height: calc(38 * var(--u));
+    border-radius: 50%;
+  }
+
+  .a-nav .on .a-nav-ic {
+    background: color-mix(in srgb, var(--accent) 16%, var(--board-panel));
+  }
+
+  .a-nav-ic span {
+    display: grid;
+    place-items: center;
+    width: calc(22 * var(--u));
+    height: calc(22 * var(--u));
+    flex: none;
+  }
+
+  .a-nav-ic :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .a-nav-dot {
+    position: absolute;
+    top: calc(5 * var(--u));
+    right: calc(6 * var(--u));
+    width: calc(8 * var(--u));
+    height: calc(8 * var(--u));
+    border-radius: 50%;
+    background: var(--accent);
+    text-decoration: none;
+  }
+
+  .a-nav--team {
+    justify-content: space-evenly;
+  }
+
+  /* === Mi turno === */
+  .a-where {
+    display: inline-flex;
+    align-items: center;
+    font-size: calc(14 * var(--u));
+    color: var(--ink-muted);
+  }
+
+  .a-close-shift {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(7 * var(--u));
+    margin-left: auto;
+    padding-top: calc(8 * var(--u));
+    font-size: calc(14.5 * var(--u));
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .a-shift {
+    flex: none;
+  }
+
+  .a-shift-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: calc(12 * var(--u));
+    font-size: calc(14.5 * var(--u));
+    line-height: 1.5;
+  }
+
+  .a-btn-out {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(8 * var(--u));
+    flex: none;
+    padding: calc(12 * var(--u)) calc(14 * var(--u));
+    border: 1px solid var(--line-strong);
+    border-radius: calc(4 * var(--u));
+    font-size: calc(14.5 * var(--u));
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .a-btn-out .a-ico {
+    width: calc(18 * var(--u));
+    height: calc(18 * var(--u));
+  }
+
+  .a-money {
+    margin-top: calc(2 * var(--u));
+    font-size: calc(40 * var(--u));
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .a-synced {
+    display: flex;
+    align-items: center;
+    gap: calc(12 * var(--u));
+    margin-top: calc(12 * var(--u));
+    font-size: calc(16 * var(--u));
+  }
+
+  .a-synced span:first-of-type {
+    flex: 1;
+  }
+
+  .a-sales {
+    position: relative;
+    display: grid;
+    gap: calc(10 * var(--u));
+    flex: none;
+  }
+
+  /* Hilo punteado que une las ventas del turno. */
+  .a-sales::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(66 * var(--u));
+    border-left: 2px dotted var(--line-strong);
+  }
+
+  .a-sale {
+    position: relative;
+    display: grid;
+    grid-template-columns: calc(32 * var(--u)) minmax(0, 1fr);
+    gap: calc(16 * var(--u));
+    padding: calc(14 * var(--u)) calc(16 * var(--u));
+    font-size: calc(15.5 * var(--u));
+  }
+
+  .a-sale::before,
+  .a-sale::after {
+    content: '';
+    position: absolute;
+    left: calc(61 * var(--u));
+    width: calc(9 * var(--u));
+    height: calc(9 * var(--u));
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--board);
+  }
+
+  .a-sale::before { top: calc(-5 * var(--u)); }
+  .a-sale::after { bottom: calc(-5 * var(--u)); }
+
+  .a-pay {
+    display: grid;
+    place-items: center;
+    width: calc(32 * var(--u));
+    height: calc(32 * var(--u));
+    align-self: center;
+  }
+
+  .a-pay :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .a-pay--transfer { color: var(--m-transfer); }
+  .a-pay--cash { color: var(--m-ok); }
+
+  .a-sale-body {
+    display: grid;
+    gap: calc(3 * var(--u));
+    min-width: 0;
+  }
+
+  .a-sale-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: calc(8 * var(--u));
+  }
+
+  .a-sale-row b {
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .a-sale-main {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .a-empty {
+    display: grid;
+    justify-items: center;
+    gap: calc(8 * var(--u));
+    padding: calc(28 * var(--u)) 0;
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  .a-empty .a-ico {
+    width: calc(34 * var(--u));
+    height: calc(34 * var(--u));
+  }
+
+  .a-fab {
+    position: absolute;
+    right: calc(18 * var(--u));
+    bottom: calc(92 * var(--u));
+    display: inline-flex;
+    align-items: center;
+    gap: calc(10 * var(--u));
+    padding: calc(16 * var(--u)) calc(24 * var(--u));
+    border-radius: calc(4 * var(--u));
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: calc(15.5 * var(--u));
+    font-weight: 800;
+    box-shadow: calc(4 * var(--u)) calc(4 * var(--u)) 0 var(--ink);
+  }
+
+  .a-fab .a-ico {
+    width: calc(20 * var(--u));
+    height: calc(20 * var(--u));
+  }
+
+  /* === Cuadres y listas === */
+  .a-prod {
+    display: grid;
+    grid-template-columns: calc(38 * var(--u)) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(12 * var(--u));
+    flex: none;
+    padding: calc(10 * var(--u)) calc(12 * var(--u));
+  }
+
+  .a-avatar {
+    display: grid;
+    place-items: center;
+    width: calc(38 * var(--u));
+    height: calc(38 * var(--u));
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 14%, var(--plate));
+    color: var(--accent);
+    font-size: calc(15 * var(--u));
+    font-weight: 800;
+  }
+
+  .a-avatar--quiet {
+    background: var(--board-panel);
+    color: var(--ink-muted);
+  }
+
+  .a-prod-text {
+    display: grid;
+    gap: calc(1 * var(--u));
+    min-width: 0;
+  }
+
+  .a-prod-text b {
+    font-size: calc(14.5 * var(--u));
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .a-badge {
+    padding: calc(4 * var(--u)) calc(10 * var(--u));
+    border-radius: calc(20 * var(--u));
+    background: color-mix(in srgb, var(--accent) 14%, var(--plate));
+    color: var(--accent-deep);
+    font-size: calc(12 * var(--u));
+    font-weight: 700;
+  }
+
+  .a-badge--ok {
+    background: color-mix(in srgb, var(--success) 14%, var(--plate));
+    color: var(--success);
+  }
+
+  .a-close {
+    display: grid;
+    flex: none;
+  }
+
+  .a-close-head {
+    display: grid;
+    grid-template-columns: calc(38 * var(--u)) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: calc(12 * var(--u));
+    padding-bottom: calc(12 * var(--u));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .a-dot {
+    width: calc(8 * var(--u));
+    height: calc(8 * var(--u));
+    border-radius: 50%;
+  }
+
+  .a-dot--ink { background: var(--ink); }
+  .a-dot--hot { background: var(--accent); }
+
+  .a-split {
+    display: flex;
+    gap: calc(2 * var(--u));
+    height: calc(6 * var(--u));
+    margin-top: calc(14 * var(--u));
+  }
+
+  .a-split i {
+    display: block;
+    border-radius: calc(3 * var(--u));
+    background: var(--ink);
+  }
+
+  .a-split i:last-child {
+    background: var(--accent);
+  }
+
+  .a-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(10 * var(--u));
+    margin-top: calc(16 * var(--u));
+  }
+
+  .a-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(6 * var(--u));
+    padding: calc(14 * var(--u)) calc(12 * var(--u));
+    border-radius: calc(4 * var(--u));
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: calc(15 * var(--u));
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .a-cta--ghost {
+    background: var(--plate);
+    color: var(--accent);
+  }
+
+  /* Barra inferior con el botón principal, sobre un degradado del fondo. */
+  .a-bar {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: calc(28 * var(--u)) calc(16 * var(--u)) calc(18 * var(--u));
+    background: linear-gradient(to top, var(--board) 62%, transparent);
+  }
+
+  /* === Confirmar pago === */
+  .a-total {
+    display: grid;
+    justify-items: center;
+    gap: calc(2 * var(--u));
+    margin: calc(2 * var(--u)) 0;
+  }
+
+  .a-total-label {
+    font-size: calc(14 * var(--u));
+    color: var(--ink-muted);
+  }
+
+  .a-total-num {
+    font-size: calc(46 * var(--u));
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .a-modes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: calc(8 * var(--u));
+  }
+
+  .a-mode {
+    position: relative;
+    height: calc(52 * var(--u));
+    padding: 0 calc(2 * var(--u));
+    border: 1px solid var(--line);
+    border-radius: calc(4 * var(--u));
+    background: var(--plate);
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: calc(13.5 * var(--u));
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out, transform 120ms ease-out;
+  }
+
+  /* Área de toque ampliada: el botón escala con el teléfono, la mano no. */
+  .a-mode::after {
+    content: '';
+    position: absolute;
+    inset: -8px -3px;
+  }
+
+  .a-mode[aria-pressed='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-on);
+    font-weight: 800;
+  }
+
+  .a-mode:active {
+    transform: scale(0.97);
+  }
+
+  .a-mode:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* El panel ocupa el alto que deja el botón inferior: así la pantalla no queda
+     con un hueco vacío entre el contenido y "Confirmar cobro". */
+  .a-pane {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    gap: calc(12 * var(--u));
+    min-height: 0;
+    padding-bottom: calc(84 * var(--u));
+  }
+
+  .a-pane-card,
+  .a-pay-card {
+    margin-block: auto;
+  }
+
+  .app[data-mode='efectivo'] .a-pane--efectivo,
+  .app[data-mode='transferencia'] .a-pane--transferencia,
+  .app[data-mode='mixto'] .a-pane--mixto {
+    display: flex;
+    animation: a-pane-in 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @keyframes a-pane-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app[data-mode] .a-pane {
+      animation: none !important;
+    }
+  }
+
+  .a-qr {
+    flex: 1;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: calc(12 * var(--u));
+    text-align: center;
+  }
+
+  .a-qr b {
+    font-size: calc(15 * var(--u));
+  }
+
+  .a-qr-svg {
+    width: calc(220 * var(--u));
+    height: calc(220 * var(--u));
+    padding: calc(8 * var(--u));
+    border-radius: calc(4 * var(--u));
+    background: color-mix(in srgb, var(--accent) 14%, var(--plate));
+    color: var(--ink);
+  }
+</style>

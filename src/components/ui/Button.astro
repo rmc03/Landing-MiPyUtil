@@ -1,6 +1,6 @@
 ---
 interface Props {
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'ghost';
   icon?: 'download' | 'whatsapp' | 'telegram' | 'android' | 'windows';
   href?: string;
   type?: 'button' | 'link';
@@ -158,8 +158,8 @@ const {
     transition: background-color var(--dur-routine) ease,
                 border-color var(--dur-routine) ease,
                 color var(--dur-routine) ease,
-                box-shadow var(--dur-feedback) ease,
-                transform var(--dur-feedback) ease;
+                box-shadow var(--dur-feedback) var(--ease-out-expo),
+                transform var(--dur-feedback) var(--ease-out-expo);
     text-align: center;
     cursor: pointer;
     border: 1.5px solid transparent;
@@ -193,11 +193,6 @@ const {
     border-color: var(--accent);
   }
 
-  .btn-primary:hover {
-    background: var(--accent-deep);
-    border-color: var(--accent-deep);
-  }
-
   /* === SECONDARY === */
   .btn-secondary {
     background: var(--plate);
@@ -205,10 +200,48 @@ const {
     border-color: var(--line-strong);
   }
 
-  .btn-secondary:hover {
-    background: var(--board-panel);
-    color: var(--accent);
-    border-color: var(--accent);
+  /* === GHOST ===
+     Contacto secundario: texto subrayado, sin caja, para que no compita con
+     el botón de descarga. */
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    padding-inline: clamp(8px, 2vw, 12px);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+  }
+
+  /* Hover solo con puntero fino: en táctil el hover se queda pegado tras tocar. */
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover {
+      background: var(--accent-deep);
+      border-color: var(--accent-deep);
+    }
+
+    .btn-secondary:hover {
+      background: var(--board-panel);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .btn-ghost:hover {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+
+    .btn-stamp:hover {
+      box-shadow: var(--shadow-stamp-pressed);
+      transform: translate(2px, 2px);
+    }
+  }
+
+  /* Pulsación en cualquier dispositivo: el botón se hunde. El estampado se
+     aplasta contra el tablón hasta quedarse sin sombra. */
+  .btn:active {
+    transform: scale(0.97);
   }
 
   /* === ESTAMPADO ===
@@ -217,15 +250,14 @@ const {
     box-shadow: var(--shadow-stamp);
   }
 
-  .btn-stamp:hover,
-  .btn-stamp:focus-visible {
-    box-shadow: var(--shadow-stamp-pressed);
-    transform: translate(2px, 2px);
+  .btn-stamp:active {
+    box-shadow: 0 0 0 var(--stamp-color);
+    transform: translate(4px, 4px);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .btn-stamp:hover,
-    .btn-stamp:focus-visible {
+    .btn-stamp:active {
       transform: none;
     }
   }
@@ -264,26 +296,17 @@ const {
   }
 
   /* === MOTION === */
-  @media (prefers-reduced-motion: no-preference) {
-    .btn:hover .btn-icon--download,
-    .btn:focus-visible .btn-icon--download {
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+    .btn:hover .btn-icon--download {
       transform: translateY(2px);
     }
 
-    .btn:hover .btn-icon--whatsapp,
-    .btn:focus-visible .btn-icon--whatsapp {
+    .btn:hover .btn-icon--whatsapp {
       transform: translateX(2px);
     }
 
-    .btn:hover .btn-icon--telegram,
-    .btn:focus-visible .btn-icon--telegram {
+    .btn:hover .btn-icon--telegram {
       transform: translate(1px, -1px);
-    }
-  }
-
-  @media (hover: none) and (pointer: coarse) {
-    .btn:active {
-      transform: translateY(0) scale(0.97);
     }
   }
 </style>

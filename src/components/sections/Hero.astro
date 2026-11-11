@@ -1,218 +1,145 @@
 ---
 import Button from '../ui/Button.astro';
 import PhoneMockup from '../PhoneMockup.astro';
-import FloatingCards from '../ui/FloatingCards.astro';
-import CheckList from '../ui/CheckList.astro';
-import OfflineBadge from '../ui/OfflineBadge.astro';
 
-const checkItems = [
-  { highlight: 'Sabes qué te queda.', text: ' Antes de que se acaben los productos.' },
-  { highlight: 'Control de caja diario.', text: ' Sabes quién vendió y cuadró.' },
-  { highlight: 'Sin papel ni Excel.', text: ' Adiós a la libreta de siempre.' }
-];
+const words = ['Revoluciona', 'Gestiona', 'Optimiza', 'Controla', 'Perfecciona'];
 ---
 
-<section id="hero" class="hero">
-  <div class="container">
-    <p class="eyebrow">
-      <span class="eyebrow__audience">Para MiPyMEs y TCPs en Cuba</span>
-      <OfflineBadge />
-    </p>
+<section id="hero" class="hero veta veta--a">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <h1>
+        <span class="sr-only">Gestiona tu MiPyME.</span>
+        <span aria-hidden="true">
+          <span class="title-line">
+            <span class="rotating-word" data-words={JSON.stringify(words)}>{words[0]}</span>
+          </span>
+          <span class="title-line">tu MiPyME.</span>
+        </span>
+      </h1>
 
-    <h1>
-      <span class="title-line">
-        <span class="rotating-word" data-words='["Revoluciona", "Gestiona", "Optimiza", "Controla", "Perfecciona"]'>Revoluciona</span>
-      </span>
-      <span class="title-line">tu MiPyME.</span>
-    </h1>
+      <p class="lead">
+        MiPyUtil le da a cada dependiente su propia app para vender y cerrar
+        turno, y a ti la tuya para controlar ventas, ingresos e inventario.{' '}
+        <strong>Todo funciona sin internet.</strong>
+      </p>
 
-    <div class="hero-visual">
-      <FloatingCards />
-      <PhoneMockup screenshot="01-resumen.png" alt="Resumen de MiPyUtil: ventas, ingresos e inventario desde el teléfono del administrador" compact />
-    </div>
-
-    <p class="lead">
-      MiPyUtil le da a cada dependiente su propia app para vender y cerrar
-      turno, y a ti la tuya para controlar ventas, ingresos e inventario.
-    </p>
-
-    <CheckList items={checkItems} />
-
-    <div class="cta-group">
-      <Button variant="primary" type="link" href="#descarga" icon="download" stamp fullWidth>
-        Descargar MiPyUtil
-      </Button>
-      <div class="secondary-ctas">
-        <Button
-          variant="secondary"
-          type="link"
-          href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20app%20MiPyUtil"
-          icon="whatsapp"
-          target="_blank"
-          fullWidth
-        >
-          Contacto WhatsApp
+      <div class="cta-group">
+        <Button variant="primary" type="link" href="#descarga" icon="download" stamp fullWidth>
+          Descargar MiPyUtil
         </Button>
-        <Button
-          variant="secondary"
-          type="link"
-          href="https://t.me/MipyUtil"
-          icon="telegram"
-          target="_blank"
-          fullWidth
-        >
-          Canal de Telegram
-        </Button>
+        <div class="secondary-ctas">
+          <Button
+            variant="secondary"
+            type="link"
+            href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20app%20MiPyUtil"
+            icon="whatsapp"
+            target="_blank"
+            fullWidth
+          >
+            WhatsApp
+          </Button>
+          <Button variant="secondary" type="link" href="https://t.me/MipyUtil" icon="telegram" target="_blank" fullWidth>
+            Telegram
+          </Button>
+        </div>
+        <p class="fine">Plan gratuito para siempre. Android 8+ y Windows, sin Play Store.</p>
       </div>
     </div>
+
+    <figure class="hero-stage">
+      <div class="stage-phones">
+        <div class="stage-phone">
+          <span class="role">Tu app</span>
+          <PhoneMockup
+            screen="resumen"
+            time="11:50"
+            alt="Pantalla Resumen del dueño: lo vendido este mes, cómo entró, la cuenta, la caja y los avisos del tablón (datos de ejemplo)"
+            compact
+            peek
+          />
+        </div>
+        <div class="stage-phone stage-phone--team">
+          <span class="role">La de tu equipo</span>
+          <PhoneMockup
+            screen="mi-turno"
+            time="11:50"
+            alt="Pantalla Mi turno de un dependiente: el dinero del turno y sus últimas ventas (datos de ejemplo)"
+            compact
+            peek
+          />
+        </div>
+      </div>
+      <figcaption>Pantallas de ejemplo con datos ficticios.</figcaption>
+    </figure>
   </div>
 </section>
 
 <script>
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Palabra rotativa del titular. Se detiene fuera de pantalla y con la pestaña oculta.
+  const rotatingWord = document.querySelector<HTMLElement>('.rotating-word');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
-    const hero = document.querySelector('.hero');
-    const ambientTargets = document.querySelectorAll('.hero .phone-mockup, .hero .offline-icon');
+  if (rotatingWord && !reduceMotion) {
+    const words: string[] = JSON.parse(rotatingWord.dataset.words || '[]');
+    let index = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let visible = true;
 
-    if (hero && ambientTargets.length) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            ambientTargets.forEach((target) => {
-              target.classList.toggle('ambient-paused', !entry.isIntersecting);
-            });
-          });
-        },
-        { threshold: 0.05 }
-      );
-      observer.observe(hero);
-    }
-  }
+    const next = () => {
+      rotatingWord.classList.add('word-exit');
+      setTimeout(() => {
+        index = (index + 1) % words.length;
+        rotatingWord.textContent = words[index];
+        rotatingWord.classList.remove('word-exit');
+        rotatingWord.classList.add('word-enter');
+        setTimeout(() => rotatingWord.classList.remove('word-enter'), 280);
+      }, 180);
+    };
 
-  // Palabra rotativa del titular
-  if (!prefersReducedMotion) {
-    const rotatingWord = document.querySelector('.rotating-word');
-    if (rotatingWord) {
-      const words = JSON.parse(rotatingWord.getAttribute('data-words') || '[]');
-      let currentIndex = 0;
-      let rotateInterval: ReturnType<typeof setInterval> | null = null;
+    const sync = () => {
+      const shouldRun = visible && !document.hidden;
+      if (shouldRun && !timer) timer = setInterval(next, 3200);
+      if (!shouldRun && timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    };
 
-      const rotateWord = () => {
-        rotatingWord.classList.add('word-exit');
+    new IntersectionObserver(
+      (entries) => {
+        visible = entries.some((entry) => entry.isIntersecting);
+        sync();
+      },
+      { threshold: 0.1 }
+    ).observe(rotatingWord);
 
-        setTimeout(() => {
-          currentIndex = (currentIndex + 1) % words.length;
-          rotatingWord.textContent = words[currentIndex];
-          rotatingWord.classList.remove('word-exit');
-          rotatingWord.classList.add('word-enter');
-
-          setTimeout(() => {
-            rotatingWord.classList.remove('word-enter');
-          }, 500);
-        }, 300);
-      };
-
-      const startRotation = () => {
-        if (!rotateInterval) {
-          rotateInterval = setInterval(rotateWord, 3000);
-        }
-      };
-
-      const stopRotation = () => {
-        if (rotateInterval) {
-          clearInterval(rotateInterval);
-          rotateInterval = null;
-        }
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            startRotation();
-          } else {
-            stopRotation();
-          }
-        });
-      }, { threshold: 0.1 });
-
-      observer.observe(rotatingWord);
-    }
+    document.addEventListener('visibilitychange', sync);
   }
 </script>
 
 <style>
   .hero {
-    position: relative;
-    padding-top: clamp(var(--space-md), 3vw, 40px);
-    padding-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
+    padding-top: clamp(var(--space-lg), 5vw, 56px);
+    padding-bottom: clamp(var(--space-xl), 6vw, var(--space-3xl));
   }
 
-  /* === Veta del tablón: el hero es la tabla de madera misma, no una
-     superficie plana. Textura tomada del propio mundo del sistema (madera
-     pintada), nunca un patrón decorativo genérico. Enmascara --ink sobre
-     el fondo para que se re-tiña sola entre tema claro y apagón. === */
-  @supports (mask-image: none) or (-webkit-mask-image: none) {
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-color: var(--ink);
-      opacity: 0.09;
-      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Cpath d="M0 22 Q40 14 80 24 T160 18 T240 26 T320 20" stroke="white" stroke-width="1.4" fill="none" opacity="0.55"/%3E%3Cpath d="M0 62 Q55 70 110 60 T220 66 T320 58" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 106 Q48 98 96 108 T192 102 T320 110" stroke="white" stroke-width="1.7" fill="none" opacity="0.5"/%3E%3Cpath d="M0 148 Q60 156 120 146 T240 152 T320 144" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
-      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="320" height="180"%3E%3Cpath d="M0 22 Q40 14 80 24 T160 18 T240 26 T320 20" stroke="white" stroke-width="1.4" fill="none" opacity="0.55"/%3E%3Cpath d="M0 62 Q55 70 110 60 T220 66 T320 58" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 106 Q48 98 96 108 T192 102 T320 110" stroke="white" stroke-width="1.7" fill="none" opacity="0.5"/%3E%3Cpath d="M0 148 Q60 156 120 146 T240 152 T320 144" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
-      -webkit-mask-size: 320px 180px;
-      mask-size: 320px 180px;
-      -webkit-mask-repeat: repeat;
-      mask-repeat: repeat;
-    }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-xl);
   }
 
-  .hero .container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 24px);
-  }
-
-  /* Las dos piezas se apilan por debajo de 40rem en vez de envolver: el
-     separador es un signo de línea compartida, y al envolver quedaba
-     colgando al final de la primera línea sin nada que separar. */
-  .eyebrow {
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    margin-bottom: var(--space-md);
+  .hero-copy {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-sm);
-  }
-
-  @media (min-width: 40rem) {
-    .eyebrow {
-      flex-direction: row;
-      align-items: center;
-    }
-
-    /* El separador solo existe cuando ambas piezas comparten línea. */
-    .eyebrow__audience::after {
-      content: ' ·';
-    }
+    min-width: 0;
   }
 
   .hero h1 {
-    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
     max-width: 20ch;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
     hyphens: auto;
   }
 
@@ -225,7 +152,9 @@ const checkItems = [
     margin-bottom: 0.05em;
   }
 
-  /* === ROTATING WORD === */
+  /* === Palabra rotativa ===
+     Salida corta y entrada con desenfoque suave: el desenfoque une las dos
+     palabras en un solo movimiento en vez de dos objetos que se cruzan. */
   .rotating-word {
     display: inline-block;
     color: var(--accent);
@@ -233,199 +162,162 @@ const checkItems = [
 
   @media (prefers-reduced-motion: no-preference) {
     .rotating-word {
-      transition: transform 300ms var(--ease-out-expo), opacity 300ms ease;
+      transition: transform 180ms var(--ease-out-expo), opacity 180ms ease-out, filter 180ms ease-out;
     }
 
     .rotating-word.word-exit {
-      transform: translateY(-4px);
       opacity: 0;
+      filter: blur(2px);
+      transform: translateY(-6px);
     }
 
     .rotating-word.word-enter {
-      animation: word-in 500ms var(--ease-out-expo);
+      animation: word-in 280ms var(--ease-out-expo);
     }
   }
 
   @keyframes word-in {
     from {
-      transform: translateY(6px);
       opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
+      filter: blur(2px);
+      transform: translateY(8px);
     }
   }
 
   .lead {
+    max-width: 46ch;
+    margin-bottom: var(--space-lg);
     font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     line-height: var(--lh-lead);
     color: var(--ink-muted);
-    margin-bottom: clamp(var(--space-sm), 3vw, var(--space-lg));
-    max-width: 52ch;
   }
 
-  .hero :global(.checklist) {
-    margin-bottom: var(--space-lg);
+  .lead strong {
+    color: var(--ink);
   }
 
+  /* El botón principal ocupa todo el ancho de la columna (igual que el párrafo
+     de arriba) y manda sobre los dos contactos; la línea final comparte ese
+     mismo ancho. Con un botón más angosto que el texto, la jerarquía se aplana. */
   .cta-group {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     gap: var(--space-md);
-    margin-bottom: var(--space-lg);
     width: 100%;
   }
 
   .secondary-ctas {
     display: flex;
-    flex-direction: column;
     gap: var(--space-md);
     width: 100%;
   }
 
-  /* === Visual del hero: mockup + notificaciones flotantes. Solo desde
-     48rem (ver FloatingCards.astro: sus offsets negativos desbordarían un
-     viewport angosto, y en móvil la prueba tangible llega más abajo con
-     ComoFunciona). === */
-  .hero-visual {
-    display: none;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+  .secondary-ctas > :global(*) {
+    flex: 1;
   }
 
+  .fine {
+    max-width: none;
+    font-size: var(--fs-body);
+    line-height: var(--lh-lead);
+    color: var(--ink-muted);
+  }
+
+  /* === Escenario: dos teléfonos, dos roles ===
+     El dueño y su equipo usan la misma app con otro rol. Se muestra eso, en
+     vez de tarjetas de notificación flotando. */
+  .hero-stage {
+    min-width: 0;
+  }
+
+  .stage-phones {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+    align-items: start;
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+
+  .stage-phone {
+    display: grid;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+
+  .stage-phone--team {
+    margin-top: clamp(20px, 7vw, 48px);
+  }
+
+  /* .compact incluida a propósito: iguala la especificidad del tamaño del
+     teléfono y gana sin depender del orden de las hojas de estilo. */
+  .stage-phone :global(.phone-mockup.compact) {
+    --phone-w: 100%;
+  }
+
+  .role {
+    justify-self: start;
+    padding: 2px 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--plate);
+    font-size: var(--fs-caption);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+
+  .hero-stage figcaption {
+    margin-top: var(--space-sm);
+    font-size: var(--fs-caption);
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  /* Entrada: un solo gesto escalonado, ease-out fuerte. Lo demás en la
+     página no se anima solo. */
   @media (prefers-reduced-motion: no-preference) {
-    .hero .eyebrow,
     .hero h1,
-    .hero-visual,
     .hero .lead,
-    .hero :global(.checklist),
-    .hero .cta-group {
-      animation: hero-rise 500ms var(--ease-out-expo) both;
+    .hero .cta-group,
+    .stage-phone {
+      animation: hero-rise 420ms var(--ease-out-expo) both;
     }
 
-    .hero .eyebrow { animation-delay: 0ms; }
-    .hero h1 { animation-delay: 60ms; }
-    .hero-visual { animation-delay: 110ms; }
-    .hero .lead { animation-delay: 160ms; }
-    .hero :global(.checklist) { animation-delay: 210ms; }
-    .hero .cta-group { animation-delay: 260ms; }
-
-    :global(.hero .phone-frame) {
-      animation: hero-phone var(--dur-focal) var(--ease-out-expo) both;
-    }
-
-    :global(.hero .phone-mockup) {
-      animation: float-phone 6s ease-in-out 1s infinite;
-    }
-
-    :global(.hero .phone-mockup.ambient-paused) {
-      animation-play-state: paused;
-    }
+    .hero h1 { animation-delay: 0ms; }
+    .hero .lead { animation-delay: 50ms; }
+    .hero .cta-group { animation-delay: 100ms; }
+    .stage-phone { animation-delay: 120ms; }
+    .stage-phone--team { animation-delay: 190ms; }
   }
 
   @keyframes hero-rise {
     from {
       opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+      transform: translateY(10px);
     }
   }
 
-  @keyframes hero-phone {
-    from {
-      opacity: 0;
-      transform: translateY(16px) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  @keyframes float-phone {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-6px);
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .cta-group {
-      align-items: stretch;
-    }
-
-    .secondary-ctas {
-      flex-direction: row;
-      gap: var(--space-md);
-    }
-
-    .secondary-ctas > :global(*) {
-      flex: 1;
-    }
-  }
-
-  /* === Desktop: dos columnas, el visual del teléfono ocupa la segunda
-     columna completa mientras el texto fluye en la primera (ver DESIGN.md) === */
+  /* Desde 48rem el teléfono se muestra entero y los dos textos comparten fila. */
   @media (min-width: 48rem) {
-    .hero .container {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      grid-template-areas:
-        'eyebrow visual'
-        'title visual'
-        'lead visual'
-        'checklist visual'
-        'cta visual';
-      column-gap: clamp(var(--space-2xl), 6vw, var(--space-3xl));
-      align-content: start;
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      column-gap: clamp(var(--space-xl), 5vw, var(--space-3xl));
+      align-items: center;
     }
 
-    .eyebrow { grid-area: eyebrow; }
-    .hero h1 { grid-area: title; max-width: none; }
-    .hero-visual { display: flex; grid-area: visual; align-self: center; }
-    .lead { grid-area: lead; }
-    .hero :global(.checklist) { grid-area: checklist; }
-    .cta-group { grid-area: cta; }
+    .hero-stage :global(.phone-mockup.peek) {
+      aspect-ratio: auto;
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
   }
 
   @media (min-width: 80rem) {
-    .hero .container {
+    .hero-grid {
       column-gap: var(--space-section-sm);
-    }
-  }
-
-  /* === Viewport corto de escritorio: la ventana es ancha pero baja
-     (laptop con chrome del navegador), así que el hero comprime su propio
-     ritmo vertical para que el CTA siga visible sin scroll. === */
-  @media (min-width: 48rem) and (max-height: 50rem) {
-    .hero {
-      padding-top: var(--space-sm);
-      padding-bottom: var(--space-md);
-    }
-
-    .lead {
-      margin-bottom: var(--space-xs);
-    }
-
-    .hero :global(.checklist) {
-      margin-bottom: var(--space-sm);
-    }
-
-    .hero :global(.checklist li) {
-      margin-bottom: var(--space-xs);
-    }
-
-    .cta-group {
-      gap: var(--space-sm);
-      margin-bottom: var(--space-sm);
     }
   }
 </style>

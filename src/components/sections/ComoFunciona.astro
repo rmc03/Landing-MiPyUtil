@@ -1,66 +1,90 @@
 ---
 import PhoneMockup from '../PhoneMockup.astro';
+import AppScreen from '../ui/AppScreen.astro';
+import { realScreenshot } from '../../lib/screens';
+import type { Screen } from '../../lib/screens';
 
-interface Step {
-  screenshot: string;
-  alt: string;
-  number: number;
+interface Moment {
   time: string;
+  screen: Screen;
+  state?: 'activo' | 'inicio';
+  clock: string;
+  alt: string;
   title: string;
   description: string;
 }
 
-const steps: Step[] = [
+const moments: Moment[] = [
   {
-    screenshot: '06-mi-turno.png',
-    alt: 'Pantalla Mi turno mostrando el turno abierto del dependiente',
-    number: 1,
     time: '8:00 AM',
+    screen: 'mi-turno',
+    state: 'inicio',
+    clock: '8:00',
+    alt: 'Pantalla Mi turno con el turno recién abierto y sin ventas todavía (datos de ejemplo)',
     title: 'El dependiente abre su turno.',
     description: 'Llega, abre el teléfono, inicia el turno y está listo para vender.'
   },
   {
-    screenshot: '02-nueva-venta.png',
-    alt: 'Pantalla de nueva venta con productos en el carrito',
-    number: 2,
     time: 'Durante el día',
+    screen: 'mi-turno',
+    clock: '11:50',
+    alt: 'Pantalla Mi turno con el dinero del turno y las ventas del día (datos de ejemplo)',
     title: 'Vende y cobra.',
     description: 'Efectivo, transferencia o mixto, con el cambio calculado y el inventario descontado automáticamente.'
   },
   {
-    screenshot: '05-cuadres.png',
-    alt: 'Pantalla de cuadres pendientes de aprobación',
-    number: 3,
     time: 'Al cerrar',
+    screen: 'cuadres',
+    clock: '8:05',
+    alt: 'Pantalla Cuadres con un cuadre pendiente de aprobar (datos de ejemplo)',
     title: 'Cierra y rinde cuentas.',
     description: 'Envía su cuadre. Tú lo apruebas o lo rechazas desde tu casa.'
   }
 ];
 ---
 
-<section class="como-funciona" id="como-funciona">
+<section id="como-funciona" class="como-funciona veta veta--b">
   <div class="container">
     <h2>Así se trabaja un día con MiPyUtil.</h2>
     <p class="section-lead">Desde que abre la tienda hasta que se aprueba el cuadre.</p>
+    <p class="example-note">Pantallas de ejemplo con datos ficticios.</p>
 
-    <div class="steps">
-      <div class="spine-track" aria-hidden="true"></div>
-      <div class="spine-fill" aria-hidden="true"></div>
-      {steps.map(step => (
-        <div class="step">
-          <div class="step-marker" aria-hidden="true">{step.number}</div>
-          <div class="step-body">
-            <div class="step-visual">
-              <PhoneMockup screenshot={step.screenshot} alt={step.alt} />
+    <div class="day">
+      <ol class="moments">
+        {moments.map((moment, i) => (
+          <li class:list={['moment', { 'is-active': i === 0 }]} data-index={i}>
+            <div class="moment-copy">
+              <p class="moment-time">{moment.time}</p>
+              <h3>{moment.title}</h3>
+              <p class="moment-text">{moment.description}</p>
             </div>
-            <div class="step-content">
-              <span class="step-time">{step.time}</span>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
+            <div class="moment-phone">
+              <PhoneMockup screen={moment.screen} state={moment.state} time={moment.clock} alt={moment.alt} compact peek />
             </div>
-          </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* Escritorio: un solo teléfono que sigue la lectura. Cada pantalla se
+          apila en la misma celda y solo la del momento activo es visible. */}
+      <div class="day-stage">
+        <div class="stage-sticky">
+          <PhoneMockup alt="Pantalla de la app que cambia con cada momento del día (datos de ejemplo)">
+            {moments.map((moment, i) => {
+              const shot = moment.state === 'inicio' ? undefined : realScreenshot(moment.screen);
+              return (
+                <div class:list={['stage-screen', { 'is-on': i === 0 }]} data-index={i}>
+                  {shot ? (
+                    <img class="stage-shot" src={`/screens/${shot}`} alt="" width="1080" height="2340" loading="lazy" decoding="async" />
+                  ) : (
+                    <AppScreen screen={moment.screen} state={moment.state} time={moment.clock} />
+                  )}
+                </div>
+              );
+            })}
+          </PhoneMockup>
         </div>
-      ))}
+      </div>
     </div>
 
     <p class="section-close">
@@ -74,284 +98,249 @@ const steps: Step[] = [
 </section>
 
 <script>
-  const initSpine = () => {
-    const stepsContainer = document.querySelector<HTMLElement>('.como-funciona .steps');
-    const spineTrack = document.querySelector<HTMLElement>('.spine-track');
-    const spineFill = document.querySelector<HTMLElement>('.spine-fill');
-    const markers = Array.from(document.querySelectorAll<HTMLElement>('.step-marker'));
+  // El momento que cruza el centro de la pantalla manda: enciende su marca y
+  // cambia la pantalla del teléfono fijo. Sin listener de scroll.
+  const section = document.querySelector<HTMLElement>('#como-funciona');
 
-    if (!stepsContainer || !spineTrack || !spineFill || markers.length < 2) return;
+  if (section && 'IntersectionObserver' in window) {
+    const moments = Array.from(section.querySelectorAll<HTMLElement>('.moment'));
+    const screens = Array.from(section.querySelectorAll<HTMLElement>('.stage-screen'));
 
-    let ticking = false;
-
-    // El eje corre exactamente entre el centro del primer y el último
-    // marcador, no entre los bordes del contenedor: los pasos tienen alturas
-    // distintas (el mockup del teléfono es mucho más alto que el texto), así
-    // que solo medir el DOM da una posición correcta en cualquier viewport.
-    const positionSpine = () => {
-      const containerRect = stepsContainer.getBoundingClientRect();
-      const firstRect = markers[0].getBoundingClientRect();
-      const lastRect = markers[markers.length - 1].getBoundingClientRect();
-      const top = firstRect.top + firstRect.height / 2 - containerRect.top;
-      const bottom = lastRect.top + lastRect.height / 2 - containerRect.top;
-      const height = Math.max(0, bottom - top);
-
-      spineTrack.style.top = `${top}px`;
-      spineTrack.style.height = `${height}px`;
-      spineFill.style.top = `${top}px`;
-      spineFill.style.height = `${height}px`;
+    const setActive = (index: number) => {
+      moments.forEach((el, i) => el.classList.toggle('is-active', i === index));
+      screens.forEach((el, i) => el.classList.toggle('is-on', i === index));
     };
 
-    // El relleno sigue una línea de lectura fija en pantalla (60% de la
-    // altura) y se mide contra el propio eje, no contra la altura total de la
-    // sección. Antes el avance se calculaba sobre toda la sección (con el
-    // teléfono del último paso incluido) pero se pintaba sobre un eje más
-    // corto, así que el relleno se quedaba muy por detrás del scroll y
-    // parecía perderse a mitad del recorrido. Cada marcador se enciende
-    // cuando la línea de lectura lo alcanza, así que marcador y relleno
-    // siempre coinciden.
-    const updateFill = () => {
-      ticking = false;
-      const trackRect = spineTrack.getBoundingClientRect();
-      if (trackRect.height <= 0) return;
-
-      const readingLine = window.innerHeight * 0.6;
-      const filled = Math.min(trackRect.height, Math.max(0, readingLine - trackRect.top));
-      spineFill.style.transform = `scaleY(${filled / trackRect.height})`;
-
-      markers.forEach((marker) => {
-        const rect = marker.getBoundingClientRect();
-        if (rect.top + rect.height / 2 <= readingLine) {
-          marker.closest('.step')?.classList.add('step-active');
-        }
+    // El activo es el último momento cuyo borde superior ya pasó la mitad de la
+    // pantalla. Se recalcula desde las posiciones reales (no desde qué momento
+    // "entró"), así un salto brusco de scroll no deja el teléfono atrasado.
+    const update = () => {
+      const line = window.innerHeight * 0.5;
+      let active = 0;
+      moments.forEach((el, i) => {
+        if (el.getBoundingClientRect().top <= line) active = i;
       });
+      setActive(active);
     };
 
-    const requestUpdate = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(updateFill);
-      }
-    };
-
-    const relayout = () => {
-      positionSpine();
-      requestUpdate();
-    };
-
-    relayout();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', relayout);
-    // Las capturas del teléfono y la tipografía cargan después: cuando cambia
-    // la altura de los pasos, el eje se recalcula solo en lugar de quedar
-    // medido sobre la altura provisional.
-    window.addEventListener('load', relayout);
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(relayout).observe(stepsContainer);
-    }
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSpine);
-  } else {
-    initSpine();
+    // Dos observadores como disparadores: la franja central (cruce de la línea)
+    // y el viewport (entrada y salida). `scrollend` cubre el salto más brusco.
+    const band = new IntersectionObserver(update, { rootMargin: '-42% 0px -42% 0px' });
+    const viewport = new IntersectionObserver(update, { threshold: [0, 1] });
+    moments.forEach((el) => {
+      band.observe(el);
+      viewport.observe(el);
+    });
+    window.addEventListener('scrollend', update);
+    update();
   }
 </script>
 
 <style>
-  .como-funciona {
-    position: relative;
-  }
-
-  /* Misma veta del tablón que el hero (ver Hero.astro), con otra curva y
-     otro tamaño de mosaico: la misma madera, otra tabla — no un patrón
-     decorativo nuevo. */
-  @supports (mask-image: none) or (-webkit-mask-image: none) {
-    .como-funciona::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-color: var(--ink);
-      opacity: 0.08;
-      -webkit-mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Cpath d="M0 30 Q45 20 90 32 T180 26 T300 34" stroke="white" stroke-width="1.3" fill="none" opacity="0.5"/%3E%3Cpath d="M0 78 Q50 88 100 76 T200 84 T300 74" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 130 Q42 122 84 132 T168 126 T300 134" stroke="white" stroke-width="1.6" fill="none" opacity="0.5"/%3E%3Cpath d="M0 172 Q55 180 110 170 T220 178 T300 168" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
-      mask-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Cpath d="M0 30 Q45 20 90 32 T180 26 T300 34" stroke="white" stroke-width="1.3" fill="none" opacity="0.5"/%3E%3Cpath d="M0 78 Q50 88 100 76 T200 84 T300 74" stroke="white" stroke-width="1" fill="none" opacity="0.35"/%3E%3Cpath d="M0 130 Q42 122 84 132 T168 126 T300 134" stroke="white" stroke-width="1.6" fill="none" opacity="0.5"/%3E%3Cpath d="M0 172 Q55 180 110 170 T220 178 T300 168" stroke="white" stroke-width="1" fill="none" opacity="0.3"/%3E%3C/svg%3E');
-      -webkit-mask-size: 300px 200px;
-      mask-size: 300px 200px;
-      -webkit-mask-repeat: repeat;
-      mask-repeat: repeat;
-    }
-  }
-
-  .como-funciona .container {
-    position: relative;
-    z-index: 1;
-  }
-
   .como-funciona h2 {
     margin-bottom: clamp(var(--space-sm), 3vw, var(--space-md));
   }
 
   .section-lead {
+    margin-bottom: var(--space-xs);
     font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
     line-height: var(--lh-lead);
     color: var(--ink-muted);
-    margin-bottom: clamp(var(--space-xl), 6vw, var(--space-2xl));
   }
 
-  .steps {
-    --marker-size: clamp(36px, 9vw, 40px);
-    position: relative;
+  .example-note {
+    margin-bottom: clamp(var(--space-lg), 5vw, var(--space-2xl));
+    font-size: var(--fs-caption);
+    color: var(--ink-muted);
+  }
+
+  .day {
     display: grid;
-    gap: clamp(var(--space-2xl), 8vw, var(--space-section-sm));
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  /* El eje que conecta los tres marcadores: pista fija + relleno que avanza
-     con el scroll, en vez de la barra flotante desconectada de antes. */
-  .spine-track,
-  .spine-fill {
+  /* Riel de la jornada: una línea y un remache por momento. La hora es el
+     encabezado; no hace falta numerar lo que ya está ordenado en el tiempo. */
+  .moments {
+    position: relative;
+    list-style: none;
+  }
+
+  .moments::before {
+    content: '';
     position: absolute;
-    left: calc(var(--marker-size) / 2 - 1px);
-    width: 2px;
-    border-radius: 1px;
-  }
-
-  .spine-track {
+    top: 8px;
+    bottom: 8px;
+    left: 5px;
+    width: 1px;
     background: var(--line-strong);
   }
 
-  .spine-fill {
-    background: var(--accent);
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-
-  .step {
+  .moment {
     position: relative;
     display: grid;
-    grid-template-columns: var(--marker-size) 1fr;
-    gap: clamp(var(--space-md), 4vw, var(--space-xl));
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+    padding: 0 0 clamp(var(--space-xl), 7vw, var(--space-2xl)) 2rem;
   }
 
-  .step-marker {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--marker-size);
-    height: var(--marker-size);
-    background: var(--plate);
-    color: var(--ink-muted);
+  .moment:last-child {
+    padding-bottom: 0;
+  }
+
+  .moment::before {
+    content: '';
+    position: absolute;
+    top: 0.3em;
+    left: 0;
+    width: 11px;
+    height: 11px;
     border: 2px solid var(--line-strong);
-    border-radius: var(--radius-md);
-    font-size: var(--fs-title);
-    font-weight: 800;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    transition: background-color var(--dur-routine) ease, color var(--dur-routine) ease, border-color var(--dur-routine) ease;
+    border-radius: 50%;
+    background: var(--board);
+    transition: background-color var(--dur-routine) ease-out, border-color var(--dur-routine) ease-out;
   }
 
-  .step.step-active .step-marker {
-    background: var(--accent);
-    color: var(--accent-on);
+  .moment.is-active::before {
     border-color: var(--accent);
+    background: var(--accent);
   }
 
-  .step-body {
-    display: grid;
-    gap: clamp(var(--space-lg), 5vw, var(--space-xl));
-    align-items: center;
-  }
-
-  .step-visual {
-    order: 2;
-  }
-
-  .step-content {
-    order: 1;
-  }
-
-  .step-time {
-    display: inline-block;
-    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
-    font-size: clamp(var(--fs-caption), 2vw, var(--fs-label));
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+  .moment-time {
+    margin-bottom: var(--space-xs);
+    font-size: var(--fs-headline);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
     color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+    transition: color var(--dur-routine) ease-out;
   }
 
-  .step h3 {
-    margin-bottom: clamp(var(--space-xs), 2vw, var(--space-sm));
+  .moment.is-active .moment-time {
+    color: var(--accent);
+  }
+
+  .moment h3 {
     font-size: clamp(var(--fs-title), 2.5vw, 1.375rem);
   }
 
-  .step p {
+  .moment-text {
     color: var(--ink-muted);
     font-size: clamp(0.9375rem, 2.5vw, var(--fs-body));
     line-height: 1.6;
   }
 
+  .moment-phone {
+    margin-top: var(--space-md);
+  }
+
+  .day-stage {
+    display: none;
+  }
+
   .section-close {
-    margin-top: clamp(var(--space-lg), 5vw, var(--space-xl));
-    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
-    font-weight: 600;
-    line-height: var(--lh-lead);
-    max-width: 60ch;
     display: flex;
     align-items: flex-start;
     gap: var(--space-sm);
+    max-width: 60ch;
+    margin-top: clamp(var(--space-xl), 6vw, var(--space-2xl));
+    font-size: clamp(var(--fs-body), 2.5vw, var(--fs-lead));
+    font-weight: 600;
+    line-height: var(--lh-lead);
     color: var(--ink-muted);
   }
 
   .revert-icon {
+    flex-shrink: 0;
     width: clamp(20px, 5vw, 24px);
     height: clamp(20px, 5vw, 24px);
-    flex-shrink: 0;
-    color: var(--accent);
     margin-top: 2px;
+    color: var(--accent);
   }
 
-  @media (min-width: 48rem) {
-    .step-body {
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(var(--space-xl), 5vw, var(--space-3xl));
+  /* Tablet: texto a la izquierda, teléfono asomado a la derecha en cada momento. */
+  @media (min-width: 40rem) and (max-width: 63.99rem) {
+    .moment {
+      grid-template-columns: minmax(0, 1fr) 13.5rem;
+      column-gap: var(--space-xl);
+      align-items: start;
     }
 
-    .step-visual {
-      order: unset;
-    }
-
-    .step-content {
-      order: unset;
-    }
-
-    .step:nth-child(even) .step-visual {
-      order: 2;
+    .moment-phone {
+      margin-top: 0;
     }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .step.step-active .step-marker {
-      animation: step-pop 300ms var(--ease-out-expo);
+  /* Escritorio: un teléfono fijo, tres momentos que pasan. */
+  @media (min-width: 64rem) {
+    .day {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      column-gap: var(--space-3xl);
+      align-items: start;
     }
-  }
 
-  @keyframes step-pop {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+    /* Alto suficiente para que el teléfono fijo alcance a cambiar de pantalla
+       mientras se lee cada momento, sin dejar un vacío del tamaño de otra
+       sección entre uno y el siguiente. */
+    .moment {
+      min-height: clamp(220px, 34vh, 340px);
+      padding-bottom: 0;
+      align-content: start;
     }
-    40% {
-      transform: scale(1.1);
-      box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
+
+    .moment:last-child {
+      min-height: 0;
     }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+
+    .moment-phone {
+      display: none;
+    }
+
+    .day-stage {
+      display: block;
+      align-self: stretch;
+    }
+
+    .stage-sticky {
+      position: sticky;
+      top: max(88px, calc(50vh - 300px));
+      display: grid;
+      justify-items: center;
+      gap: var(--space-md);
+    }
+
+    .stage-sticky :global(.phone-mockup) {
+      --phone-w: 270px;
+    }
+
+    /* Pantallas apiladas: la saliente se apaga rápido y la entrante llega un
+       poco después y más despacio. El desenfoque ligero une las dos en un solo
+       cambio en vez de dos objetos cruzándose. */
+    .stage-screen {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      filter: blur(3px);
+      transform: scale(0.985);
+      transition: opacity 120ms ease-out, filter 120ms ease-out, transform 120ms ease-out;
+      pointer-events: none;
+    }
+
+    .stage-screen.is-on {
+      opacity: 1;
+      filter: none;
+      transform: none;
+      transition-duration: 240ms;
+      transition-timing-function: var(--ease-out-expo);
+      transition-delay: 60ms;
+    }
+
+    .stage-shot {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 </style>

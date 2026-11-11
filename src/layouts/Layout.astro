@@ -13,6 +13,13 @@ const ogImage = new URL('/og-image.png', Astro.site);
 
 import Analytics from '@vercel/analytics/astro';
 import Button from '../components/ui/Button.astro';
+// Fuentes alojadas en el proyecto (sin Google Fonts): una petición menos a un
+// tercero y cero parpadeo de fuente en conexiones lentas. Anton (display, un
+// solo uso por página) + Archivo variable (todo lo demás, 400 a 900).
+import '@fontsource/anton/latin-400.css';
+import '@fontsource-variable/archivo/wght.css';
+import antonLatin from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url';
 import '../styles/global.css';
 ---
 
@@ -50,13 +57,10 @@ import '../styles/global.css';
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- Google Fonts: Anton (display, un solo uso por página) + Archivo (todo lo demás) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Las dos fuentes del primer pantallazo se precargan: el titular y el texto
+         salen con su fuente definitiva en la primera pintura. -->
+    <link rel="preload" href={antonLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
 
     <!-- Tema: oscuro por defecto (modo apagón). El modo día sigue existiendo
          en CSS y en la lógica de abajo, pero por ahora no tiene botón para
@@ -122,23 +126,34 @@ import '../styles/global.css';
 
     <footer class="footer">
       <div class="footer-container">
-        <div class="footer-brand">
-          <p class="footer-logo">
-            <img src="/mipyutil-mark.png" alt="" width="26" height="26" class="footer-logo-mark" />
-            MiPyUtil
+        <div class="footer-top">
+          <div class="footer-brand">
+            <p class="footer-logo">
+              <img src="/mipyutil-mark.png" alt="" width="26" height="26" class="footer-logo-mark" />
+              MiPyUtil
+            </p>
+            <p class="footer-tagline">Tu MiPyME, organizada.</p>
+            <p class="footer-desc">Inventario, ventas, turnos y ganancias, todo en un solo lugar.</p>
+          </div>
+
+          <nav class="footer-links" aria-label="Enlaces del pie de página">
+            <a href="#descarga">Descargar</a>
+            <a href="#precios">Precios</a>
+            <a href="#faq">Preguntas frecuentes</a>
+            <a href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20MiPyUtil" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="https://t.me/MipyUtil" target="_blank" rel="noopener noreferrer">Canal de Telegram</a>
+          </nav>
+        </div>
+
+        <div class="footer-bottom">
+          <p class="footer-note">
+            Aplicación en desarrollo activo. Funcionalidades mostradas según el estado actual del producto.
           </p>
-          <p class="footer-tagline">Tu MiPyME, organizada.</p>
-          <p class="footer-desc">Inventario, ventas, turnos y ganancias, todo en un solo lugar.</p>
+          <p class="footer-note">
+            Las pantallas de la app y las cifras de Inventario y Ganancias son ejemplos con datos ficticios.
+            Precios, límites y descargas son reales.
+          </p>
         </div>
-
-        <div class="footer-links">
-          <a href="https://wa.me/5353770707?text=Hola,%20me%20gustar%C3%ADa%20hacer%20una%20consulta%20sobre%20MiPyUtil" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          <a href="https://t.me/MipyUtil" target="_blank" rel="noopener noreferrer">Canal de Telegram</a>
-        </div>
-
-        <p class="footer-note">
-          Aplicación en desarrollo activo. Funcionalidades mostradas según el estado actual del producto.
-        </p>
       </div>
     </footer>
 
@@ -197,8 +212,10 @@ import '../styles/global.css';
         transition: color var(--dur-routine) ease;
       }
 
-      .logo:hover {
-        color: var(--accent);
+      @media (hover: hover) and (pointer: fine) {
+        .logo:hover {
+          color: var(--accent);
+        }
       }
 
       .logo-mark {
@@ -292,8 +309,10 @@ import '../styles/global.css';
         transition: color var(--dur-routine) ease;
       }
 
-      .nav-toggle:hover {
-        color: var(--accent);
+      @media (hover: hover) and (pointer: fine) {
+        .nav-toggle:hover {
+          color: var(--accent);
+        }
       }
 
       .hamburger {
@@ -348,8 +367,18 @@ import '../styles/global.css';
         outline-offset: 2px;
       }
 
-      .nav-menu a:hover {
-        color: var(--accent);
+      @media (hover: hover) and (pointer: fine) {
+        .nav-menu a:hover {
+          color: var(--accent);
+        }
+      }
+
+      /* Sección actual: subrayado de acento, no solo un cambio de color. */
+      .nav-menu a[aria-current='location'] {
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.45em;
       }
 
       /* === NAV CTA ===
@@ -420,7 +449,8 @@ import '../styles/global.css';
         max-width: 1120px;
         margin: 0 auto;
         padding: 0 clamp(16px, 4vw, 24px);
-        text-align: center;
+        display: grid;
+        gap: var(--space-xl);
       }
 
       .footer-logo {
@@ -455,36 +485,72 @@ import '../styles/global.css';
       .footer-desc {
         font-size: var(--fs-small);
         color: var(--ink-muted);
-        margin-bottom: 32px;
-        max-width: none;
+        max-width: 38ch;
       }
 
+      .footer-top {
+        display: grid;
+        gap: var(--space-lg);
+      }
+
+      /* Una fila de enlaces que usa el ancho del pie: la marca manda (más
+         grande), los enlaces acompañan (peso medio, sin competir). */
       .footer-links {
         display: flex;
-        justify-content: center;
-        gap: 24px;
-        margin-bottom: 32px;
         flex-wrap: wrap;
+        gap: 0 var(--space-xl);
       }
 
       .footer-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
         color: var(--ink);
-        font-weight: 700;
-        padding: 12px 10px;
-        margin: -12px -10px;
-        border-bottom: 2px solid transparent;
+        font-size: var(--fs-small);
+        font-weight: 600;
+        text-decoration: underline;
+        text-decoration-color: var(--line-strong);
+        text-underline-offset: 0.3em;
       }
 
-      .footer-links a:hover {
-        color: var(--accent);
-        border-bottom-color: var(--accent);
+      @media (hover: hover) and (pointer: fine) {
+        .footer-links a:hover {
+          color: var(--accent);
+          text-decoration-color: var(--accent);
+        }
+      }
+
+      /* La línea cruza todo el ancho; el texto conserva su medida legible. */
+      .footer-bottom {
+        display: grid;
+        gap: var(--space-sm);
+        padding-top: var(--space-lg);
+        border-top: 1px solid var(--line);
       }
 
       .footer-note {
         font-size: var(--fs-small);
         color: var(--ink-muted);
         max-width: 60ch;
-        margin: 0 auto;
+      }
+
+      /* Escritorio: marca a la izquierda y enlaces a la derecha, alineados a la
+         base de la marca; las dos notas se reparten el ancho en dos columnas. */
+      @media (min-width: 48rem) {
+        .footer-top {
+          grid-template-columns: minmax(0, 1fr) auto;
+          column-gap: var(--space-3xl);
+          align-items: end;
+        }
+
+        .footer-links {
+          justify-content: flex-end;
+        }
+
+        .footer-bottom {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          column-gap: var(--space-3xl);
+        }
       }
     </style>
 
@@ -537,6 +603,44 @@ import '../styles/global.css';
             document.body.style.overflow = '';
             navToggle.focus();
           }
+        });
+      }
+
+      // Sección actual en el menú: la que cruza la franja central de la pantalla.
+      // Resumen agrupa lo que va antes de Ventas; Descarga y Preguntas no tienen enlace.
+      if ('IntersectionObserver' in window) {
+        const sectionToLink: Record<string, string> = {
+          hero: 'hero',
+          problema: 'hero',
+          'como-funciona': 'hero',
+          ventas: 'ventas',
+          inventario: 'inventario',
+          ganancias: 'ganancias',
+          precios: 'precios',
+          descarga: '',
+          faq: ''
+        };
+        const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.nav-menu a[href^="#"]'));
+
+        const markCurrent = (id: string) => {
+          links.forEach((link) => {
+            if (id && link.getAttribute('href') === `#${id}`) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+        };
+
+        const navObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) markCurrent(sectionToLink[(entry.target as HTMLElement).id] ?? '');
+            });
+          },
+          { rootMargin: '-45% 0px -50% 0px' }
+        );
+
+        Object.keys(sectionToLink).forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) navObserver.observe(el);
         });
       }
 

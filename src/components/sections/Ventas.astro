@@ -1,0 +1,64 @@
+---
+import PhoneMockup from '../PhoneMockup.astro';
+---
+
+<section id="ventas" class="ventas dark-band veta veta--c">
+  <div class="container">
+    <div class="layout">
+      <div class="copy">
+        <h2>Cobra en efectivo… y también por transferencia.</h2>
+        <ul class="feature-list">
+          <li>Modo <strong>Efectivo</strong>, <strong>Transferencia</strong> o <strong>Mixto</strong> con cálculo de cambio al vuelo.</li>
+          <li>Muestra tu <strong>QR de pago</strong> en pantalla completa: el cliente escanea desde su app bancaria y paga.</li>
+          <li>Gestiona hasta <strong>5 QRs propios</strong> y comparte los del negocio con tu equipo.</li>
+        </ul>
+      </div>
+
+      <figure class="demo">
+        <PhoneMockup screen="confirmar-pago" time="11:42" alt="Pantalla Confirmar pago" interactive />
+        <figcaption>Toca un modo de cobro para probarlo. Datos de ejemplo.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(var(--space-xl), 6vw, var(--space-2xl));
+    align-items: center;
+  }
+
+  .copy h2 {
+    margin-bottom: clamp(var(--space-md), 4vw, var(--space-lg));
+  }
+
+  .demo {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-md);
+  }
+
+  .demo :global(.phone-mockup) {
+    --phone-w: min(76vw, 280px);
+  }
+
+  .demo figcaption {
+    max-width: 30ch;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      column-gap: clamp(var(--space-2xl), 6vw, var(--space-3xl));
+    }
+
+    .demo :global(.phone-mockup) {
+      --phone-w: 290px;
+    }
+  }
+</style>
