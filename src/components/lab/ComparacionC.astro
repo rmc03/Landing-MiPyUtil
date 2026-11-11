@@ -1,0 +1,513 @@
+---
+/**
+ * Variante C: el cuadre de caja como único protagonista.
+ *
+ * Escala: 20 minutos = 100% del ancho (escritorio) o 180px de alto (móvil).
+ * Cada paso mide minutos/20 de esa escala; la barra de MiPyUtil mide 2/20, que
+ * es el tope de "menos de 2 min" (nunca más corta que lo que se afirma).
+ * Los minutos por paso suman 20: 6 + 6 + 4 + 4.
+ */
+const TOTAL = 20;
+
+const pasos = [
+  { nombre: 'Contar el efectivo', min: 6 },
+  { nombre: 'Sumar la libreta', min: 6 },
+  { nombre: 'Restar las transferencias', min: 4 },
+  { nombre: 'Buscar el descuadre', min: 4 }
+];
+
+const app = { nombre: 'Revisas el cuadre ya calculado y lo apruebas', min: 2 };
+
+const resto = [
+  {
+    antes: 'En un apagón, la libreta sigue y Excel no.',
+    ahora: 'MiPyUtil también sigue, sin internet.'
+  },
+  {
+    antes: 'Ni libreta ni Excel avisan cuando algo se acaba.',
+    ahora: 'MiPyUtil avisa solo cuando se acaba.'
+  },
+  {
+    antes: 'Libreta: cada uno la suya. Excel: uno a la vez.',
+    ahora: 'MiPyUtil es un solo sistema para ti y tu equipo.'
+  },
+  {
+    antes: 'Libreta no compara ganancias; Excel, a mano.',
+    ahora: 'MiPyUtil las compara con el mes anterior, solo.'
+  }
+];
+---
+
+<section id="comparacion-c" class="cuadre dark-band">
+  <div class="container">
+    <header class="cabeza">
+      <h2>Cuadrar la caja no debería llevarte 20 minutos</h2>
+      <p class="lead">
+        Al cerrar, el efectivo y las transferencias tienen que cuadrar con lo vendido.
+      </p>
+    </header>
+
+    <figure class="tiempo" data-total={TOTAL}>
+      <div class="pista pista--mano">
+        <p class="pista-titulo">
+          <span class="pista-nombre">A mano</span>
+          <span class="pista-total">≈20 min</span>
+        </p>
+        <ol class="pasos">
+          {pasos.map(p => (
+            <li class="paso" style={`--min:${p.min}`}>
+              <span class="barra"></span>
+              <span class="paso-texto">
+                <span class="paso-nombre">{p.nombre}</span>
+                <span class="paso-min">{p.min} min</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="pista pista--app">
+        <p class="pista-titulo">
+          <span class="pista-nombre">Con MiPyUtil</span>
+        </p>
+        <div class="app-fila" style={`--min:${app.min}`}>
+          <span class="barra"></span>
+          <span class="hilo" aria-hidden="true"></span>
+          <p class="app-texto">
+            <span class="paso-min">menos de {app.min} min</span>
+            <span class="paso-nombre">{app.nombre}</span>
+          </p>
+          <p class="ahorro">Más de 18 min que te ahorras</p>
+        </div>
+      </div>
+
+      <figcaption class="nota">
+        Estimado: lo que puede tardar un cuadre a mano, repartido por pasos. Cada negocio es distinto.
+      </figcaption>
+
+      <script is:inline>
+        (function () {
+          var f = document.currentScript.parentElement;
+          try {
+            if (!('IntersectionObserver' in window)) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            f.setAttribute('data-anim', 'pre');
+            var io = new IntersectionObserver(function (es) {
+              if (es.some(function (e) { return e.isIntersecting; })) {
+                f.setAttribute('data-anim', 'go');
+                io.disconnect();
+              }
+            }, { threshold: 0.4 });
+            io.observe(f);
+          } catch (e) {
+            f.removeAttribute('data-anim');
+          }
+        })();
+      </script>
+    </figure>
+
+    <div class="resto">
+      <p class="resto-cab" aria-hidden="true">
+        <span>Con libreta o Excel</span>
+        <span>Con MiPyUtil</span>
+      </p>
+      <ul class="resto-lista" aria-label="Otras cuatro diferencias">
+        {resto.map(r => (
+          <li class="linea">
+            <p class="antes"><span class="sr-only">Con libreta o Excel: </span>{r.antes}</p>
+            <p class="ahora"><span class="sr-only">Con MiPyUtil: </span>{r.ahora}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cuadre {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    --escala-v: 8px; /* alto por minuto en móvil */
+    --corte: 2px; /* separación entre pasos, dentro de cada celda */
+  }
+
+  .cabeza {
+    margin-bottom: var(--space-lg);
+  }
+
+  .cabeza h2 {
+    margin-bottom: var(--space-md);
+    max-width: 22ch;
+  }
+
+  .lead {
+    font-size: var(--fs-body);
+    line-height: 1.5;
+    color: var(--ink-muted);
+    max-width: 44ch;
+  }
+
+  /* ---------- El tiempo ---------- */
+  .tiempo {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+  }
+
+  .pista-titulo {
+    display: flex;
+    max-width: none;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-sm);
+    font-size: var(--fs-title);
+    font-weight: 800;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pista--mano .pista-nombre,
+  .pista--mano .pista-total {
+    color: var(--ink-muted);
+  }
+
+  .pista--app .pista-nombre {
+    color: var(--ink);
+  }
+
+  .pasos {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Móvil: el alto de cada paso son sus minutos. */
+  .paso {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: var(--space-md);
+    height: calc(var(--min) * var(--escala-v));
+  }
+
+  .barra {
+    display: block;
+    background: var(--ink-muted);
+    background-clip: padding-box;
+    border-bottom: var(--corte) solid transparent;
+    border-radius: var(--radius-sm);
+    transform-origin: top;
+  }
+
+  .pista--app .barra {
+    background: var(--accent);
+  }
+
+  .paso-texto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-width: 0;
+  }
+
+  .paso-nombre {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .paso-min {
+    flex-shrink: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-muted);
+    white-space: nowrap;
+  }
+
+  .app-fila {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: var(--space-md);
+    align-items: start;
+  }
+
+  .app-fila .barra {
+    height: calc(var(--min) * var(--escala-v));
+    border-bottom: 0;
+  }
+
+  .hilo {
+    display: none;
+  }
+
+  .app-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: none;
+  }
+
+  .app-texto .paso-min {
+    color: var(--accent-deep);
+    font-size: 1.0625rem;
+  }
+
+  .app-texto .paso-nombre {
+    font-weight: 700;
+  }
+
+  .ahorro {
+    grid-column: 2;
+    margin-top: 2px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .nota {
+    font-size: var(--fs-label);
+    line-height: 1.45;
+    color: var(--ink-muted);
+    max-width: 56ch;
+  }
+
+  /* ---------- El resto: cuatro líneas ---------- */
+  .resto {
+    margin-top: var(--space-lg);
+  }
+
+  .resto-cab {
+    display: none;
+  }
+
+  .resto-lista {
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .linea {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .linea p {
+    max-width: none;
+    line-height: 1.4;
+  }
+
+  .antes {
+    font-size: 0.9375rem;
+    color: var(--ink-muted);
+  }
+
+  .ahora {
+    margin-top: 2px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ---------- Escritorio: el mismo tiempo, a lo ancho ---------- */
+  @media (min-width: 48rem) {
+    .cabeza {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .tiempo {
+      gap: var(--space-xl);
+    }
+
+    .pasos {
+      flex-direction: row;
+    }
+
+    .paso {
+      display: block;
+      flex: none;
+      width: calc(var(--min) / 20 * 100%);
+      height: auto;
+      min-width: 0;
+      padding-right: var(--space-md);
+    }
+
+    .barra,
+    .app-fila .barra {
+      height: 28px;
+      border-bottom: 0;
+      border-right: var(--corte) solid transparent;
+      transform-origin: left;
+    }
+
+    .paso .barra {
+      margin-right: calc(var(--space-md) * -1);
+    }
+
+    .paso-texto {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 2px;
+      margin-top: var(--space-sm);
+    }
+
+    .paso-min {
+      font-size: var(--fs-title);
+      font-weight: 800;
+    }
+
+    .paso-nombre {
+      font-size: var(--fs-body);
+    }
+
+    .app-texto .paso-min {
+      font-size: var(--fs-title);
+      font-weight: 800;
+    }
+
+    .app-texto .paso-nombre {
+      font-size: var(--fs-body);
+    }
+
+    .hilo::after {
+      content: '';
+      display: block;
+      float: right;
+      width: 1px;
+      height: 14px;
+      margin-top: -7px;
+      background: var(--line-strong);
+    }
+
+    .app-fila {
+      display: grid;
+      grid-template-columns: calc(var(--min) / 20 * 100%) minmax(0, 1fr);
+      grid-template-areas:
+        'barra hilo'
+        'texto ahorro';
+      column-gap: 0;
+      row-gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .app-fila .barra {
+      grid-area: barra;
+      width: 100%;
+    }
+
+    /* El hueco que deja la barra corta: lo que no se gasta. */
+    .hilo {
+      display: block;
+      grid-area: hilo;
+      height: 0;
+      margin-left: var(--space-sm);
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .app-texto {
+      grid-area: texto;
+      align-self: start;
+      width: max-content;
+      max-width: 24rem;
+    }
+
+    .ahorro {
+      grid-area: ahorro;
+      align-self: start;
+      justify-self: end;
+      margin: 0;
+      text-align: right;
+      font-size: var(--fs-title);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .nota {
+      margin-top: calc(var(--space-sm) * -1);
+    }
+
+    .resto {
+      margin-top: var(--space-2xl);
+    }
+
+    .resto-cab {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-xl);
+      max-width: none;
+      margin-bottom: var(--space-sm);
+      font-size: var(--fs-label);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--ink-muted);
+    }
+
+    .linea {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-xl);
+      align-items: baseline;
+      padding: var(--space-md) 0;
+    }
+
+    .antes {
+      font-size: var(--fs-body);
+    }
+
+    .ahora {
+      margin-top: 0;
+      font-size: var(--fs-body);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .cabeza {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--space-2xl);
+      align-items: end;
+    }
+
+    .cabeza h2 {
+      margin-bottom: 0;
+    }
+
+    .lead {
+      font-size: var(--fs-lead);
+      padding-bottom: 4px;
+    }
+  }
+
+  /* ---------- Un único momento: las pistas se dibujan al entrar ----------
+     Sin JS o con movimiento reducido, nada se oculta. */
+  .tiempo[data-anim='pre'] .barra {
+    transform: scaleY(0);
+  }
+
+  .tiempo[data-anim='pre'] .paso-texto,
+  .tiempo[data-anim='pre'] .app-texto,
+  .tiempo[data-anim='pre'] .ahorro,
+  .tiempo[data-anim='pre'] .pista-total,
+  .tiempo[data-anim='pre'] .hilo {
+    opacity: 0;
+  }
+
+  .tiempo[data-anim='go'] .barra,
+  .tiempo[data-anim='go'] .paso-texto,
+  .tiempo[data-anim='go'] .app-texto,
+  .tiempo[data-anim='go'] .ahorro,
+  .tiempo[data-anim='go'] .pista-total,
+  .tiempo[data-anim='go'] .hilo {
+    transition:
+      transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 450ms cubic-bezier(0.16, 1, 0.3, 1) 250ms;
+  }
+
+  @media (min-width: 48rem) {
+    .tiempo[data-anim='pre'] .barra {
+      transform: scaleX(0);
+    }
+  }
+</style>
