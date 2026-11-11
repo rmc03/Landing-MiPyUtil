@@ -1,0 +1,201 @@
+---
+type Cell =
+  | { kind: 'yes' }
+  | { kind: 'no' }
+  | { kind: 'text'; text: string };
+
+interface Row {
+  label: string;
+  libreta: Cell;
+  excel: Cell;
+  app: Cell;
+}
+
+const yes: Cell = { kind: 'yes' };
+const no: Cell = { kind: 'no' };
+const t = (text: string): Cell => ({ kind: 'text', text });
+
+const rows: Row[] = [
+  { label: 'Funciona en apagón', libreta: yes, excel: no, app: yes },
+  { label: 'Avisa cuando algo se acaba', libreta: no, excel: no, app: yes },
+  { label: 'Cuadre de caja', libreta: t('A mano'), excel: t('A mano'), app: t('Calculado') },
+  { label: 'Dueño y equipo juntos', libreta: t('Una por persona'), excel: t('Uno a la vez'), app: t('En equipo') },
+  { label: 'Ganancias vs. mes anterior', libreta: no, excel: t('A mano'), app: t('Comparada') }
+];
+
+const comparisonLabel = 'Qué hace cada forma de llevar el negocio: libreta, Excel o MiPyUtil';
+---
+
+<section id="comparacion" class="comparacion dark-band" aria-labelledby="comparacion-titulo">
+  <div class="container">
+    <h2 id="comparacion-titulo">Libreta, Excel o MiPyUtil: qué resuelve cada uno</h2>
+
+    <table class="board">
+      <caption class="sr-only">{comparisonLabel}</caption>
+      <colgroup>
+        <col class="board__label" />
+        <col class="board__val" />
+        <col class="board__val" />
+        <col class="board__val" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><span class="sr-only">Capacidad</span></th>
+          <th scope="col">Libreta</th>
+          <th scope="col">Excel</th>
+          <th scope="col" class="board__app">MiPyUtil</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(row => (
+          <tr>
+            <th scope="row">{row.label}</th>
+            {[row.libreta, row.excel, row.app].map((cell, i) => (
+              <td class={i === 2 ? 'board__app' : undefined}>
+                {cell.kind === 'yes' && (
+                  <>
+                    <svg class="mark mark--yes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <polyline points="4 12.5 9.5 18 20 6.5"></polyline>
+                    </svg>
+                    <span class="sr-only">Sí</span>
+                  </>
+                )}
+                {cell.kind === 'no' && (
+                  <>
+                    <svg class="mark mark--no" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <line x1="7" y1="12" x2="17" y2="12"></line>
+                    </svg>
+                    <span class="sr-only">No</span>
+                  </>
+                )}
+                {cell.kind === 'text' && <span class="val">{cell.text}</span>}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    <p class="nota">
+      Estimado: un cuadre a mano puede tomar <span class="num">≈20 min</span>; con MiPyUtil, <span class="num">menos de 2 min</span>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .comparacion {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .comparacion h2 {
+    max-width: 24ch;
+    margin-bottom: var(--space-lg);
+    font-size: clamp(var(--fs-title), 4vw, var(--fs-headline));
+  }
+
+  .board {
+    width: 100%;
+    max-width: 56rem;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: var(--fs-label);
+  }
+
+  .board__label { width: 32%; }
+
+  .board th,
+  .board td {
+    padding: 0 2px;
+    text-align: center;
+    text-wrap: balance;
+    vertical-align: middle;
+    line-height: 1.25;
+  }
+
+  .board tbody tr { height: 48px; }
+  .board thead tr { border-bottom: 1px solid var(--line-strong); }
+  .board tbody tr + tr { border-top: 1px solid var(--line); }
+
+  .board thead th {
+    height: 40px;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    color: var(--ink-muted);
+  }
+
+  .board tbody th {
+    padding-left: 0;
+    padding-right: var(--space-sm);
+    text-align: left;
+    font-size: var(--fs-label);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .board td {
+    font-weight: 600;
+    color: var(--ink-muted);
+  }
+
+  /* Una sola franja continua: lavado del acento sobre el panel, de la
+     cabecera al pie, con un canto de acento arriba. */
+  .board .board__app {
+    background: color-mix(in srgb, var(--accent) 14%, var(--board-panel));
+    color: var(--ink);
+  }
+
+  .board thead th.board__app {
+    border-top: 2px solid var(--accent);
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  .board td.board__app { font-weight: 800; }
+
+  .mark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+  }
+
+  .mark--yes { color: var(--ink); }
+  .mark--no { color: var(--ink-muted); opacity: 0.8; }
+  .board__app .mark--yes { color: var(--accent-deep); }
+
+  .nota {
+    max-width: 56rem;
+    margin-top: var(--space-md);
+    font-size: var(--fs-label);
+    line-height: 1.5;
+    color: var(--ink-muted);
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  @media (max-width: 24rem) {
+    .board td.board__app { font-weight: 700; letter-spacing: -0.01em; }
+  }
+
+  @media (min-width: 40rem) {
+    .board,
+    .board th,
+    .board td,
+    .board tbody th,
+    .board thead th,
+    .nota { font-size: var(--fs-body); }
+
+    .board tbody tr { height: 56px; }
+    .board thead th { height: 48px; }
+    .board__label { width: 40%; }
+    .board th, .board td { padding: 0 8px; }
+    .mark { width: 22px; height: 22px; }
+    .comparacion h2 { max-width: 40ch; }
+  }
+</style>
