@@ -2,18 +2,19 @@
 /**
  * Variante C: el cuadre de caja como único protagonista.
  *
- * Escala: 20 minutos = 100% del ancho (escritorio) o 180px de alto (móvil).
- * Cada paso mide minutos/20 de esa escala; la barra de MiPyUtil mide 2/20, que
- * es el tope de "menos de 2 min" (nunca más corta que lo que se afirma).
- * Los minutos por paso suman 20: 6 + 6 + 4 + 4.
+ * Escala: 20 minutos = 100% del ancho (escritorio) o 160px de alto (móvil).
+ * Solo se afirman dos cifras: ≈20 min a mano y menos de 2 min en MiPyUtil.
+ * Los cuatro pasos a mano son segmentos iguales (--min:5 es solo reparto de
+ * layout, 20 / 4; no se muestra ni se afirma como duración de cada paso).
+ * La barra de MiPyUtil mide 2/20, el tope de "menos de 2 min".
  */
 const TOTAL = 20;
 
 const pasos = [
-  { nombre: 'Contar el efectivo', min: 6 },
-  { nombre: 'Sumar la libreta', min: 6 },
-  { nombre: 'Restar las transferencias', min: 4 },
-  { nombre: 'Buscar el descuadre', min: 4 }
+  { nombre: 'Contar el efectivo' },
+  { nombre: 'Sumar la libreta' },
+  { nombre: 'Restar las transferencias' },
+  { nombre: 'Buscar el descuadre' }
 ];
 
 const app = { nombre: 'Revisas el cuadre ya calculado y lo apruebas', min: 2 };
@@ -25,7 +26,7 @@ const resto = [
   },
   {
     antes: 'Ni libreta ni Excel avisan cuando algo se acaba.',
-    ahora: 'MiPyUtil avisa solo cuando se acaba.'
+    ahora: 'MiPyUtil te avisa antes de que se acabe.'
   },
   {
     antes: 'Libreta: cada uno la suya. Excel: uno a la vez.',
@@ -33,7 +34,7 @@ const resto = [
   },
   {
     antes: 'Libreta no compara ganancias; Excel, a mano.',
-    ahora: 'MiPyUtil las compara con el mes anterior, solo.'
+    ahora: 'MiPyUtil te las compara con el mes anterior.'
   }
 ];
 ---
@@ -55,11 +56,10 @@ const resto = [
         </p>
         <ol class="pasos">
           {pasos.map(p => (
-            <li class="paso" style={`--min:${p.min}`}>
+            <li class="paso" style="--min:5">
               <span class="barra"></span>
               <span class="paso-texto">
                 <span class="paso-nombre">{p.nombre}</span>
-                <span class="paso-min">{p.min} min</span>
               </span>
             </li>
           ))}
@@ -82,7 +82,7 @@ const resto = [
       </div>
 
       <figcaption class="nota">
-        Estimado: lo que puede tardar un cuadre a mano, repartido por pasos. Cada negocio es distinto.
+        Estimado: lo que puede tardar un cuadre a mano. Cada negocio es distinto.
       </figcaption>
 
       <script is:inline>
@@ -129,6 +129,13 @@ const resto = [
     border-bottom: 1px solid var(--line);
     --escala-v: 8px; /* alto por minuto en móvil */
     --corte: 2px; /* separación entre pasos, dentro de cada celda */
+    /* Pista manual atenuada: ink-muted diluido en el panel, para que la barra de
+       acento sea lo único que atrae la mirada. */
+    --tenue: color-mix(in srgb, var(--ink-muted) 76%, var(--board-panel)); /* claro: 3.3:1 */
+  }
+
+  :global(:root[data-theme='dark']) .cuadre {
+    --tenue: color-mix(in srgb, var(--ink-muted) 62%, var(--board-panel)); /* oscuro: 3.3:1 */
   }
 
   .cabeza {
@@ -181,7 +188,7 @@ const resto = [
     flex-direction: column;
   }
 
-  /* Móvil: el alto de cada paso son sus minutos. */
+  /* Móvil: los cuatro pasos miden lo mismo; el alto total son los ≈20 min. */
   .paso {
     display: grid;
     grid-template-columns: 14px minmax(0, 1fr);
@@ -191,7 +198,7 @@ const resto = [
 
   .barra {
     display: block;
-    background: var(--ink-muted);
+    background: var(--tenue);
     background-clip: padding-box;
     border-bottom: var(--corte) solid transparent;
     border-radius: var(--radius-sm);
@@ -260,7 +267,7 @@ const resto = [
 
   .ahorro {
     grid-column: 2;
-    margin-top: 2px;
+    margin-top: 10px;
     font-size: 0.9375rem;
     font-weight: 700;
     color: var(--ink);
@@ -270,7 +277,7 @@ const resto = [
     font-size: var(--fs-label);
     line-height: 1.45;
     color: var(--ink-muted);
-    max-width: 56ch;
+    max-width: 70ch;
   }
 
   /* ---------- El resto: cuatro líneas ---------- */
